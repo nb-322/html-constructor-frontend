@@ -1,0 +1,7 @@
+.Canvas {
+    width: 50%;
+    border: 1px solid black;
+    margin: 5px;
+    position: relative;
+    box-sizing: border-box;
+}

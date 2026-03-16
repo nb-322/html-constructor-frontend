@@ -1,0 +1,4 @@
+.TextEditor {
+    display: flex;
+    flex-direction: column;
+}
