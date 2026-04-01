@@ -1,14 +1,12 @@
 import './App.css'
-import Canvas from "./features/editor/components/Canvas/Canvas"
-import PropertiesEditor from "./features/editor/components/PropertiesEditor/PropertiesEditor"
-import ToolBar from "./features/editor/components/ToolBar/ToolBar"
+import { Routes, Route } from "react-router-dom";
+import Editor from "./features/editor/components/Editor/Editor.tsx";
 function App() {
 
     return <div className="App">
-        <ToolBar></ToolBar>
-        <Canvas></Canvas>
-        <PropertiesEditor></PropertiesEditor>
-    </div>
+        <Routes>
+            <Route path="/editor" element={<Editor />} />
+        </Routes>    </div>
 
 }
 
