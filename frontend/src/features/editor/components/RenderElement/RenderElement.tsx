@@ -8,13 +8,9 @@ export function renderElement(el: EditorElement) {
 
 
         case "text":
-            return <div data-element-id={el.id} >
-                <TextElement key={el.id} element={el} />
-            </div>
+            return <TextElement key={el.id} element={el} />
         case "img":
-            return <div data-element-id={el.id} >
-                <ImgElement key = {el.id} element={el} />
-            </div>
+            return <ImgElement key = {el.id} element={el} />
         default:
             return null
     }
