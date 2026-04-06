@@ -27,6 +27,18 @@ export interface AuthUser {
     name: string;
 }
 
+export interface JWTPayload {
+    userId?: string;
+    id?: string;
+    user_id?: string;
+    email?: string;
+    name?: string;
+    username?: string;
+    exp: number;
+    iat: number;
+    sub?: string;
+}
+
 export interface LoginRequest {
     email: string;
     password: string;

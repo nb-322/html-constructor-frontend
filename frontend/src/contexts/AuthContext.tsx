@@ -1,30 +1,123 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import type { AuthUser } from '../api/types';
-
+import type { AuthUser, JWTPayload } from '../api/types';
+import { jwtDecode } from 'jwt-decode';
+type role = "admin" | "user" | "manager";
 interface AuthContextType {
     user: AuthUser | null;
-    login: (user: AuthUser) => void;
+    login: (email: string, password: string) => Promise<void>;
     logout: () => void;
+    register: (email: string, password: string, role: role) => Promise<void>;
+    isAuthenticated: boolean;
+    isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<AuthUser | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const login = (user: AuthUser) => {
-        setUser(user);
-        // TODO: Store token in localStorage
+    // Функция для декодирования токена и установки пользователя
+    const decodeTokenAndSetUser = (token: string) => {
+        try {
+            console.log('Decoding token:', token.substring(0, 50) + '...');
+            const decoded = jwtDecode<JWTPayload>(token);
+            console.log('Decoded payload:', decoded);
+            
+            // Проверяем, не истек ли токен
+            const currentTime = Date.now() / 1000;
+            if (decoded.exp < currentTime) {
+                console.log('Token expired');
+                // Токен истек
+                localStorage.removeItem('token');
+                setUser(null);
+                return false;
+            }
+
+            // Извлекаем данные пользователя с учетом разных возможных названий полей
+            const userId = decoded.userId || decoded.id || decoded.user_id || decoded.sub;
+            const email = decoded.email || '';
+            const name = decoded.name || decoded.username || '';
+
+            if (!userId) {
+                console.error('No user ID found in token');
+                localStorage.removeItem('token');
+                setUser(null);
+                return false;
+            }
+
+            // Устанавливаем пользователя из декодированного токена
+            setUser({
+                id: userId,
+                email: email,
+                name: name
+            });
+            console.log('User set from token:', { id: userId, email, name });
+            return true;
+        } catch (error) {
+            console.error('Error decoding token:', error);
+            localStorage.removeItem('token');
+            setUser(null);
+            return false;
+        }
+    };
+
+    // Инициализация при загрузке приложения
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            decodeTokenAndSetUser(token);
+        }
+        setIsLoading(false);
+    }, []);
+
+    const login = async (email: string, password: string) => {
+        const res = await fetch("http://100.103.69.36:8080/api/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ "login": email, "password": password }),
+        });
+
+        if (!res.ok) {
+            throw new Error('Login failed');
+        }
+
+        const data = await res.json();
+
+        // Сохраняем токен
+        localStorage.setItem("token", data.token);
+
+        // Декодируем токен и устанавливаем пользователя
+        decodeTokenAndSetUser(data.token);
     };
 
     const logout = () => {
         setUser(null);
-        // TODO: Remove token from localStorage
+        localStorage.removeItem('token');
     };
+    const register = async (email: string, password: string) => {
+        const res = await fetch("http://100.103.69.36:8080/api/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ "login": email, "password": password ,role:"admin"}),
+        });
+
+        if (!res.ok) {
+            throw new Error('Login failed');
+        }
+
+
+    }
+
+    const isAuthenticated = user !== null;
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, login, logout, register,isAuthenticated, isLoading }}>
             {children}
         </AuthContext.Provider>
     );
