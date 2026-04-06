@@ -11,6 +11,6 @@
 |-------|------|----------|
 | `POST` | `/api/templates` | Добавление пользователя |
 | `GET` | `/api/templates` | Импорт excel таблицы с пользователями |
-| `GET` | `/api/templates/:id` | Получение пользователся по user_id |
+| `GET` | `/api/templates/:id` | Получение шаблонов по user_id |
 | `PUT` | `/api/templates/:id` | Получение всех пользователей |
 | `DELETE` | `/api/templates/:id` | Вывод пользователя по telegram_username |
