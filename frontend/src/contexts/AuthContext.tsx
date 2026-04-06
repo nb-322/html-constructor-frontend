@@ -19,6 +19,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [user, setUser] = useState<AuthUser | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    const clearElements = useEditorStore(s=>s.clearElements);
+
     // Функция для декодирования токена и установки пользователя
     const decodeTokenAndSetUser = (token: string) => {
         try {
@@ -30,7 +32,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             const currentTime = Date.now() / 1000;
             if (decoded.exp < currentTime) {
                 console.log('Token expired');
-                // Токен истек
+                clearElements();
                 localStorage.removeItem('token');
                 setUser(null);
                 return false;
@@ -99,6 +101,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const logout = () => {
         setUser(null);
+        clearElements();
         localStorage.removeItem('token');
     };
     const register = async (email: string, password: string) => {
