@@ -25,15 +25,14 @@ export interface AuthUser {
     id: string;
     email: string;
     name: string;
+    role: string;
 }
 
 export interface JWTPayload {
-    userId?: string;
-    id?: string;
     user_id?: string;
     email?: string;
-    name?: string;
-    username?: string;
+    login?: string;
+    role?: string;
     exp: number;
     iat: number;
     sub?: string;

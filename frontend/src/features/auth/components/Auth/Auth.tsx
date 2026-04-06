@@ -30,7 +30,6 @@ const Auth = () => {
             setEmail('');
             setPassword('');
             setError('');
-            // Редирект на главную страницу после успешного входа
             navigate('/', { replace: true });
         } catch (err) {
             setError('Login failed. Check console for details.');

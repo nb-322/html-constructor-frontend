@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type { AuthUser, JWTPayload } from '../api/types';
 import { jwtDecode } from 'jwt-decode';
+import {useEditorStore} from "../features/editor/store/useEditorStore.ts";
 type role = "admin" | "user" | "manager";
 interface AuthContextType {
     user: AuthUser | null;
@@ -36,10 +37,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             }
 
             // Извлекаем данные пользователя с учетом разных возможных названий полей
-            const userId = decoded.userId || decoded.id || decoded.user_id || decoded.sub;
-            const email = decoded.email || '';
-            const name = decoded.name || decoded.username || '';
-
+            console.log('это декодед ',decoded);
+            const userId = decoded.user_id;
+            const email = '';
+            const name =decoded.login || '';
+            const role = decoded.role || '';
             if (!userId) {
                 console.error('No user ID found in token');
                 localStorage.removeItem('token');
@@ -51,7 +53,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setUser({
                 id: userId,
                 email: email,
-                name: name
+                name: name,
+                role: role
             });
             console.log('User set from token:', { id: userId, email, name });
             return true;
@@ -104,7 +107,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ "login": email, "password": password ,role:"admin"}),
+            body: JSON.stringify({ "login": email, "password": password ,role:"marketer"}),
         });
 
         if (!res.ok) {
