@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import {useAuth} from "../../../../contexts/AuthContext.tsx";
 import { useNavigate } from 'react-router-dom';
+import './Auth.css';
 
 const Auth = () => {
     const { login, isLoading } = useAuth();
@@ -38,42 +39,42 @@ const Auth = () => {
     };
 
     return (
-        <div>
+        <div className="auth-container">
             <h3>Авторизация</h3>
-            <form onSubmit={handleSubmit} noValidate>
-                <div style={{ marginBottom: '10px' }}>
+            <form onSubmit={handleSubmit} noValidate className="auth-form">
+                <div className="auth-input-group">
                     <input
                         type="text"
                         placeholder="Логин"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        style={{ width: '100%', padding: '5px' }}
+                        className="auth-input"
                         disabled={isLoading}
                     />
                 </div>
-                <div style={{ marginBottom: '10px' }}>
+                <div className="auth-input-group">
                     <input
                         type="password"
                         placeholder="Пароль"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        style={{ width: '100%', padding: '5px' }}
+                        className="auth-input"
                         disabled={isLoading}
                     />
                 </div>
                 <button
                     type="submit"
                     disabled={isLoading}
-                    style={{ width: '100%', padding: '8px' }}
+                    className="auth-button"
                 >
                     {isLoading ? 'Logging in...' : 'Login'}
                 </button>
             </form>
-            {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
-            <p style={{ marginTop: '10px' }}>
+            {error && <p className="auth-error">{error}</p>}
+            <p className="auth-link">
                 <button
                     onClick={() => navigate('/register')}
-                    style={{ background: 'none', border: 'none', color: 'blue', cursor: 'pointer' }}
+                    className="auth-link-button"
                 >
                     Нет аккаунта? Зарегистрироваться
                 </button>
