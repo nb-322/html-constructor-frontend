@@ -69,7 +69,7 @@ ${s.join("")}
 
     return (
         <div>
-            <button className="toolbar-button" onClick={()=>exportHTML()}> Экспортировать HTML(в буфер обмена)</button>
+            <button onClick={()=>exportHTML()}> Экспортировать HTML(в буфер обмена)</button>
         </div>
     );
 };

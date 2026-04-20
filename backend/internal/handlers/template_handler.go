@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"opd-backend/internal/services"
+	"opd-backend/internal/utils"
 )
 
 type TemplateHandler struct {
@@ -35,8 +36,12 @@ func (h *TemplateHandler) CreateTemplate(c *gin.Context) {
 		return
 	}
 
-	// TODO: Получить userID из токена (сейчас заглушка)
-	userID := int64(1)
+	// Получение userID из токена
+	userID, err := utils.GetUserID(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
 
 	template, err := h.service.CreateTemplate(req.Name, req.HTMLBody, userID)
 	if err != nil {
@@ -142,7 +147,11 @@ func (h *TemplateHandler) UpdateTemplate(c *gin.Context) {
 	}
 
 	// TODO: Получить userID из токена
-	userID := int64(1)
+	userID, err := utils.GetUserID(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
 
 	template, err := h.service.UpdateTemplate(id, req.Name, req.HTMLBody, userID)
 	if err != nil {
