@@ -94,6 +94,26 @@ func (h *TemplateHandler) GetTemplateByID(c *gin.Context) {
 	})
 }
 
+func (h *TemplateHandler) GetTemplatesByUserID(c *gin.Context) {
+	
+	// Получение userID из токена
+	userID, err := utils.GetUserID(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	templates, err := h.service.GetTemplatesByUserID(userID)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"templates": templates,
+	})
+}
+
 // UpdateTemplate godoc
 // @Summary Обновить шаблон
 // @Tags templates

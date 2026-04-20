@@ -104,6 +104,41 @@ func (r *TemplateRepository) GetByID(id int64) (*models.Template, error) {
 	return &t, nil
 }
 
+// GetByUserID возвращает шаблоны, созданные определённым пользователем
+func (r *TemplateRepository) GetByUserID(userID int64) ([]*models.Template, error) {
+	query := `
+		SELECT id, name, html_body, created_at, updated_at, created_by, updated_by
+		FROM templates
+		WHERE created_by = $1
+		ORDER BY created_at DESC`
+
+	rows, err := r.db.Pool.Query(context.Background(), query, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var templates []*models.Template
+	for rows.Next() {
+		var t models.Template
+		err := rows.Scan(
+			&t.ID,
+			&t.Name,
+			&t.HTMLBody,
+			&t.CreatedAt,
+			&t.UpdatedAt,
+			&t.CreatedBy,
+			&t.UpdatedBy,
+		)
+		if err != nil {
+			return nil, err
+		}
+		templates = append(templates, &t)
+	}
+
+	return templates, nil
+}
+
 // Update обновляет шаблон
 func (r *TemplateRepository) Update(template *models.Template) (*models.Template, error) {
 	query := `

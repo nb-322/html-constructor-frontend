@@ -1,0 +1,150 @@
+basePath: /
+host: localhost:8080
+info:
+  contact: {}
+  description: API для конструктора email-рассылок
+  title: Email Campaign API
+  version: "1.0"
+paths:
+  /api/auth/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Логин данные
+        in: body
+        name: input
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: Логин
+      tags:
+      - auth
+  /api/auth/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные регистрации
+        in: body
+        name: input
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: Регистрация пользователя
+      tags:
+      - auth
+  /api/templates:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: object
+            type: array
+      summary: Получить все шаблоны
+      tags:
+      - templates
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные шаблона
+        in: body
+        name: template
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            type: object
+      summary: Создать шаблон
+      tags:
+      - templates
+  /api/templates/{id}:
+    delete:
+      parameters:
+      - description: ID шаблона
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: Удалить шаблон
+      tags:
+      - templates
+    get:
+      parameters:
+      - description: ID шаблона
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: Получить шаблон по ID
+      tags:
+      - templates
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID шаблона
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Данные шаблона
+        in: body
+        name: template
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+      summary: Обновить шаблон
+      tags:
+      - templates
+security:
+- BearerAuth: []
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

@@ -28,6 +28,12 @@ type LoginRequest struct {
 
 // Register godoc
 // @Summary Регистрация пользователя
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param input body object true "Данные регистрации"
+// @Success 200 {object} object
+// @Router /api/auth/register [post]
 func (h *AuthHandler) Register(c *gin.Context) {
     var req RegisterRequest
     if err := c.ShouldBindJSON(&req); err != nil {
@@ -50,7 +56,13 @@ func (h *AuthHandler) Register(c *gin.Context) {
 }
 
 // Login godoc
-// @Summary Авторизация и получение JWT
+// @Summary Логин
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param input body object true "Логин данные"
+// @Success 200 {object} object
+// @Router /api/auth/login [post]
 func (h *AuthHandler) Login(c *gin.Context) {
     var req LoginRequest
     if err := c.ShouldBindJSON(&req); err != nil {

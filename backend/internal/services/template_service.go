@@ -43,6 +43,11 @@ func (s *TemplateService) GetTemplateByID(id int64) (*models.Template, error) {
 	return s.repo.GetByID(id)
 }
 
+// GetTemplatesByUserID возвращает шаблоны, созданные определённым пользователем
+func (s *TemplateService) GetTemplatesByUserID(userID int64) ([]*models.Template, error) {
+	return s.repo.GetByUserID(userID)
+}
+
 // UpdateTemplate обновляет шаблон
 func (s *TemplateService) UpdateTemplate(id int64, name, htmlBody string, userID int64) (*models.Template, error) {
 	template, err := s.repo.GetByID(id)

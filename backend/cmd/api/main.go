@@ -1,15 +1,33 @@
 package main
 
+// @title Email Campaign API
+// @version 1.0
+// @description API для конструктора email-рассылок
+// @host localhost:8080
+// @BasePath /
+
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
+
+// @security BearerAuth
+
 import (
 	"log"
 	"os"
 
-	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"opd-backend/internal/handlers"
 	"opd-backend/internal/repositories"
 	"opd-backend/internal/services"
 	"opd-backend/storage"
+
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+
+	_ "opd-backend/docs"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func main() {
@@ -42,38 +60,55 @@ func main() {
 	// 6. Настраиваем роутер Gin
 	r := gin.Default()
 
+	// Swagger UI
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	r.Use(func(c *gin.Context) {
-    c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-    c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-    c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
-    if c.Request.Method == "OPTIONS" {
-        c.AbortWithStatus(204)
-        return
-    }
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
 
-    c.Next()
-})
+		c.Next()
+	})
 
 	// Группа всех API маршрутов
 	api := r.Group("/api")
 	{
-		// ======================
 		// Публичные маршруты (без авторизации)
-		// ======================
 		auth := api.Group("/auth")
 		{
-			auth.POST("/register", authHandler.Register)   // POST /api/auth/register
-			auth.POST("/login", authHandler.Login)         // POST /api/auth/login
+			auth.POST("/register", authHandler.Register) // POST /api/auth/register
+			auth.POST("/login", authHandler.Login)       // POST /api/auth/login
 		}
 
-		templates := api.Group("/templates")
+		// Защищённые маршруты (требуют авторизации)
+
+		protected := api.Group("/")
+		protected.Use(middleware.AuthMiddleware([]byte(jwtSecret)))
 		{
-			templates.POST("", templateHandler.CreateTemplate)       // POST /api/templates
-			templates.GET("", templateHandler.GetAllTemplates)       // GET /api/templates
-			templates.GET("/:id", templateHandler.GetTemplateByID)   // GET /api/templates/:id
-			templates.PUT("/:id", templateHandler.UpdateTemplate)    // PUT /api/templates/:id
-			templates.DELETE("/:id", templateHandler.DeleteTemplate) // DELETE /api/templates/:id
+
+			templates := protected.Group("/templates")
+			{
+				templates.POST("", templateHandler.CreateTemplate)           // POST /api/templates
+				templates.GET("", templateHandler.GetAllTemplates)           // GET /api/templates
+				templates.GET("/:id", templateHandler.GetTemplateByID)       // GET /api/templates/:id
+				templates.GET("/user", templateHandler.GetTemplatesByUserID) // GET /api/templates/user
+				templates.PUT("/:id", templateHandler.UpdateTemplate)        // PUT /api/templates/:id
+				templates.DELETE("/:id", templateHandler.DeleteTemplate)     // DELETE /api/templates/:id
+			}
+
+			clients := protected.Group("/clients")
+			{
+				clients.POST("", clientHandler.CreateClient)       // POST /api/clients
+				clients.GET("", clientHandler.GetAllClients)       // GET /api/clients
+				clients.PUT("/:id", clientHandler.UpdateClient)    // PUT /api/clients/:id
+				clients.DELETE("/:id", clientHandler.DeleteClient) // DELETE /api/clients/:id
+			}
 		}
 
 		// Сюда позже добавим защищённые маршруты (шаблоны, кампании и т.д.)
