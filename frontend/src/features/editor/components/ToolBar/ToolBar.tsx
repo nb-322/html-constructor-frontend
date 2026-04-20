@@ -11,11 +11,11 @@ const ToolBar = () => {
 
     return (
         <div className="ToolBar">
-            <button style={{height:"100px", width:"250px"}} onClick={()=>add("img")}>Добавить картинку</button>
-            <button style={{height:"100px", width:"250px"}} onClick={()=>add("text")}>Добавить текст</button>
+            <button className="toolbar-button" onClick={()=>add("img")}>Добавить картинку</button>
+            <button className="toolbar-button" onClick={()=>add("text")}>Добавить текст</button>
 
-            {selectedId && (<button style={{height:"100px", width:"250px"}} onClick={()=>del(selectedId)}>Удалить</button>)}
-            <button style={{height:"100px", width:"250px"}} onClick={()=>navigate('/main', { replace: true })}>Выйти на глав экран</button>
+            {selectedId && (<button className="toolbar-button" onClick={()=>del(selectedId)}>Удалить</button>)}
+            <button className="toolbar-button" onClick={()=>navigate('/main', { replace: true })}>Выйти на глав экран</button>
             <ExportHTML/>
         </div>
     );

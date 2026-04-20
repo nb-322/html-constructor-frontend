@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {useAuth} from "../../../../contexts/AuthContext.tsx";
+import './Register.css';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ const Register = () => {
 
         try {
             console.log('Registration data:', formData);
-            register(formData.email, formData.password);
+            register(formData.email, formData.password, "marketer");
             navigate('/auth');
         } catch (err) {
             setError('Registration failed');
@@ -40,41 +41,41 @@ const Register = () => {
     };
 
     return (
-        <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
+        <div className="register-container">
             <h3>Регистрация</h3>
-            <form onSubmit={handleSubmit} noValidate>
-                <div style={{ marginBottom: '10px' }}>
+            <form onSubmit={handleSubmit} noValidate className="register-form">
+                <div className="register-input-group">
                     <input
                         type="email"
                         name="email"
                         placeholder="Логин"
                         value={formData.email}
                         onChange={handleChange}
-                        style={{ width: '100%', padding: '5px' }}
+                        className="register-input"
                     />
                 </div>
-                <div style={{ marginBottom: '10px' }}>
+                <div className="register-input-group">
                     <input
                         type="password"
                         name="password"
                         placeholder="Пароль"
                         value={formData.password}
                         onChange={handleChange}
-                        style={{ width: '100%', padding: '5px' }}
+                        className="register-input"
                     />
                 </div>
                 <button
                     type="submit"
-                    style={{ width: '100%', padding: '8px' }}
+                    className="register-button"
                 >
                     Зарегистрироваться
                 </button>
             </form>
-            {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
-            <p style={{ marginTop: '10px' }}>
+            {error && <p className="register-error">{error}</p>}
+            <p className="register-link">
                 <button
                     onClick={() => navigate('/auth')}
-                    style={{ background: 'none', border: 'none', color: 'blue', cursor: 'pointer' }}
+                    className="register-link-button"
                 >
                     Уже есть аккаунт? Войти
                 </button>

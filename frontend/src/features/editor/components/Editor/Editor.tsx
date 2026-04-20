@@ -8,7 +8,7 @@ const Editor = () => {
         <div className="Editor">
             <ToolBar></ToolBar>
             <Canvas></Canvas>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div className="properties-container">
                 <PropertiesEditor></PropertiesEditor>
             </div>
         </div>
