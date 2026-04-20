@@ -5,6 +5,7 @@ import (
 
     "github.com/gin-gonic/gin"
     "opd-backend/internal/services"
+    "opd-backend/internal/dto"
 )
 
 type AuthHandler struct {
@@ -15,27 +16,16 @@ func NewAuthHandler(service *services.UserService) *AuthHandler {
     return &AuthHandler{service: service}
 }
 
-type RegisterRequest struct {
-    Login    string `json:"login" binding:"required"`
-    Password string `json:"password" binding:"required"`
-    Role     string `json:"role" binding:"required,oneof=marketer analyst admin"`
-}
-
-type LoginRequest struct {
-    Login    string `json:"login" binding:"required"`
-    Password string `json:"password" binding:"required"`
-}
-
 // Register godoc
 // @Summary Регистрация пользователя
 // @Tags auth
 // @Accept json
 // @Produce json
-// @Param input body object true "Данные регистрации"
-// @Success 200 {object} object
+// @Param input body dto.RegisterRequest true "Данные регистрации"
+// @Success 200 {object} dto.RegisterResponse
 // @Router /api/auth/register [post]
 func (h *AuthHandler) Register(c *gin.Context) {
-    var req RegisterRequest
+    var req dto.RegisterRequest
     if err := c.ShouldBindJSON(&req); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
@@ -60,11 +50,11 @@ func (h *AuthHandler) Register(c *gin.Context) {
 // @Tags auth
 // @Accept json
 // @Produce json
-// @Param input body object true "Логин данные"
-// @Success 200 {object} object
+// @Param input body dto.LoginRequest true "Логин данные"
+// @Success 200 {object} dto.LoginResponse
 // @Router /api/auth/login [post]
 func (h *AuthHandler) Login(c *gin.Context) {
-    var req LoginRequest
+    var req dto.LoginRequest
     if err := c.ShouldBindJSON(&req); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
@@ -78,6 +68,6 @@ func (h *AuthHandler) Login(c *gin.Context) {
 
     c.JSON(http.StatusOK, gin.H{
         "token": token,
-        "message": "успешная авторизация",
+        "message": "успешный вход",
     })
 }

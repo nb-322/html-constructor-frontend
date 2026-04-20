@@ -38,6 +38,62 @@ definitions:
       template:
         $ref: '#/definitions/dto.TemplateResponse'
     type: object
+  dto.LoginRequest:
+    properties:
+      login:
+        example: user123
+        type: string
+      password:
+        example: pass123
+        type: string
+    required:
+    - login
+    - password
+    type: object
+  dto.LoginResponse:
+    properties:
+      message:
+        example: успешный вход
+        type: string
+      token:
+        example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        type: string
+    type: object
+  dto.RegisterRequest:
+    properties:
+      login:
+        example: user123
+        type: string
+      password:
+        example: pass123
+        type: string
+      role:
+        enum:
+        - marketer
+        - analyst
+        - admin
+        example: marketer
+        type: string
+    required:
+    - login
+    - password
+    - role
+    type: object
+  dto.RegisterResponse:
+    properties:
+      login:
+        example: user123
+        type: string
+      message:
+        example: пользователь создан
+        type: string
+      role:
+        example: marketer
+        type: string
+      user_id:
+        example: 1
+        type: integer
+    type: object
   dto.TemplateResponse:
     properties:
       created_at:
@@ -94,14 +150,14 @@ paths:
         name: input
         required: true
         schema:
-          type: object
+          $ref: '#/definitions/dto.LoginRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            type: object
+            $ref: '#/definitions/dto.LoginResponse'
       summary: Логин
       tags:
       - auth
@@ -115,14 +171,14 @@ paths:
         name: input
         required: true
         schema:
-          type: object
+          $ref: '#/definitions/dto.RegisterRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            type: object
+            $ref: '#/definitions/dto.RegisterResponse'
       summary: Регистрация пользователя
       tags:
       - auth
