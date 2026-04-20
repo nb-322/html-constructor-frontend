@@ -1,4 +1,82 @@
 basePath: /
+definitions:
+  dto.CreateTemplateRequest:
+    properties:
+      html_body:
+        example: <h1>Hello</h1>
+        type: string
+      name:
+        example: Welcome template
+        type: string
+    required:
+    - html_body
+    - name
+    type: object
+  dto.CreateTemplateResponse:
+    properties:
+      message:
+        example: шаблон создан
+        type: string
+      template:
+        $ref: '#/definitions/dto.TemplateResponse'
+    type: object
+  dto.DeleteTemplateResponse:
+    properties:
+      message:
+        example: шаблон удалён
+        type: string
+    type: object
+  dto.GetAllTemplatesResponse:
+    properties:
+      templates:
+        items:
+          $ref: '#/definitions/dto.TemplateResponse'
+        type: array
+    type: object
+  dto.GetTemplateByIDResponse:
+    properties:
+      template:
+        $ref: '#/definitions/dto.TemplateResponse'
+    type: object
+  dto.TemplateResponse:
+    properties:
+      created_at:
+        example: "2024-06-01T12:00:00Z"
+        type: string
+      created_by:
+        example: 18
+        type: integer
+      html_body:
+        example: <h1>Hello</h1>
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Welcome template
+        type: string
+      updated_at:
+        example: "2024-06-01T12:00:00Z"
+        type: string
+      updated_by:
+        example: 18
+        type: integer
+    type: object
+  dto.UpdateTemplateRequest:
+    properties:
+      html_body:
+        type: string
+      name:
+        type: string
+    type: object
+  dto.UpdateTemplateResponse:
+    properties:
+      message:
+        example: шаблон обновлён
+        type: string
+      template:
+        $ref: '#/definitions/dto.TemplateResponse'
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -56,9 +134,7 @@ paths:
         "200":
           description: OK
           schema:
-            items:
-              type: object
-            type: array
+            $ref: '#/definitions/dto.GetAllTemplatesResponse'
       summary: Получить все шаблоны
       tags:
       - templates
@@ -71,14 +147,14 @@ paths:
         name: template
         required: true
         schema:
-          type: object
+          $ref: '#/definitions/dto.CreateTemplateRequest'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            type: object
+            $ref: '#/definitions/dto.CreateTemplateResponse'
       summary: Создать шаблон
       tags:
       - templates
@@ -94,7 +170,7 @@ paths:
         "200":
           description: OK
           schema:
-            type: object
+            $ref: '#/definitions/dto.DeleteTemplateResponse'
       summary: Удалить шаблон
       tags:
       - templates
@@ -111,11 +187,11 @@ paths:
         "200":
           description: OK
           schema:
-            type: object
+            $ref: '#/definitions/dto.GetTemplateByIDResponse'
       summary: Получить шаблон по ID
       tags:
       - templates
-    put:
+    patch:
       consumes:
       - application/json
       parameters:
@@ -129,14 +205,14 @@ paths:
         name: template
         required: true
         schema:
-          type: object
+          $ref: '#/definitions/dto.UpdateTemplateRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            type: object
+            $ref: '#/definitions/dto.UpdateTemplateResponse'
       summary: Обновить шаблон
       tags:
       - templates

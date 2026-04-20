@@ -4,6 +4,7 @@ import (
 	"errors"
 	"opd-backend/internal/models"
 	"opd-backend/internal/repositories"
+	"opd-backend/internal/dto"
 )
 
 type TemplateService struct {
@@ -49,14 +50,26 @@ func (s *TemplateService) GetTemplatesByUserID(userID int64) ([]*models.Template
 }
 
 // UpdateTemplate обновляет шаблон
-func (s *TemplateService) UpdateTemplate(id int64, name, htmlBody string, userID int64) (*models.Template, error) {
+func (s *TemplateService) UpdateTemplate(
+	id int64,
+	req dto.UpdateTemplateRequest,
+	userID int64,
+) (*models.Template, error) {
+
 	template, err := s.repo.GetByID(id)
 	if err != nil {
-		return nil, errors.New("template not found")
+		return nil, err
 	}
 
-	template.Name = name
-	template.HTMLBody = htmlBody
+	// PATCH логика
+	if req.Name != nil {
+		template.Name = *req.Name
+	}
+
+	if req.HTMLBody != nil {
+		template.HTMLBody = *req.HTMLBody
+	}
+
 	template.UpdatedBy = userID
 
 	return s.repo.Update(template)

@@ -94,10 +94,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "object"
-                            }
+                            "$ref": "#/definitions/dto.GetAllTemplatesResponse"
                         }
                     }
                 }
@@ -120,7 +117,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/dto.CreateTemplateRequest"
                         }
                     }
                 ],
@@ -128,7 +125,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Created",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/dto.CreateTemplateResponse"
                         }
                     }
                 }
@@ -156,12 +153,35 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/dto.GetTemplateByIDResponse"
                         }
                     }
                 }
             },
-            "put": {
+            "delete": {
+                "tags": [
+                    "templates"
+                ],
+                "summary": "Удалить шаблон",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID шаблона",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.DeleteTemplateResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
                 "consumes": [
                     "application/json"
                 ],
@@ -186,7 +206,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/dto.UpdateTemplateRequest"
                         }
                     }
                 ],
@@ -194,32 +214,124 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/dto.UpdateTemplateResponse"
                         }
                     }
                 }
-            },
-            "delete": {
-                "tags": [
-                    "templates"
-                ],
-                "summary": "Удалить шаблон",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID шаблона",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
+            }
+        }
+    },
+    "definitions": {
+        "dto.CreateTemplateRequest": {
+            "type": "object",
+            "required": [
+                "html_body",
+                "name"
+            ],
+            "properties": {
+                "html_body": {
+                    "type": "string",
+                    "example": "\u003ch1\u003eHello\u003c/h1\u003e"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Welcome template"
+                }
+            }
+        },
+        "dto.CreateTemplateResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "шаблон создан"
+                },
+                "template": {
+                    "$ref": "#/definitions/dto.TemplateResponse"
+                }
+            }
+        },
+        "dto.DeleteTemplateResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "шаблон удалён"
+                }
+            }
+        },
+        "dto.GetAllTemplatesResponse": {
+            "type": "object",
+            "properties": {
+                "templates": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.TemplateResponse"
                     }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object"
-                        }
-                    }
+                }
+            }
+        },
+        "dto.GetTemplateByIDResponse": {
+            "type": "object",
+            "properties": {
+                "template": {
+                    "$ref": "#/definitions/dto.TemplateResponse"
+                }
+            }
+        },
+        "dto.TemplateResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2024-06-01T12:00:00Z"
+                },
+                "created_by": {
+                    "type": "integer",
+                    "example": 18
+                },
+                "html_body": {
+                    "type": "string",
+                    "example": "\u003ch1\u003eHello\u003c/h1\u003e"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Welcome template"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2024-06-01T12:00:00Z"
+                },
+                "updated_by": {
+                    "type": "integer",
+                    "example": 18
+                }
+            }
+        },
+        "dto.UpdateTemplateRequest": {
+            "type": "object",
+            "properties": {
+                "html_body": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UpdateTemplateResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "шаблон обновлён"
+                },
+                "template": {
+                    "$ref": "#/definitions/dto.TemplateResponse"
                 }
             }
         }

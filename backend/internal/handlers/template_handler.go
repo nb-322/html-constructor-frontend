@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"opd-backend/internal/services"
 	"opd-backend/internal/utils"
+	"opd-backend/internal/dto"
 )
 
 type TemplateHandler struct {
@@ -22,14 +23,11 @@ func NewTemplateHandler(service *services.TemplateService) *TemplateHandler {
 // @Tags templates
 // @Accept json
 // @Produce json
-// @Param template body object true "Данные шаблона"
-// @Success 201 {object} object
+// @Param template body dto.CreateTemplateRequest true "Данные шаблона"
+// @Success 201 {object} dto.CreateTemplateResponse
 // @Router /api/templates [post]
 func (h *TemplateHandler) CreateTemplate(c *gin.Context) {
-	var req struct {
-		Name     string `json:"name" binding:"required"`
-		HTMLBody string `json:"html_body" binding:"required"`
-	}
+	var req dto.CreateTemplateRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -50,7 +48,7 @@ func (h *TemplateHandler) CreateTemplate(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{
-		"message":  "шаблон создан",
+		"message": "шаблон создан",
 		"template": template,
 	})
 }
@@ -59,7 +57,7 @@ func (h *TemplateHandler) CreateTemplate(c *gin.Context) {
 // @Summary Получить все шаблоны
 // @Tags templates
 // @Produce json
-// @Success 200 {array} object
+// @Success 200 {object} dto.GetAllTemplatesResponse
 // @Router /api/templates [get]
 func (h *TemplateHandler) GetAllTemplates(c *gin.Context) {
 	templates, err := h.service.GetAllTemplates()
@@ -78,7 +76,7 @@ func (h *TemplateHandler) GetAllTemplates(c *gin.Context) {
 // @Tags templates
 // @Produce json
 // @Param id path int true "ID шаблона"
-// @Success 200 {object} object
+// @Success 200 {object} dto.GetTemplateByIDResponse
 // @Router /api/templates/{id} [get]
 func (h *TemplateHandler) GetTemplateByID(c *gin.Context) {
 	idStr := c.Param("id")
@@ -125,35 +123,30 @@ func (h *TemplateHandler) GetTemplatesByUserID(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path int true "ID шаблона"
-// @Param template body object true "Данные шаблона"
-// @Success 200 {object} object
-// @Router /api/templates/{id} [put]
+// @Param template body dto.UpdateTemplateRequest true "Данные шаблона"
+// @Success 200 {object} dto.UpdateTemplateResponse
+// @Router /api/templates/{id} [patch]
 func (h *TemplateHandler) UpdateTemplate(c *gin.Context) {
-	idStr := c.Param("id")
-	id, err := strconv.ParseInt(idStr, 10, 64)
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
 		return
 	}
 
-	var req struct {
-		Name     string `json:"name" binding:"required"`
-		HTMLBody string `json:"html_body" binding:"required"`
-	}
-
+	var req dto.UpdateTemplateRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// TODO: Получить userID из токена
+	// userID только из токена
 	userID, err := utils.GetUserID(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
 
-	template, err := h.service.UpdateTemplate(id, req.Name, req.HTMLBody, userID)
+	template, err := h.service.UpdateTemplate(id, req, userID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -169,7 +162,7 @@ func (h *TemplateHandler) UpdateTemplate(c *gin.Context) {
 // @Summary Удалить шаблон
 // @Tags templates
 // @Param id path int true "ID шаблона"
-// @Success 200 {object} object
+// @Success 200 {object} dto.DeleteTemplateResponse
 // @Router /api/templates/{id} [delete]
 func (h *TemplateHandler) DeleteTemplate(c *gin.Context) {
 	idStr := c.Param("id")

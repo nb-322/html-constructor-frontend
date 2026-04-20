@@ -70,7 +70,7 @@ func main() {
 
 	r.Use(func(c *gin.Context) {
     c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-    c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+    c.Writer.Header().Set("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS")
     c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
     if c.Request.Method == "OPTIONS" {
@@ -103,7 +103,7 @@ func main() {
 				templates.GET("", templateHandler.GetAllTemplates)       // GET /api/templates
 				templates.GET("/:id", templateHandler.GetTemplateByID)   // GET /api/templates/:id
 				templates.GET("/user", templateHandler.GetTemplatesByUserID) // GET /api/templates/user
-				templates.PUT("/:id", templateHandler.UpdateTemplate)    // PUT /api/templates/:id
+				templates.PATCH("/:id", templateHandler.UpdateTemplate)    // PATCH /api/templates/:id
 				templates.DELETE("/:id", templateHandler.DeleteTemplate) // DELETE /api/templates/:id
 			}
 
@@ -111,7 +111,7 @@ func main() {
 			{
 				clients.POST("", clientHandler.CreateClient)       // POST /api/clients
 				clients.GET("", clientHandler.GetAllClients)       // GET /api/clients
-				clients.PUT("/:id", clientHandler.UpdateClient)		// PUT /api/clients/:id
+				clients.PATCH("/:id", clientHandler.UpdateClient)		// PATCH /api/clients/:id
 				clients.DELETE("/:id", clientHandler.DeleteClient)	// DELETE /api/clients/:id
 			}
 
