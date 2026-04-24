@@ -6,36 +6,46 @@
     align-items: center;
     justify-content: center;
     margin: 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--secondary-dark-2) 50%, var(--secondary-dark-3) 100%);
 }
 
 .sidebar {
-    width: 300px;
+    width: 320px;
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 20px;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    background: rgba(26, 31, 58, 0.6);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(0, 217, 255, 0.1);
+    padding: 28px 20px;
+    box-shadow: 2px 0 20px rgba(0, 0, 0, 0.3);
 }
 
 .user-info {
-    background: rgba(0, 0, 0, 0.7);
-    padding: 20px;
-    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(255, 0, 110, 0.05) 100%);
+    padding: 24px;
+    border-radius: 16px;
     color: white;
     text-align: center;
     width: 100%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 217, 255, 0.2);
 }
 
 .user-info p {
-    margin: 8px 0;
+    margin: 10px 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.user-info p:first-child {
+    color: var(--primary-cyan);
     font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 .content {
@@ -48,35 +58,40 @@
 }
 
 .add-button {
-    font-size: 80px;
-    background: rgba(255, 255, 255, 0.9);
-    border: 2px solid #4f46e5;
-    color: #4f46e5;
-    border-radius: 16px;
-    padding: 40px 60px;
+    font-size: 60px;
+    background: linear-gradient(135deg, rgba(0, 217, 255, 0.15) 0%, rgba(255, 0, 110, 0.05) 100%);
+    border: 2px solid var(--primary-cyan);
+    color: var(--primary-cyan);
+    border-radius: 20px;
+    padding: 50px 80px;
     font-weight: bold;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 12px 36px rgba(0, 217, 255, 0.15);
 }
 
 .add-button:hover {
-    background: #4f46e5;
-    color: white;
-    transform: scale(1.05);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, var(--primary-cyan) 0%, var(--primary-neon) 100%);
+    color: var(--secondary-dark);
+    transform: scale(1.08);
+    box-shadow: 0 16px 48px rgba(0, 217, 255, 0.4);
+    border-color: var(--primary-neon);
 }
 
 .logout-button {
-    background: #dc2626;
+    background: linear-gradient(135deg, var(--primary-neon) 0%, var(--accent-pink) 100%);
     color: white;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: all 0.3s ease;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 13px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .logout-button:hover {
-    background: #b91c1c;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(135deg, var(--accent-pink) 0%, var(--primary-neon) 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(255, 0, 110, 0.3);
 }

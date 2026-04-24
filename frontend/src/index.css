@@ -1,3 +1,28 @@
+/* Google Fonts Import */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* CSS Variables - Modern Color Palette */
+:root {
+    /* Primary colors - AIGA inspired */
+    --primary-neon: #FF006E;
+    --primary-cyan: #00D9FF;
+    --primary-yellow: #FFD60A;
+
+    /* Secondary colors */
+    --secondary-dark: #0A0E27;
+    --secondary-dark-2: #1A1F3A;
+    --secondary-dark-3: #2D3561;
+
+    /* Accent colors */
+    --accent-purple: #8338EC;
+    --accent-pink: #FB5607;
+
+    /* Neutral colors */
+    --text-primary: #FFFFFF;
+    --text-secondary: #B8C5D6;
+    --border-color: rgba(255, 255, 255, 0.1);
+}
+
 /* Global styles */
 * {
     margin: 0;
@@ -6,10 +31,12 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--secondary-dark-2) 50%, var(--secondary-dark-3) 100%);
     min-height: 100vh;
-    color: #333;
+    color: var(--text-primary);
+    font-weight: 400;
+    letter-spacing: 0.5px;
 }
 
 #root {
@@ -18,53 +45,73 @@ body {
 
 /* Button styles */
 button {
-    font-family: inherit;
+    font-family: 'Space Grotesk', sans-serif;
     border: none;
-    border-radius: 8px;
-    padding: 12px 24px;
-    font-size: 16px;
+    border-radius: 12px;
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
-    background: #4f46e5;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(135deg, var(--primary-neon) 0%, var(--accent-pink) 100%);
     color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 8px 24px rgba(255, 0, 110, 0.3);
 }
 
 button:hover {
-    background: #3730a3;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: linear-gradient(135deg, var(--accent-pink) 0%, var(--primary-neon) 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 36px rgba(255, 0, 110, 0.5);
+}
+
+button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(255, 0, 110, 0.3);
 }
 
 button:disabled {
-    background: #9ca3af;
+    background: var(--secondary-dark-3);
     cursor: not-allowed;
     transform: none;
+    box-shadow: none;
+    opacity: 0.5;
 }
 
 /* Input styles */
 input {
-    font-family: inherit;
-    border: 2px solid #e5e7eb;
-    border-radius: 8px;
-    padding: 12px;
-    font-size: 16px;
-    transition: border-color 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+input::placeholder {
+    color: var(--text-secondary);
 }
 
 input:focus {
     outline: none;
-    border-color: #4f46e5;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    border-color: var(--primary-cyan);
+    background: rgba(0, 217, 255, 0.05);
+    box-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
 }
 
 /* Form styles */
 form {
-    background: white;
-    padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    background: rgba(26, 31, 58, 0.8);
+    backdrop-filter: blur(20px);
+    padding: 48px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     width: 100%;
-    max-width: 400px;
+    max-width: 420px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Container styles */
@@ -76,12 +123,19 @@ form {
     justify-content: center;
     min-height: 100vh;
     padding: 20px;
+    background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--secondary-dark-2) 50%, var(--secondary-dark-3) 100%);
 }
 
 .auth-container h3,
 .register-container h3 {
-    margin-bottom: 20px;
-    color: #1f2937;
-    font-size: 24px;
-    font-weight: 600;
+    margin-bottom: 28px;
+    color: var(--text-primary);
+    font-size: 32px;
+    font-weight: 700;
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, var(--primary-cyan) 0%, var(--primary-neon) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }

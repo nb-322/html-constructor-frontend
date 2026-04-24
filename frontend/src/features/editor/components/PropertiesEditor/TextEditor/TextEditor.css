@@ -1,4 +1,17 @@
 .TextEditor {
     display: flex;
     flex-direction: column;
+    gap: 10px;
+}
+
+.TextEditor input,
+.TextEditor textarea {
+    background: rgba(10, 14, 39, 0.6);
+    border: 1px solid rgba(0, 217, 255, 0.2);
+}
+
+.TextEditor input:focus,
+.TextEditor textarea:focus {
+    background: rgba(0, 217, 255, 0.1);
+    border-color: var(--primary-cyan);
 }

@@ -19,10 +19,12 @@ export const useDrag = (element: EditorElement) => {
             const newY = Math.max(0, Math.min(canvasHeight - element.height, startTop + e.clientY - startY));
             updateElement(element.id, { x: newX, y: newY });
         };
+        
         const up = () => {
             window.removeEventListener("mousemove", move);
             window.removeEventListener("mouseup", up);
         };
+        
         window.addEventListener("mousemove", move);
         window.addEventListener("mouseup", up);
     };

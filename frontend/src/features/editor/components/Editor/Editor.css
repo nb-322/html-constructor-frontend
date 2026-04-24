@@ -4,8 +4,8 @@
     justify-content: space-between;
     height: 100vh;
     width: 100%;
-    background: #f8fafc;
-    padding: 20px;
+    background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--secondary-dark-2) 50%, var(--secondary-dark-3) 100%);
+    padding: 24px;
     gap: 20px;
 }
 
@@ -13,8 +13,11 @@
     display: flex;
     flex-direction: column;
     width: 25%;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    background: rgba(26, 31, 58, 0.8);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    padding: 24px;
+    border: 1px solid rgba(0, 217, 255, 0.1);
+    color: var(--text-primary);
 }
