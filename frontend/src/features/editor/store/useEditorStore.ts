@@ -48,7 +48,8 @@ export const useEditorStore = create<EditorState>((set) => ({
       elements: state.elements.filter((el) => el.id !== id),
       selectedId: state.selectedId === id ? null : state.selectedId,
     })),
-    clearElements: () => set({elements:[]}),
+
+  clearElements: () => set({elements:[]}),
 
   canvasWidth: 0,
   canvasHeight: 0,

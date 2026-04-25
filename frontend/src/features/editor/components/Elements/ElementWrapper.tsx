@@ -16,16 +16,18 @@ export const ElementWrapper: React.FC<ElementWrapperProps> = ({ element, childre
     const { startDrag } = useDrag(element);
     const { startResize } = useResize(element);
     const dragStartedRef = useRef(false);
+    const [isDragging, setIsDragging] = React.useState(false);
 
     const handleMouseDown = (e: React.MouseEvent) => {
         // Если это не resize хэндл
         if ((e.target as HTMLElement).getAttribute("data-resize-handle") !== "true") {
             dragStartedRef.current = false;
+            setIsDragging(true);
             // Выбираем элемент при клике, если еще не выбран
             if (!isSelected) {
                 selectElement(element.id);
             }
-            startDrag(e);
+            startDrag(e, () => setIsDragging(false));
         }
     };
 
@@ -47,13 +49,13 @@ export const ElementWrapper: React.FC<ElementWrapperProps> = ({ element, childre
                 outlineOffset: "-2px",
                 boxSizing: "border-box",
                 cursor: isSelected ? "move" : "pointer",
-                transition: "outline 0.1s ease",
+                transition: isDragging ? "none" : "outline 0.1s ease",
                 userSelect: "none",
             }}
             onMouseDown={handleMouseDown}
         >
             {children}
-            {isSelected && (
+            {isSelected && !isDragging && (
                 <div
                     data-resize-handle="true"
                     onMouseDown={handleResizeMouseDown}

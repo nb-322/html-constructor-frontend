@@ -6,7 +6,7 @@ export const useDrag = (element: EditorElement) => {
     const canvasHeight = useEditorStore(s => s.canvasHeight);
     const updateElement = useEditorStore(s => s.updateElement);
 
-    const startDrag = (e: React.MouseEvent) => {
+    const startDrag = (e: React.MouseEvent, onDragEnd?: () => void) => {
         e.stopPropagation();
 
         const startX = e.clientX;
@@ -23,6 +23,7 @@ export const useDrag = (element: EditorElement) => {
         const up = () => {
             window.removeEventListener("mousemove", move);
             window.removeEventListener("mouseup", up);
+            onDragEnd?.();
         };
         
         window.addEventListener("mousemove", move);
