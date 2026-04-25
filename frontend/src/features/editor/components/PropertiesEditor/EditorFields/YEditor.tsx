@@ -13,7 +13,7 @@ const YEditor = () => {
         if (selectedElement) {
             setTimeout(() => setYString(String(selectedElement.y)), 0)
         }
-    }, [selectedElement?.y])
+    }, [selectedElement?.y, selectedElement])
 
     if (!selectedElement) return null;
 
@@ -27,7 +27,7 @@ const YEditor = () => {
     };
 
     return (
-        <div>
+        <div className="editor-field">
             <h2>Позиция по Y</h2>
             <input
                 type="text"

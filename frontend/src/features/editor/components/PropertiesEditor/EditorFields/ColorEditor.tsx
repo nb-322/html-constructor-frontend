@@ -9,14 +9,13 @@ const ColorEditor = () => {
     if (!selectedElement) return null;
     if (!selectedId) return null;
     return (
-        <div>
+        <div className="editor-field">
             <h2>Цвет</h2>
             <input
                 type="text"
                 placeholder={"Цвет текста"}
                 value={selectedElement.styles.color}
                 onChange={(e)=>{updateElement(selectedId,{styles:{...selectedElement?.styles, color:(e.target.value)}})}}
-                style={{width: "95%"}}
             />
         </div>
     );
