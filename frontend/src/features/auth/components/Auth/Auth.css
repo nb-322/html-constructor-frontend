@@ -3,7 +3,6 @@
 }
 
 .auth-form {
-    /* Form styles handled globally */
 }
 
 .auth-input-group {
@@ -61,6 +60,9 @@
 }
 
 .auth-link-button:hover {
-    color: var(--primary-neon);
     text-decoration: underline;
+    color: var(--primary-neon);
+    background: none !important;
+    transform: none !important;
+    box-shadow: none !important;
 }

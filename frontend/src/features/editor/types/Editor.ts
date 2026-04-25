@@ -1,4 +1,4 @@
-export type ElementType = "img" | "text";
+export type ElementType = "img" | "text" | "button";
 
 export interface BaseElement {
     id: string;
@@ -23,6 +23,9 @@ export type TextStyles = BaseStyles & {
 export type ImgStyles = BaseStyles & {
 
 }
+export type ButtonStyles = BaseStyles & {
+
+}
 
 export interface ImgElement extends BaseElement {
     type: "img"
@@ -35,5 +38,10 @@ export interface TextElement extends BaseElement {
     text: string
     styles: TextStyles
 }
-
-export type EditorElement = TextElement | ImgElement;
+export interface ButtonElement extends BaseElement {
+    type: "button"
+    link: string
+    text: string
+    styles: ButtonStyles
+}
+export type EditorElement = TextElement | ImgElement | ButtonElement;
