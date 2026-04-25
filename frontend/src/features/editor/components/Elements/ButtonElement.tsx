@@ -21,7 +21,7 @@ export function ButtonElement({ element }: Props) {
                     height: "100%",
                     border: "none",
                     background: "transparent",
-                    color: "inherit",
+                    color: "black",
                     fontSize: "inherit",
                     fontWeight: "inherit",
                     cursor: "pointer",
@@ -34,6 +34,19 @@ export function ButtonElement({ element }: Props) {
                     wordWrap: "break-word",
                     overflowWrap: "break-word",
                     boxSizing: "border-box",
+                    // Переопределяем глобальные стили button
+                    boxShadow: "none !important",
+                    transform: "none !important",
+                }}
+                onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = "none";
+                    e.currentTarget.style.transform = "none";
+                    e.currentTarget.style.background = "transparent";
+                }}
+                onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = "none";
+                    e.currentTarget.style.transform = "none";
+                    e.currentTarget.style.background = "transparent";
                 }}
             >
                 {element.text}

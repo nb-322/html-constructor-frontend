@@ -30,7 +30,7 @@ export function createElement(type: ElementType,):EditorElement {
                     type: 'text',
                     text: "текст+-",
                     styles:{
-                        color:'Black',
+                        color:'black',
                         fontSize:24,
                         fontWeight:4,
                         background:"",
@@ -44,7 +44,7 @@ export function createElement(type: ElementType,):EditorElement {
                     text: "Кнопка",
                     link: "https://cats.fandom.com/ru/wiki/Кошка",
                     styles:{
-                        color:'Black',
+                        color:'black',
                         fontSize:24,
                         fontWeight:4,
                         background:"",

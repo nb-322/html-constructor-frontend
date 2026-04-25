@@ -18,6 +18,9 @@ export const ElementWrapper: React.FC<ElementWrapperProps> = ({ element, childre
     const dragStartedRef = useRef(false);
     const [isDragging, setIsDragging] = React.useState(false);
 
+    // Для кнопок не показываем outline
+    const shouldShowOutline = element.type !== "button";
+
     const handleMouseDown = (e: React.MouseEvent) => {
         // Если это не resize хэндл
         if ((e.target as HTMLElement).getAttribute("data-resize-handle") !== "true") {
@@ -45,7 +48,7 @@ export const ElementWrapper: React.FC<ElementWrapperProps> = ({ element, childre
                 top: element.y,
                 width: element.width,
                 height: element.height,
-                outline: isSelected ? "2px solid #00D9FF" : "2px solid rgba(0, 217, 255, 0.3)",
+                outline: shouldShowOutline ? (isSelected ? "2px solid #00D9FF" : "2px solid rgba(0, 217, 255, 0.3)") : "none",
                 outlineOffset: "-2px",
                 boxSizing: "border-box",
                 cursor: isSelected ? "move" : "pointer",
@@ -55,7 +58,7 @@ export const ElementWrapper: React.FC<ElementWrapperProps> = ({ element, childre
             onMouseDown={handleMouseDown}
         >
             {children}
-            {isSelected && !isDragging && (
+            {isSelected && !isDragging && shouldShowOutline && (
                 <div
                     data-resize-handle="true"
                     onMouseDown={handleResizeMouseDown}
