@@ -37,6 +37,22 @@ export function createElement(type: ElementType,):EditorElement {
                         borderRadius:1
                     }
                 }
+            case "button":
+                return {
+                    ...base,
+                    type: 'button',
+                    text: "Кнопка",
+                    link: "https://cats.fandom.com/ru/wiki/Кошка",
+                    styles:{
+                        color:'Black',
+                        fontSize:24,
+                        fontWeight:4,
+                        background:"",
+                        borderRadius:1
+                    }
+                }
+
+
     }
     throw new Error("Unknown element type")
 }
