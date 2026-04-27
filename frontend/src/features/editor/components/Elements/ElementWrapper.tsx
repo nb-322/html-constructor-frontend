@@ -19,7 +19,7 @@ export const ElementWrapper: React.FC<ElementWrapperProps> = ({ element, childre
     const [isDragging, setIsDragging] = React.useState(false);
 
     // Для кнопок не показываем outline
-    const shouldShowOutline = element.type !== "button";
+    const shouldShowOutline = true;
 
     const handleMouseDown = (e: React.MouseEvent) => {
         // Если это не resize хэндл

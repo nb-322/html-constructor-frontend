@@ -62,7 +62,7 @@ export function ButtonElement({ element }: Props) {
                     }}
                     className={""}
                     value={element.text}
-                >{element.text}</button>/
+                >{element.text}</button>
             </div>
         </ElementWrapper>
     );
