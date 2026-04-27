@@ -9,14 +9,13 @@ const BackgroundEditor = () => {
     if (!selectedElement) return null;
     if (!selectedId) return null;
     return (
-        <div>
+        <div className="editor-field">
             <h2>Фон</h2>
             <input
                 type="text"
                 placeholder={"Цвет фона"}
                 value={selectedElement.styles.background}
                 onChange={(e)=>{updateElement(selectedId,{styles:{...selectedElement?.styles, background:(e.target.value)}})}}
-                style={{width: "95%"}}
             />
         </div>
     );

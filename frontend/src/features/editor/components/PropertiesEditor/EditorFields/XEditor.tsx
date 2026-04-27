@@ -11,7 +11,7 @@ const XEditor = () => {
         if (selectedElement){
             setTimeout(() => setXString(String(selectedElement.x)), 0)
         }
-    },[selectedElement?.x])
+    },[selectedElement?.x, selectedElement])
     if (!selectedElement) return null
     const handleXChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setXString(e.target.value)
@@ -23,7 +23,7 @@ const XEditor = () => {
         }
     }
     return (
-        <div>
+        <div className="editor-field">
             <h2>Позиция по x</h2>
             <input
                 type="text"

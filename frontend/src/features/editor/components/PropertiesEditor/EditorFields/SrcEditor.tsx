@@ -9,14 +9,13 @@ const SrcEditor = () => {
     if (!selectedElement || selectedElement.type!=="img") return null;
     if (!selectedId) return null;
     return (
-            <div>
+            <div className="editor-field">
                 <h2>Источник</h2>
                 <input
                     type="text"
-                    placeholder={"Значение по x"}
+                    placeholder={"URL изображения"}
                     value={selectedElement.src}
                     onChange={(e)=>{updateElement(selectedId,{src:e.target.value})}}
-                    style={{width: "95%"}}
                 />
             </div>
 

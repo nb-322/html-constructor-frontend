@@ -13,7 +13,7 @@ const FontSizeEditor = () => {
     if (!selectedElement || selectedElement.type!=="text") return null;
     if (!selectedId) return null;
     return (
-        <div>
+        <div className="editor-field">
             <h2>Размер шрифта</h2>
             <select
                 value={selectedElement.styles.fontSize}

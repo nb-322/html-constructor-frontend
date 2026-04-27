@@ -13,6 +13,8 @@ const ToolBar = () => {
         <div className="ToolBar">
             <button className="toolbar-button" onClick={()=>add("img")}>Добавить картинку</button>
             <button className="toolbar-button" onClick={()=>add("text")}>Добавить текст</button>
+            <button className="toolbar-button" onClick={()=>add("button")}>Добавить кнопку</button>
+
 
             {selectedId && (<button className="toolbar-button" onClick={()=>del(selectedId)}>Удалить</button>)}
             <button className="toolbar-button" onClick={()=>navigate('/main', { replace: true })}>Выйти на глав экран</button>

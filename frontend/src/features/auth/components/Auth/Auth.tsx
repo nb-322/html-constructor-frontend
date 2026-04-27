@@ -14,7 +14,6 @@ const Auth = () => {
         e.preventDefault();
         setError('');
 
-        // Валидация
         if (!email.trim()) {
             setError('Пожалуйста, введите логин');
             return;

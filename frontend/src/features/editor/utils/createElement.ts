@@ -30,13 +30,29 @@ export function createElement(type: ElementType,):EditorElement {
                     type: 'text',
                     text: "текст+-",
                     styles:{
-                        color:'Black',
+                        color:'black',
                         fontSize:24,
                         fontWeight:4,
                         background:"",
                         borderRadius:1
                     }
                 }
+            case "button":
+                return {
+                    ...base,
+                    type: 'button',
+                    text: "Кнопка",
+                    link: "https://cats.fandom.com/ru/wiki/Кошка",
+                    styles:{
+                        color:'black',
+                        fontSize:24,
+                        fontWeight:4,
+                        background:"",
+                        borderRadius:1
+                    }
+                }
+
+
     }
     throw new Error("Unknown element type")
 }
