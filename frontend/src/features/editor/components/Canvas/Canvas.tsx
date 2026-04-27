@@ -2,6 +2,7 @@ import './Canvas.css'
 import {renderElement} from "../RenderElement/RenderElement.tsx";
 import {useEditorStore} from "../../store/useEditorStore.ts";
 import {useEffect, useRef} from "react";
+import ShadowCanvas from "../../../../contexts/ShadowCanvas.tsx";
 
 const Canvas = () => {
     const canvasRef = useRef<HTMLDivElement>(null)
@@ -30,9 +31,10 @@ const Canvas = () => {
     }
 
     return (
-        <div className="Canvas" onClick={handleCanvasClick} ref={canvasRef} style={{height: canvasHeight}}>
-            {elements.map(el=>renderElement(el))}
-        </div>
+            <div className="Canvas" onClick={handleCanvasClick} ref={canvasRef} style={{height: canvasHeight}}>
+                {elements.map(el=>renderElement(el))}
+            </div>
+
     );
 };
 

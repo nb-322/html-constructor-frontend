@@ -20,6 +20,7 @@ export function ButtonElement({ element }: Props) {
     if (element.type !== "button") return null;
 
     return (
+
         <ElementWrapper element={element}>
             <div
                 ref={imgRef}
@@ -40,7 +41,25 @@ export function ButtonElement({ element }: Props) {
                 <button
 
                     draggable={false}
-                    style={{ all: "unset",height: "100%", width: "100%", background:"none",boxShadow:"none",textAlign:"start",textJustify:"none",}}
+                    style={{
+                        all: "unset",
+                        display: "flex",          // делаем флекс-контейнером
+                        alignItems: "center",     // вертикально по центру
+                        justifyContent: "center", // горизонтально по центру
+                        width: "100%",
+                        height: "100%",
+                        boxSizing: "border-box",
+                        cursor: "pointer",
+                        font: "inherit",          // наследует шрифт из настроек элемента
+                        color: element.styles.color,
+                        background: "none",
+                        border: "none",
+                        boxShadow: "none",
+                        borderRadius: element.styles.borderRadius,
+                        padding: "0 8px",         // минимальные отступы, чтобы текст не прилипал
+                        textAlign: "center",      // на случай, если flex не применится (но он применится)
+                        lineHeight: "normal",     // убираем возможные перекосы
+                    }}
                     className={""}
                     value={element.text}
                 >{element.text}</button>/
