@@ -1,56 +1,50 @@
 import type { EditorElement } from "../../types/Editor.ts";
+import { useEditorStore } from "../../store/useEditorStore.ts";
+import { useRef, useLayoutEffect } from "react";
 import { ElementWrapper } from "./ElementWrapper";
-import {useNavigate} from "react-router-dom";
 
 interface Props {
     element: EditorElement;
 }
 
 export function ButtonElement({ element }: Props) {
-    const navigate = useNavigate();
+    const updateElement = useEditorStore(s => s.updateElement);
+    const imgRef = useRef<HTMLDivElement>(null);
+
+    useLayoutEffect(() => {
+        if (!imgRef.current) return;
+        const h = imgRef.current.scrollHeight;
+        if (h !== element.height) updateElement(element.id, { height: h });
+    }, []);
 
     if (element.type !== "button") return null;
 
     return (
         <ElementWrapper element={element}>
-            <button
-                onClick={() => navigate(element.link)}
-                draggable={false}
+            <div
+                ref={imgRef}
                 style={{
                     width: "100%",
                     height: "100%",
-                    border: "none",
-                    background: "transparent",
-                    color: "black",
-                    fontSize: "inherit",
-                    fontWeight: "inherit",
-                    cursor: "pointer",
-                    padding: "8px 16px",
-                    borderRadius: "4px",
-                    textAlign: "center",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
                     wordWrap: "break-word",
                     overflowWrap: "break-word",
+                    color: element.styles.color,
+                    fontSize: element.styles.fontSize,
+                    fontWeight: element.styles.fontWeight,
+                    background: element.styles.background,
+                    borderRadius: element.styles.borderRadius,
                     boxSizing: "border-box",
-                    // Переопределяем глобальные стили button
-                    boxShadow: "none !important",
-                    transform: "none !important",
-                }}
-                onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = "none";
-                    e.currentTarget.style.transform = "none";
-                    e.currentTarget.style.background = "transparent";
-                }}
-                onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = "none";
-                    e.currentTarget.style.transform = "none";
-                    e.currentTarget.style.background = "transparent";
+                    transition: "height 0.15s ease, width 0.15s ease",
                 }}
             >
-                {element.text}
-            </button>
+                <button
+
+                    draggable={false}
+                    style={{ all: "unset",height: "100%", width: "100%", background:"none",boxShadow:"none",textAlign:"start",textJustify:"none",}}
+                    className={""}
+                    value={element.text}
+                >{element.text}</button>/
+            </div>
         </ElementWrapper>
     );
 }
