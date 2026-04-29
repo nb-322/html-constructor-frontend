@@ -81,6 +81,209 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/campaigns": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "campaigns"
+                ],
+                "summary": "Получить все кампании",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetAllCampaignsResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "campaigns"
+                ],
+                "summary": "Создать кампанию",
+                "parameters": [
+                    {
+                        "description": "Данные кампании",
+                        "name": "campaign",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateCampaignRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateCampaignResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/campaigns/{id}": {
+            "delete": {
+                "tags": [
+                    "campaigns"
+                ],
+                "summary": "Удалить кампанию",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID кампании",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.DeleteCampaignResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "campaigns"
+                ],
+                "summary": "Обновить статус кампании",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID кампании",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Новый статус кампании",
+                        "name": "status",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateCampaignRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CampaignResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/clients": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "clients"
+                ],
+                "summary": "Получить всех клиентов",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetAllClientsResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "clients"
+                ],
+                "summary": "Создать клиента",
+                "parameters": [
+                    {
+                        "description": "Данные шаблона",
+                        "name": "client",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateClientRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateClientResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/clients/{id}": {
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "clients"
+                ],
+                "summary": "Обновить клиента",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID клиента",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Данные шаблона",
+                        "name": "template",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateClientRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateClientResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/templates": {
             "get": {
                 "produces": [
@@ -222,6 +425,140 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.CampaignResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2023-10-10T10:00:00Z"
+                },
+                "created_by": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "scheduled_at": {
+                    "type": "string",
+                    "example": "2023-10-10T10:00:00Z"
+                },
+                "segment": {
+                    "type": "string",
+                    "example": "sport"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "active"
+                },
+                "tpl_id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "dto.ClientResponse": {
+            "type": "object",
+            "properties": {
+                "consent_flag": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2024-06-01T12:00:00Z"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "mirea@mail.ru"
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "segment": {
+                    "type": "string",
+                    "example": "sport"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2026-11-05T12:00:00Z"
+                }
+            }
+        },
+        "dto.CreateCampaignRequest": {
+            "type": "object",
+            "required": [
+                "created_by",
+                "scheduled_at",
+                "segment",
+                "tpl_id"
+            ],
+            "properties": {
+                "created_by": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "scheduled_at": {
+                    "type": "string",
+                    "example": "2023-10-10T10:00:00Z"
+                },
+                "segment": {
+                    "type": "string",
+                    "example": "sport"
+                },
+                "tpl_id": {
+                    "type": "integer",
+                    "example": 1
+                }
+            }
+        },
+        "dto.CreateCampaignResponse": {
+            "type": "object",
+            "properties": {
+                "campaign": {
+                    "$ref": "#/definitions/dto.CampaignResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "кампания создана"
+                }
+            }
+        },
+        "dto.CreateClientRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "segment"
+            ],
+            "properties": {
+                "consent_flag": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "email": {
+                    "type": "string",
+                    "example": "mirea@mail.ru"
+                },
+                "segment": {
+                    "type": "string",
+                    "example": "sport"
+                }
+            }
+        },
+        "dto.CreateClientResponse": {
+            "type": "object",
+            "properties": {
+                "client": {
+                    "$ref": "#/definitions/dto.ClientResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "клиент создан"
+                }
+            }
+        },
         "dto.CreateTemplateRequest": {
             "type": "object",
             "required": [
@@ -251,12 +588,52 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.DeleteCampaignResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "кампания удалена"
+                }
+            }
+        },
+        "dto.DeleteClientResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "клиент удалён"
+                }
+            }
+        },
         "dto.DeleteTemplateResponse": {
             "type": "object",
             "properties": {
                 "message": {
                     "type": "string",
                     "example": "шаблон удалён"
+                }
+            }
+        },
+        "dto.GetAllCampaignsResponse": {
+            "type": "object",
+            "properties": {
+                "campaigns": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.CampaignResponse"
+                    }
+                }
+            }
+        },
+        "dto.GetAllClientsResponse": {
+            "type": "object",
+            "properties": {
+                "clients": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.ClientResponse"
+                    }
                 }
             }
         },
@@ -387,6 +764,44 @@ const docTemplate = `{
                 "updated_by": {
                     "type": "integer",
                     "example": 18
+                }
+            }
+        },
+        "dto.UpdateCampaignRequest": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "example": "active"
+                }
+            }
+        },
+        "dto.UpdateClientRequest": {
+            "type": "object",
+            "properties": {
+                "consent_flag": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "email": {
+                    "type": "string",
+                    "example": "mirea@mail.ru"
+                },
+                "segment": {
+                    "type": "string",
+                    "example": "sport"
+                }
+            }
+        },
+        "dto.UpdateClientResponse": {
+            "type": "object",
+            "properties": {
+                "client": {
+                    "$ref": "#/definitions/dto.ClientResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "клиент обновлён"
                 }
             }
         },

@@ -46,6 +46,7 @@ func main() {
 	userRepo := repositories.NewUserRepository(db)
 	templateRepo := repositories.NewTemplateRepository(db)
 	clientRepo := repositories.NewClientRepository(db)
+	campaignRepo := repositories.NewCampaignRepository(db)
 
 	// 4. Инициализируем сервисы
 	jwtSecret := os.Getenv("JWT_SECRET")
@@ -56,11 +57,13 @@ func main() {
 	userService := services.NewUserService(userRepo, jwtSecret)
 	templateService := services.NewTemplateService(templateRepo)
 	clientService := services.NewClientService(clientRepo)
+	campaignService := services.NewCampaignService(campaignRepo)
 
 	// 5. Инициализируем обработчики (handlers)
 	authHandler := handlers.NewAuthHandler(userService)
 	templateHandler := handlers.NewTemplateHandler(templateService)
 	clientHandler := handlers.NewClientHandler(clientService)
+	campaignHandler := handlers.NewCampaignHandler(campaignService)
 
 	// 6. Настраиваем роутер Gin
 	r := gin.Default()
@@ -113,6 +116,14 @@ func main() {
 				clients.GET("", clientHandler.GetAllClients)       // GET /api/clients
 				clients.PATCH("/:id", clientHandler.UpdateClient)		// PATCH /api/clients/:id
 				clients.DELETE("/:id", clientHandler.DeleteClient)	// DELETE /api/clients/:id
+			}
+
+			campaign := protected.Group("/campaigns")
+			{
+				campaign.POST("", campaignHandler.CreateCampaign)       // POST /api/campaigns
+				campaign.GET("", campaignHandler.GetAllCampaigns)       // GET /api/campaigns
+				campaign.PATCH("/:id", campaignHandler.UpdateStatus)	// PATCH /api/campaigns/:id
+				campaign.DELETE("/:id", campaignHandler.DeleteCampaign)	// DELETE /api/campaigns/:id
 			}
 
 		}

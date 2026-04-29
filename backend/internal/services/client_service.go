@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"opd-backend/internal/dto"
 	"opd-backend/internal/models"
 	"opd-backend/internal/repositories"
 )
@@ -43,17 +44,25 @@ func (s *ClientService) GetAllClients() ([]*models.Client, error) {
 // 	return s.repo.GetByID(id)
 // }
 
-//  UpdateClient обновляет клиента
-func (s *ClientService) UpdateClient(id int64, email, segment string, consentFlag bool) (*models.Client, error) {
+// UpdateClient обновляет клиента (PATCH)
+func (s *ClientService) UpdateClient(id int64, req dto.UpdateClientRequest) (*models.Client, error) {
 	client, err := s.repo.GetByID(id)
 
 	if err != nil {
 		return  nil, errors.New("client not found")
 	}
 
-	client.Email = email
-	client.Segment = segment
-	client.ConsetnFlag = consentFlag
+	if req.Email != nil {
+		client.Email = *req.Email
+	}
+
+	if req.Segment != nil {
+		client.Segment = *req.Segment
+	}
+
+	if req.ConsentFlag != nil {
+		client.ConsetnFlag = *req.ConsentFlag
+	}
 
 	return s.repo.Update(client)
 }

@@ -45,3 +45,78 @@ func (r *CampaignRepository) Create(campaign *models.Campaign) (*models.Campaign
 
 	return campaign, nil
 }
+
+// GetAll возвращает все кампании
+func (r *CampaignRepository) GetAll() ([]*models.Campaign, error) {
+	query := `
+	SELECT id, tpl_id, segment, scheduled_at, status, created_by, created_at
+	FROM campaigns
+	ORDER BY created_at DESC`
+
+	rows, err := r.db.Pool.Query(context.Background(), query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var campaigns []*models.Campaign
+	for rows.Next() {
+		campaign := &models.Campaign{}
+		err := rows.Scan(
+			&campaign.ID,
+			&campaign.TemplateID,
+			&campaign.Segment,
+			&campaign.ScheduledAt,
+			&campaign.Status,
+			&campaign.CreatedBy,
+			&campaign.CreatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+		campaigns = append(campaigns, campaign)
+	}
+
+	return campaigns, nil
+}
+
+// GetByID возвращает кампанию по ID
+func (r *CampaignRepository) GetByID(id int64) (*models.Campaign, error) {
+	query := `
+	SELECT id, tpl_id, segment, scheduled_at, status, created_by, created_at
+	FROM campaigns
+	WHERE id = $1`
+	campaign := &models.Campaign{}
+	err := r.db.Pool.QueryRow(context.Background(), query, id).Scan(
+		&campaign.ID,
+		&campaign.TemplateID,
+		&campaign.Segment,
+		&campaign.ScheduledAt,
+		&campaign.Status,
+		&campaign.CreatedBy,
+		&campaign.CreatedAt,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return campaign, nil
+}
+
+// UpdateStatus обновляет статус кампании
+func (r *CampaignRepository) UpdateStatus(id int64, status string) error {
+	query := `
+	UPDATE campaigns
+	SET status = $1
+	WHERE id = $2`
+	_, err := r.db.Pool.Exec(context.Background(), query, status, id)
+	return err
+}
+
+// Delete удаляет кампанию по ID
+func (r *CampaignRepository) Delete(id int64) error {
+	query := `
+	DELETE FROM campaigns
+	WHERE id = $1`
+	_, err := r.db.Pool.Exec(context.Background(), query, id)
+	return err
+}

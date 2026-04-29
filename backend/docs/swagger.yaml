@@ -1,5 +1,101 @@
 basePath: /
 definitions:
+  dto.CampaignResponse:
+    properties:
+      created_at:
+        example: "2023-10-10T10:00:00Z"
+        type: string
+      created_by:
+        example: 2
+        type: integer
+      id:
+        example: 1
+        type: integer
+      scheduled_at:
+        example: "2023-10-10T10:00:00Z"
+        type: string
+      segment:
+        example: sport
+        type: string
+      status:
+        example: active
+        type: string
+      tpl_id:
+        example: 1
+        type: integer
+    type: object
+  dto.ClientResponse:
+    properties:
+      consent_flag:
+        example: true
+        type: boolean
+      created_at:
+        example: "2024-06-01T12:00:00Z"
+        type: string
+      email:
+        example: mirea@mail.ru
+        type: string
+      id:
+        example: 1
+        type: integer
+      segment:
+        example: sport
+        type: string
+      updated_at:
+        example: "2026-11-05T12:00:00Z"
+        type: string
+    type: object
+  dto.CreateCampaignRequest:
+    properties:
+      created_by:
+        example: 2
+        type: integer
+      scheduled_at:
+        example: "2023-10-10T10:00:00Z"
+        type: string
+      segment:
+        example: sport
+        type: string
+      tpl_id:
+        example: 1
+        type: integer
+    required:
+    - created_by
+    - scheduled_at
+    - segment
+    - tpl_id
+    type: object
+  dto.CreateCampaignResponse:
+    properties:
+      campaign:
+        $ref: '#/definitions/dto.CampaignResponse'
+      message:
+        example: кампания создана
+        type: string
+    type: object
+  dto.CreateClientRequest:
+    properties:
+      consent_flag:
+        example: true
+        type: boolean
+      email:
+        example: mirea@mail.ru
+        type: string
+      segment:
+        example: sport
+        type: string
+    required:
+    - email
+    - segment
+    type: object
+  dto.CreateClientResponse:
+    properties:
+      client:
+        $ref: '#/definitions/dto.ClientResponse'
+      message:
+        example: клиент создан
+        type: string
+    type: object
   dto.CreateTemplateRequest:
     properties:
       html_body:
@@ -20,11 +116,37 @@ definitions:
       template:
         $ref: '#/definitions/dto.TemplateResponse'
     type: object
+  dto.DeleteCampaignResponse:
+    properties:
+      message:
+        example: кампания удалена
+        type: string
+    type: object
+  dto.DeleteClientResponse:
+    properties:
+      message:
+        example: клиент удалён
+        type: string
+    type: object
   dto.DeleteTemplateResponse:
     properties:
       message:
         example: шаблон удалён
         type: string
+    type: object
+  dto.GetAllCampaignsResponse:
+    properties:
+      campaigns:
+        items:
+          $ref: '#/definitions/dto.CampaignResponse'
+        type: array
+    type: object
+  dto.GetAllClientsResponse:
+    properties:
+      clients:
+        items:
+          $ref: '#/definitions/dto.ClientResponse'
+        type: array
     type: object
   dto.GetAllTemplatesResponse:
     properties:
@@ -118,6 +240,32 @@ definitions:
         example: 18
         type: integer
     type: object
+  dto.UpdateCampaignRequest:
+    properties:
+      status:
+        example: active
+        type: string
+    type: object
+  dto.UpdateClientRequest:
+    properties:
+      consent_flag:
+        example: true
+        type: boolean
+      email:
+        example: mirea@mail.ru
+        type: string
+      segment:
+        example: sport
+        type: string
+    type: object
+  dto.UpdateClientResponse:
+    properties:
+      client:
+        $ref: '#/definitions/dto.ClientResponse'
+      message:
+        example: клиент обновлён
+        type: string
+    type: object
   dto.UpdateTemplateRequest:
     properties:
       html_body:
@@ -182,6 +330,137 @@ paths:
       summary: Регистрация пользователя
       tags:
       - auth
+  /api/campaigns:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetAllCampaignsResponse'
+      summary: Получить все кампании
+      tags:
+      - campaigns
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные кампании
+        in: body
+        name: campaign
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateCampaignRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CreateCampaignResponse'
+      summary: Создать кампанию
+      tags:
+      - campaigns
+  /api/campaigns/{id}:
+    delete:
+      parameters:
+      - description: ID кампании
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DeleteCampaignResponse'
+      summary: Удалить кампанию
+      tags:
+      - campaigns
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID кампании
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Новый статус кампании
+        in: body
+        name: status
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateCampaignRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CampaignResponse'
+      summary: Обновить статус кампании
+      tags:
+      - campaigns
+  /api/clients:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetAllClientsResponse'
+      summary: Получить всех клиентов
+      tags:
+      - clients
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные шаблона
+        in: body
+        name: client
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateClientRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CreateClientResponse'
+      summary: Создать клиента
+      tags:
+      - clients
+  /api/clients/{id}:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID клиента
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Данные шаблона
+        in: body
+        name: template
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateClientRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UpdateClientResponse'
+      summary: Обновить клиента
+      tags:
+      - clients
   /api/templates:
     get:
       produces:

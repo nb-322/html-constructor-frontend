@@ -1,0 +1,40 @@
+package dto
+
+type CreateClientRequest struct {
+	Email string `json:"email" binding:"required" example:"mirea@mail.ru"`
+	Segment string `json:"segment" binding:"required" example:"sport"`
+	ConsentFlag bool `json:"consent_flag" example:"true"`
+}
+
+type UpdateClientRequest struct {
+	Email *string `json:"email" example:"mirea@mail.ru"`
+	Segment *string `json:"segment" example:"sport"`
+	ConsentFlag *bool `json:"consent_flag" example:"true"`
+}
+
+type ClientResponse struct {
+	ID int64 `json:"id" example:"1"`
+	Email string `json:"email" example:"mirea@mail.ru"`
+	Segment string `json:"segment" example:"sport"`
+	ConsentFlag bool `json:"consent_flag" example:"true"`
+	CreatedAt string `json:"created_at" example:"2024-06-01T12:00:00Z"`
+	UpdatedAt string `json:"updated_at" example:"2026-11-05T12:00:00Z"`
+}
+
+type CreateClientResponse struct {
+	Message string `json:"message" example:"клиент создан"`
+	Client ClientResponse `json:"client"`
+}
+
+type GetAllClientsResponse struct {
+	Clients []ClientResponse `json:"clients"`
+}
+
+type UpdateClientResponse struct {
+	Message string `json:"message" example:"клиент обновлён"`
+	Client ClientResponse `json:"client"`
+}
+
+type DeleteClientResponse struct {
+	Message string `json:"message" example:"клиент удалён"`
+}

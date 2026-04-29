@@ -2,9 +2,11 @@ package handlers
 
 import (
 	"net/http"
+	"opd-backend/internal/dto"
+	"opd-backend/internal/services"
 	"strconv"
+
 	"github.com/gin-gonic/gin"
-	"opd-backend/internal/services"	
 )
 
 type ClientHandler struct {
@@ -15,13 +17,16 @@ func NewClientHandler(service *services.ClientService) *ClientHandler {
 	return &ClientHandler{service: service}
 }
 
-//  CreateClient - создаёт нового клиента
+// CreateClient godoc
+// @Summary Создать клиента
+// @Tags clients
+// @Accept json
+// @Produce json
+// @Param client body dto.CreateClientRequest true "Данные шаблона"
+// @Success 201 {object} dto.CreateClientResponse
+// @Router /api/clients [post]
 func (h *ClientHandler) CreateClient(c *gin.Context) {
-	var req struct {
-		Email string `json:"email" binding:"required"`
-		Segment string `json:"segment" binding:"required"`
-		ConsentFlag bool `json:"consent_flag"`
-	}
+	var req dto.CreateClientRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -38,15 +43,19 @@ func (h *ClientHandler) CreateClient(c *gin.Context) {
 		return
 	}
 
-
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "клиент создан",
-		"client": client,
+		"client":  client,
 	})
-	
+
 }
 
-// GetAllClients - возвращает всех клиентов
+// GetAllClients godoc
+// @Summary Получить всех клиентов
+// @Tags clients
+// @Produce json
+// @Success 200 {object} dto.GetAllClientsResponse
+// @Router /api/clients [get]
 func (h *ClientHandler) GetAllClients(c *gin.Context) {
 
 	clients, err := h.service.GetAllClients()
@@ -62,7 +71,15 @@ func (h *ClientHandler) GetAllClients(c *gin.Context) {
 	})
 }
 
-// UpdateClient - обновляет клиента
+// UpdateClient godoc
+// @Summary Обновить клиента
+// @Tags clients
+// @Accept json
+// @Produce json
+// @Param id path int true "ID клиента"
+// @Param template body dto.UpdateClientRequest true "Данные шаблона"
+// @Success 200 {object} dto.UpdateClientResponse
+// @Router /api/clients/{id} [patch]
 func (h *ClientHandler) UpdateClient(c *gin.Context) {
 
 	idStr := c.Param("id")
@@ -75,11 +92,7 @@ func (h *ClientHandler) UpdateClient(c *gin.Context) {
 		return
 	}
 
-	var req struct {
-		Email string `json:"email" binding:"required"`
-		Segment string `json:"segment" binding:"required"`
-		ConsentFlag bool `json:"consent_flag"`
-	}
+	var req dto.UpdateClientRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -88,7 +101,7 @@ func (h *ClientHandler) UpdateClient(c *gin.Context) {
 		return
 	}
 
-	client, err := h.service.UpdateClient(id, req.Email, req.Segment, req.ConsentFlag)
+	client, err := h.service.UpdateClient(id, req)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -98,11 +111,16 @@ func (h *ClientHandler) UpdateClient(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "клиент обновлён",
-		"client": client,
+		"client":  client,
 	})
 }
 
-// DeleteClient - удаляет клиента
+// DeleteClient godoc
+// @Summary Удалить шаблон
+// @Tags templates
+// @Param id path int true "ID шаблона"
+// @Success 200 {object} dto.DeleteClientResponse
+// @Router /api/templates/{id} [delete]
 func (h *ClientHandler) DeleteClient(c *gin.Context) {
 
 	idStr := c.Param("id")
