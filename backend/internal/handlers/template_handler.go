@@ -97,6 +97,12 @@ func (h *TemplateHandler) GetTemplateByID(c *gin.Context) {
 	})
 }
 
+// GetTemplatesByUserID godoc
+// @Summary Получить шаблоны, созданные пользователем
+// @Tags templates
+// @Produce json
+// @Success 200 {object} dto.GetTemplatesByUserIDResponse
+// @Router /api/templates/user [get]
 func (h *TemplateHandler) GetTemplatesByUserID(c *gin.Context) {
 	
 	// Получение userID из токена
@@ -155,29 +161,5 @@ func (h *TemplateHandler) UpdateTemplate(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message":  "шаблон обновлён",
 		"template": template,
-	})
-}
-
-// DeleteTemplate godoc
-// @Summary Удалить шаблон
-// @Tags templates
-// @Param id path int true "ID шаблона"
-// @Success 200 {object} dto.DeleteTemplateResponse
-// @Router /api/templates/{id} [delete]
-func (h *TemplateHandler) DeleteTemplate(c *gin.Context) {
-	idStr := c.Param("id")
-	id, err := strconv.ParseInt(idStr, 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
-		return
-	}
-
-	if err := h.service.DeleteTemplate(id); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"message": "шаблон удалён",
 	})
 }

@@ -107,7 +107,6 @@ func main() {
 				templates.GET("/:id", templateHandler.GetTemplateByID)   // GET /api/templates/:id
 				templates.GET("/user", templateHandler.GetTemplatesByUserID) // GET /api/templates/user
 				templates.PATCH("/:id", templateHandler.UpdateTemplate)    // PATCH /api/templates/:id
-				templates.DELETE("/:id", templateHandler.DeleteTemplate) // DELETE /api/templates/:id
 			}
 
 			clients := protected.Group("/clients")

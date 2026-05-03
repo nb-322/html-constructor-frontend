@@ -33,6 +33,10 @@ type GetTemplateByIDResponse struct {
 	Template TemplateResponse `json:"template"`
 }
 
+type GetTemplatesByUserIDResponse struct {
+	Templates []TemplateResponse `json:"templates"`
+}
+
 type UpdateTemplateResponse struct {
 	Message  string           `json:"message" example:"шаблон обновлён"`
 	Template TemplateResponse `json:"template"`

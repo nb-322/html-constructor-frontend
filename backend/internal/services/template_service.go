@@ -74,8 +74,3 @@ func (s *TemplateService) UpdateTemplate(
 
 	return s.repo.Update(template)
 }
-
-// DeleteTemplate удаляет шаблон
-func (s *TemplateService) DeleteTemplate(id int64) error {
-	return s.repo.Delete(id)
-}

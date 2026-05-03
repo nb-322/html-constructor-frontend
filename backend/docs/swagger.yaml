@@ -128,12 +128,6 @@ definitions:
         example: клиент удалён
         type: string
     type: object
-  dto.DeleteTemplateResponse:
-    properties:
-      message:
-        example: шаблон удалён
-        type: string
-    type: object
   dto.GetAllCampaignsResponse:
     properties:
       campaigns:
@@ -159,6 +153,13 @@ definitions:
     properties:
       template:
         $ref: '#/definitions/dto.TemplateResponse'
+    type: object
+  dto.GetTemplatesByUserIDResponse:
+    properties:
+      templates:
+        items:
+          $ref: '#/definitions/dto.TemplateResponse'
+        type: array
     type: object
   dto.LoginRequest:
     properties:
@@ -419,7 +420,7 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: Данные шаблона
+      - description: Данные клиента
         in: body
         name: client
         required: true
@@ -436,6 +437,21 @@ paths:
       tags:
       - clients
   /api/clients/{id}:
+    delete:
+      parameters:
+      - description: ID клиента
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.DeleteClientResponse'
+      summary: Удалить клиента
+      tags:
+      - clients
     patch:
       consumes:
       - application/json
@@ -445,9 +461,9 @@ paths:
         name: id
         required: true
         type: integer
-      - description: Данные шаблона
+      - description: Данные клиента
         in: body
-        name: template
+        name: client
         required: true
         schema:
           $ref: '#/definitions/dto.UpdateClientRequest'
@@ -494,21 +510,6 @@ paths:
       tags:
       - templates
   /api/templates/{id}:
-    delete:
-      parameters:
-      - description: ID шаблона
-        in: path
-        name: id
-        required: true
-        type: integer
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.DeleteTemplateResponse'
-      summary: Удалить шаблон
-      tags:
-      - templates
     get:
       parameters:
       - description: ID шаблона
@@ -549,6 +550,18 @@ paths:
           schema:
             $ref: '#/definitions/dto.UpdateTemplateResponse'
       summary: Обновить шаблон
+      tags:
+      - templates
+  /api/templates/user:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetTemplatesByUserIDResponse'
+      summary: Получить шаблоны, созданные пользователем
       tags:
       - templates
 security:

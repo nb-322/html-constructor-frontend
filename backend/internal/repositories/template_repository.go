@@ -171,9 +171,3 @@ func (r *TemplateRepository) Update(template *models.Template) (*models.Template
 	return template, nil
 }
 
-// Delete удаляет шаблон
-func (r *TemplateRepository) Delete(id int64) error {
-	query := `DELETE FROM templates WHERE id = $1`
-	_, err := r.db.Pool.Exec(context.Background(), query, id)
-	return err
-}

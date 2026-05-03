@@ -225,7 +225,7 @@ const docTemplate = `{
                 "summary": "Создать клиента",
                 "parameters": [
                     {
-                        "description": "Данные шаблона",
+                        "description": "Данные клиента",
                         "name": "client",
                         "in": "body",
                         "required": true,
@@ -245,6 +245,29 @@ const docTemplate = `{
             }
         },
         "/api/clients/{id}": {
+            "delete": {
+                "tags": [
+                    "clients"
+                ],
+                "summary": "Удалить клиента",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID клиента",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.DeleteClientResponse"
+                        }
+                    }
+                }
+            },
             "patch": {
                 "consumes": [
                     "application/json"
@@ -265,8 +288,8 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Данные шаблона",
-                        "name": "template",
+                        "description": "Данные клиента",
+                        "name": "client",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -334,6 +357,25 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/templates/user": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "templates"
+                ],
+                "summary": "Получить шаблоны, созданные пользователем",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetTemplatesByUserIDResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/templates/{id}": {
             "get": {
                 "produces": [
@@ -357,29 +399,6 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/dto.GetTemplateByIDResponse"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "templates"
-                ],
-                "summary": "Удалить шаблон",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID шаблона",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.DeleteTemplateResponse"
                         }
                     }
                 }
@@ -606,15 +625,6 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.DeleteTemplateResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string",
-                    "example": "шаблон удалён"
-                }
-            }
-        },
         "dto.GetAllCampaignsResponse": {
             "type": "object",
             "properties": {
@@ -653,6 +663,17 @@ const docTemplate = `{
             "properties": {
                 "template": {
                     "$ref": "#/definitions/dto.TemplateResponse"
+                }
+            }
+        },
+        "dto.GetTemplatesByUserIDResponse": {
+            "type": "object",
+            "properties": {
+                "templates": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.TemplateResponse"
+                    }
                 }
             }
         },

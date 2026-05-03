@@ -22,7 +22,7 @@ func NewClientHandler(service *services.ClientService) *ClientHandler {
 // @Tags clients
 // @Accept json
 // @Produce json
-// @Param client body dto.CreateClientRequest true "Данные шаблона"
+// @Param client body dto.CreateClientRequest true "Данные клиента"
 // @Success 201 {object} dto.CreateClientResponse
 // @Router /api/clients [post]
 func (h *ClientHandler) CreateClient(c *gin.Context) {
@@ -77,7 +77,7 @@ func (h *ClientHandler) GetAllClients(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path int true "ID клиента"
-// @Param template body dto.UpdateClientRequest true "Данные шаблона"
+// @Param client body dto.UpdateClientRequest true "Данные клиента"
 // @Success 200 {object} dto.UpdateClientResponse
 // @Router /api/clients/{id} [patch]
 func (h *ClientHandler) UpdateClient(c *gin.Context) {
@@ -116,11 +116,11 @@ func (h *ClientHandler) UpdateClient(c *gin.Context) {
 }
 
 // DeleteClient godoc
-// @Summary Удалить шаблон
-// @Tags templates
-// @Param id path int true "ID шаблона"
+// @Summary Удалить клиента
+// @Tags clients
+// @Param id path int true "ID клиента"
 // @Success 200 {object} dto.DeleteClientResponse
-// @Router /api/templates/{id} [delete]
+// @Router /api/clients/{id} [delete]
 func (h *ClientHandler) DeleteClient(c *gin.Context) {
 
 	idStr := c.Param("id")
