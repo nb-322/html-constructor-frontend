@@ -4,5 +4,8 @@ CREATE TABLE IF NOT EXISTS users (
     login VARCHAR(100),
     password_hash VARCHAR(255),
     role VARCHAR(20),
-    created_at TIMESTAMP DEFAULT NOW()
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    is_deleted BOOLEAN DEFAULT FALSE,
+    deleted_at TIMESTAMP WITH TIME ZONE NULL,
+    deleted_by INTEGER NULL
 );

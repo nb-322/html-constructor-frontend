@@ -3,10 +3,13 @@ CREATE TABLE IF NOT EXISTS campaigns (
     id SERIAL PRIMARY KEY,
     tpl_id INTEGER NOT NULL,
     segment VARCHAR(255),
-    scheduled_at TIMESTAMP,
+    scheduled_at TIMESTAMP WITH TIME ZONE,
     status VARCHAR(255),
-    created_at TIMESTAMP,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     created_by INTEGER NOT NULL,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    deleted_at TIMESTAMP WITH TIME ZONE NULL,
+    deleted_by INTEGER NULL,
 
     CONSTRAINT fk_campaigns_templates
         FOREIGN KEY (tpl_id) 

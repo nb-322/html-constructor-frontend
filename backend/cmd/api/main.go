@@ -3,7 +3,7 @@ package main
 // @title Email Campaign API
 // @version 1.0
 // @description API для конструктора email-рассылок
-// @host localhost:8080
+// @host localhost:8081
 // @BasePath /
 
 // @securityDefinitions.apikey BearerAuth
@@ -31,7 +31,7 @@ import (
 
 func main() {
 	// 1. Загружаем переменные окружения
-	if err := godotenv.Load(); err != nil {
+	if err := godotenv.Load("../.env"); err != nil {
 		log.Println("Warning: .env file not found, using system environment variables")
 	}
 

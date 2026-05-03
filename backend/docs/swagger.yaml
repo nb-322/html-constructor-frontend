@@ -281,7 +281,7 @@ definitions:
       template:
         $ref: '#/definitions/dto.TemplateResponse'
     type: object
-host: localhost:8080
+host: localhost:8081
 info:
   contact: {}
   description: API для конструктора email-рассылок
