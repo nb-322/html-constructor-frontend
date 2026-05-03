@@ -66,8 +66,3 @@ func (s *ClientService) UpdateClient(id int64, req dto.UpdateClientRequest) (*mo
 
 	return s.repo.Update(client)
 }
-
-// DeleteClient удаляет клиента по ID
-func (s *ClientService) DeleteClient(id int64) error {
-	return s.repo.Delete(id)
-}

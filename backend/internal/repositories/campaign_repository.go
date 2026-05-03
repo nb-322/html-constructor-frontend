@@ -111,12 +111,3 @@ func (r *CampaignRepository) UpdateStatus(id int64, status string) error {
 	_, err := r.db.Pool.Exec(context.Background(), query, status, id)
 	return err
 }
-
-// Delete удаляет кампанию по ID
-func (r *CampaignRepository) Delete(id int64) error {
-	query := `
-	DELETE FROM campaigns
-	WHERE id = $1`
-	_, err := r.db.Pool.Exec(context.Background(), query, id)
-	return err
-}

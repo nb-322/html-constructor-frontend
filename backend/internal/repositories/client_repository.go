@@ -143,17 +143,3 @@ func (r *ClientRepository) Update(client *models.Client) (*models.Client, error)
 	return client, nil
 
 }
-
-
-// Delete удаляет клиента по ID
-func (r *ClientRepository) Delete(id int64) error {
-	query := `DELETE FROM clients WHERE id = $1`
-
-	_, err := r.db.Pool.Exec(
-		context.Background(),
-		query,
-		id,
-	)
-
-	return err
-}

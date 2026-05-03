@@ -132,29 +132,6 @@ const docTemplate = `{
             }
         },
         "/api/campaigns/{id}": {
-            "delete": {
-                "tags": [
-                    "campaigns"
-                ],
-                "summary": "Удалить кампанию",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID кампании",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.DeleteCampaignResponse"
-                        }
-                    }
-                }
-            },
             "patch": {
                 "consumes": [
                     "application/json"
@@ -245,29 +222,6 @@ const docTemplate = `{
             }
         },
         "/api/clients/{id}": {
-            "delete": {
-                "tags": [
-                    "clients"
-                ],
-                "summary": "Удалить клиента",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID клиента",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.DeleteClientResponse"
-                        }
-                    }
-                }
-            },
             "patch": {
                 "consumes": [
                     "application/json"
@@ -604,24 +558,6 @@ const docTemplate = `{
                 },
                 "template": {
                     "$ref": "#/definitions/dto.TemplateResponse"
-                }
-            }
-        },
-        "dto.DeleteCampaignResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string",
-                    "example": "кампания удалена"
-                }
-            }
-        },
-        "dto.DeleteClientResponse": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string",
-                    "example": "клиент удалён"
                 }
             }
         },

@@ -106,31 +106,3 @@ func (h *CampaignHandler) UpdateStatus(c *gin.Context) {
 		"campaign": campaign,
 	})
 }
-
-// DeleteCampaign godoc
-// @Summary Удалить кампанию
-// @Tags campaigns
-// @Param id path int true "ID кампании"
-// @Success 200 {object} dto.DeleteCampaignResponse
-// @Router /api/campaigns/{id} [delete]
-func (h *CampaignHandler) DeleteCampaign(c *gin.Context) {
-	idStr := c.Param("id")
-
-	id, err := strconv.ParseInt(idStr, 10, 64)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "invalid campaign ID",
-		})
-		return
-	}
-	err = h.service.DeleteCampaign(id)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"message": "кампания удалена",
-	})
-}

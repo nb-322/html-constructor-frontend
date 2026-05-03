@@ -59,8 +59,3 @@ func (s *CampaignService) UpdateStatus(id int64, status string) (*models.Campaig
 
 	return campaign, nil
 }
-
-// DeleteCampaign удаляет кампанию
-func (s *CampaignService) DeleteCampaign(id int64) error {
-	return s.repo.Delete(id)
-}

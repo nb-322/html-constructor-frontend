@@ -114,7 +114,6 @@ func main() {
 				clients.POST("", clientHandler.CreateClient)       // POST /api/clients
 				clients.GET("", clientHandler.GetAllClients)       // GET /api/clients
 				clients.PATCH("/:id", clientHandler.UpdateClient)		// PATCH /api/clients/:id
-				clients.DELETE("/:id", clientHandler.DeleteClient)	// DELETE /api/clients/:id
 			}
 
 			campaign := protected.Group("/campaigns")
@@ -122,7 +121,6 @@ func main() {
 				campaign.POST("", campaignHandler.CreateCampaign)       // POST /api/campaigns
 				campaign.GET("", campaignHandler.GetAllCampaigns)       // GET /api/campaigns
 				campaign.PATCH("/:id", campaignHandler.UpdateStatus)	// PATCH /api/campaigns/:id
-				campaign.DELETE("/:id", campaignHandler.DeleteCampaign)	// DELETE /api/campaigns/:id
 			}
 
 		}
