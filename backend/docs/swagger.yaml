@@ -1,5 +1,13 @@
 basePath: /
 definitions:
+  dto.ArchiveTemplateResponse:
+    properties:
+      message:
+        example: шаблон архивирован
+        type: string
+      template:
+        $ref: '#/definitions/dto.TemplateResponse'
+    type: object
   dto.CampaignResponse:
     properties:
       created_at:
@@ -204,6 +212,14 @@ definitions:
       user_id:
         example: 1
         type: integer
+    type: object
+  dto.RestoreTemplateResponse:
+    properties:
+      message:
+        example: шаблон восстановлен
+        type: string
+      template:
+        $ref: '#/definitions/dto.TemplateResponse'
     type: object
   dto.TemplateResponse:
     properties:
@@ -508,6 +524,44 @@ paths:
           schema:
             $ref: '#/definitions/dto.UpdateTemplateResponse'
       summary: Обновить шаблон
+      tags:
+      - templates
+  /api/templates/{id}/archive:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID шаблона
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ArchiveTemplateResponse'
+      summary: Архивировать шаблон
+      tags:
+      - templates
+  /api/templates/{id}/restore:
+    patch:
+      parameters:
+      - description: ID шаблона
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.RestoreTemplateResponse'
+      summary: Восстановить шаблон из архива
       tags:
       - templates
   /api/templates/user:

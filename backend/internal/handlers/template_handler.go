@@ -163,3 +163,62 @@ func (h *TemplateHandler) UpdateTemplate(c *gin.Context) {
 		"template": template,
 	})
 }
+
+// ArchiveTemplate godoc
+// @Summary Архивировать шаблон
+// @Tags templates
+// @Accept json
+// @Produce json
+// @Param id path int true "ID шаблона"
+// @Success 200 {object} dto.ArchiveTemplateResponse
+// @Router /api/templates/{id}/archive [patch]
+func (h *TemplateHandler) ArchiveTemplate(c *gin.Context) {
+    id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+        return
+    }
+
+    userID, err := utils.GetUserID(c)
+    if err != nil {
+        c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+        return
+    }
+
+    template, err := h.service.ArchiveTemplate(id, userID)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{
+        "message":  "шаблон архивирован",
+        "template": template,
+    })
+}
+
+// RestoreTemplate godoc
+// @Summary Восстановить шаблон из архива
+// @Tags templates
+// @Produce json
+// @Param id path int true "ID шаблона"
+// @Success 200 {object} dto.RestoreTemplateResponse
+// @Router /api/templates/{id}/restore [patch]
+func (h *TemplateHandler) RestoreTemplate(c *gin.Context) {
+    id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+        return
+    }
+
+    template, err := h.service.RestoreTemplate(id)
+    if err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{
+        "message":  "шаблон восстановлен",
+        "template": template,
+    })
+}

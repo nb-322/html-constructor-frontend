@@ -11,6 +11,6 @@ type Template struct {
     CreatedBy int64     `json:"created_by" db:"created_by"`
     UpdatedBy int64     `json:"updated_by" db:"updated_by"`
     IsDeleted bool     `json:"is_deleted" db:"is_deleted"`
-    DeletedAt time.Time `json:"deleted_at" db:"deleted_at"`
-    DeletedBy int64     `json:"deleted_by" db:"deleted_by"`
+    DeletedAt *time.Time `json:"deleted_at" db:"deleted_at"`
+    DeletedBy *int64     `json:"deleted_by" db:"deleted_by"`
 }

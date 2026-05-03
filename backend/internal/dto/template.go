@@ -42,6 +42,12 @@ type UpdateTemplateResponse struct {
 	Template TemplateResponse `json:"template"`
 }
 
-type DeleteTemplateResponse struct {
-	Message string `json:"message" example:"шаблон удалён"`
+type ArchiveTemplateResponse struct {
+    Message  string           `json:"message" example:"шаблон архивирован"`
+    Template TemplateResponse `json:"template"`
+}
+
+type RestoreTemplateResponse struct {
+    Message  string           `json:"message" example:"шаблон восстановлен"`
+    Template TemplateResponse `json:"template"`
 }

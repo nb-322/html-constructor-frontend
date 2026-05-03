@@ -389,9 +389,80 @@
                     }
                 }
             }
+        },
+        "/api/templates/{id}/archive": {
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "templates"
+                ],
+                "summary": "Архивировать шаблон",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID шаблона",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ArchiveTemplateResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/templates/{id}/restore": {
+            "patch": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "templates"
+                ],
+                "summary": "Восстановить шаблон из архива",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID шаблона",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.RestoreTemplateResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "dto.ArchiveTemplateResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "шаблон архивирован"
+                },
+                "template": {
+                    "$ref": "#/definitions/dto.TemplateResponse"
+                }
+            }
+        },
         "dto.CampaignResponse": {
             "type": "object",
             "properties": {
@@ -682,6 +753,18 @@
                 "user_id": {
                     "type": "integer",
                     "example": 1
+                }
+            }
+        },
+        "dto.RestoreTemplateResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "шаблон восстановлен"
+                },
+                "template": {
+                    "$ref": "#/definitions/dto.TemplateResponse"
                 }
             }
         },

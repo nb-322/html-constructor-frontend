@@ -34,7 +34,7 @@ func (s *TemplateService) CreateTemplate(name, htmlBody string, userID int64) (*
 	return s.repo.Create(template)
 }
 
-// GetAllTemplates возвращает все шаблоны
+// GetAllTemplates возвращает все не архивированные шаблоны
 func (s *TemplateService) GetAllTemplates() ([]*models.Template, error) {
 	return s.repo.GetAll()
 }
@@ -73,4 +73,32 @@ func (s *TemplateService) UpdateTemplate(
 	template.UpdatedBy = userID
 
 	return s.repo.Update(template)
+}
+
+// ArchiveTemplate архивирует шаблон
+func (s *TemplateService) ArchiveTemplate(id int64, userID int64) (*models.Template, error) {
+	template, err := s.repo.GetByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if template.IsDeleted {
+		return nil, errors.New("шаблон уже архивирова")
+	}
+
+	return s.repo.Archive(id, userID)
+}
+
+// RestoreTemplate архивирует шаблон
+func (s *TemplateService) RestoreTemplate(id int64) (*models.Template, error) {
+    template, err := s.repo.GetByIDWithDeleted(id)
+    if err != nil {
+        return nil, err
+    }
+
+    if !template.IsDeleted {
+        return nil, errors.New("шаблон не архивирован")
+    }
+
+    return s.repo.Restore(id)
 }
