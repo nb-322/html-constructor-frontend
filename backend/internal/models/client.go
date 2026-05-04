@@ -10,6 +10,6 @@ type Client struct {
 	CreatedAt     time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at" db:"updated_at"`
 	IsDeleted bool     `json:"is_deleted" db:"is_deleted"`
-  DeletedAt time.Time `json:"deleted_at" db:"deleted_at"`
-  DeletedBy int64     `json:"deleted_by" db:"deleted_by"`
+  DeletedAt *time.Time `json:"deleted_at" db:"deleted_at"`
+  DeletedBy *int64     `json:"deleted_by" db:"deleted_by"`
 }

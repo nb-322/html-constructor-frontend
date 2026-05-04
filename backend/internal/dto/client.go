@@ -38,3 +38,13 @@ type UpdateClientResponse struct {
 type DeleteClientResponse struct {
 	Message string `json:"message" example:"клиент удалён"`
 }
+
+type ArchiveClientResponse struct {
+	Message  string           `json:"message" example:"клиент архивирован"`
+  Client ClientResponse `json:"client"`
+}
+
+type RestoreClientResponse struct {
+    Message  string           `json:"message" example:"клиент восстановлен"`
+    Client ClientResponse `json:"client"`
+}

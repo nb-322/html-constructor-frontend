@@ -35,7 +35,7 @@ func (s *CampaignService) GetAllCampaigns() ([]*models.Campaign, error) {
 func (s *CampaignService) UpdateStatus(id int64, status string) (*models.Campaign, error) {
     campaign, err := s.repo.UpdateStatus(id, status)
     if err != nil {
-        return nil, errors.New("campaign not found")
+        return nil, errors.New("компания не найдена")
     }
     return campaign, nil
 }
@@ -48,7 +48,7 @@ func (s *CampaignService) GetCampaignByID(id int64) (*models.Campaign, error) {
 func (s *CampaignService) ArchiveCampaign(id int64, userID int64) (*models.Campaign, error) {
     campaign, err := s.repo.GetByID(id)
     if err != nil {
-        return nil, errors.New("campaign not found")
+        return nil, errors.New("компания не найдена")
     }
 
     if campaign.IsDeleted {
@@ -62,7 +62,7 @@ func (s *CampaignService) ArchiveCampaign(id int64, userID int64) (*models.Campa
 func (s *CampaignService) RestoreCampaign(id int64) (*models.Campaign, error) {
     campaign, err := s.repo.GetByIDWithDeleted(id)
     if err != nil {
-        return nil, errors.New("campaign not found")
+        return nil, errors.New("компания не найдена")
     }
 
     if !campaign.IsDeleted {

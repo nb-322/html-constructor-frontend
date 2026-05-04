@@ -46,8 +46,9 @@ func (r *ClientRepository) Create(client *models.Client) (*models.Client, error)
 // GetAll возвращает всех клиентов
 func (r *ClientRepository) GetAll() ([]*models.Client, error) {
 	query := `
-	SELECT id, email, segment, consent_flag, created_at, updated_at
+	SELECT id, email, segment, consent_flag, created_at, updated_at, is_deleted, deleted_at, deleted_by
 	FROM clients
+	WHERE is_deleted = false
 	ORDER BY created_at DESC`
 
 	rows, err := r.db.Pool.Query(context.Background(), query)
@@ -59,57 +60,84 @@ func (r *ClientRepository) GetAll() ([]*models.Client, error) {
 	defer rows.Close()
 
 	var clients []*models.Client
-
 	for rows.Next() {
-
-		var c models.Client
-
+		var client models.Client
 		err := rows.Scan(
-			&c.ID,
-			&c.Email,
-			&c.Segment,
-			&c.ConsetnFlag,
-			&c.CreatedAt,
-			&c.UpdatedAt,
+			&client.ID,
+			&client.Email,
+			&client.Segment,
+			&client.ConsetnFlag,
+			&client.CreatedAt,
+			&client.UpdatedAt,
+			&client.IsDeleted,
+			&client.DeletedAt,
+			&client.DeletedBy,
 		)
-
 		if err != nil {
 			return nil, err
 		}
-
-		clients = append(clients, &c)
+		clients = append(clients, &client)
 	}
 
 	return clients, nil
-
 }
 
 // GetByID возвращает клиента по ID
 func (r *ClientRepository) GetByID(id int64) (*models.Client, error) {
 	query := `
-	SELECT id, email, segment, consent_flag, created_at, updated_at
+	SELECT id, email, segment, consent_flag, created_at, updated_at, is_deleted, deleted_at, deleted_by
 	FROM clients
-	WHERE id = $1`
+	WHERE id = $1 AND is_deleted = false`
 
-	var c models.Client
-
+	var client models.Client
 	err := r.db.Pool.QueryRow(
 		context.Background(),
 		query,
 		id,
 	).Scan(
-		&c.ID,
-		&c.Email,
-		&c.Segment,
-		&c.ConsetnFlag,
-		&c.CreatedAt,
-		&c.UpdatedAt)
-
+		&client.ID,
+		&client.Email,
+		&client.Segment,
+		&client.ConsetnFlag,
+		&client.CreatedAt,
+		&client.UpdatedAt,
+		&client.IsDeleted,
+		&client.DeletedAt,
+		&client.DeletedBy,
+	)
 		if err != nil {
 			return nil, err
 		}
 
-		return &c, nil
+		return &client, nil
+}
+
+func (r *ClientRepository) GetByIDWithDeleted(id int64) (*models.Client, error) {
+    query := `
+        SELECT id, email, segment, consent_flag, created_at, updated_at, is_deleted, deleted_at, deleted_by
+				FROM clients
+        WHERE id = $1`
+
+    var client models.Client
+    err := r.db.Pool.QueryRow(
+		context.Background(),
+		query,
+		id,
+	).Scan(
+		&client.ID,
+		&client.Email,
+		&client.Segment,
+		&client.ConsetnFlag,
+		&client.CreatedAt,
+		&client.UpdatedAt,
+		&client.IsDeleted,
+		&client.DeletedAt,
+		&client.DeletedBy,
+	)
+		if err != nil {
+			return nil, err
+		}
+    return &client, nil
 }
 
 // Update обновляет данные клиента
@@ -118,7 +146,7 @@ func (r *ClientRepository) Update(client *models.Client) (*models.Client, error)
 	UPDATE clients
 	SET email = $1, segment = $2, consent_flag = $3, updated_at = NOW()
 	WHERE id = $4
-	RETURNING id, email, segment, consent_flag, created_at, updated_at`
+	RETURNING id, email, segment, consent_flag, created_at, updated_at, is_deleted, deleted_at, deleted_by`
 
 	err := r.db.Pool.QueryRow(
 		context.Background(),
@@ -134,6 +162,9 @@ func (r *ClientRepository) Update(client *models.Client) (*models.Client, error)
 		&client.ConsetnFlag,
 		&client.CreatedAt,
 		&client.UpdatedAt,
+		&client.IsDeleted,
+		&client.DeletedAt,
+		&client.DeletedBy,
 	)
 
 	if err != nil {
@@ -142,4 +173,63 @@ func (r *ClientRepository) Update(client *models.Client) (*models.Client, error)
 
 	return client, nil
 
+}
+
+func (r *ClientRepository) Archive(id int64, deletedBy int64) (*models.Client, error) {
+    query := `
+        UPDATE clients
+        SET is_deleted = true, deleted_at = NOW(), deleted_by = $1
+        WHERE id = $2 AND is_deleted = false
+        RETURNING id, email, segment, consent_flag, created_at, updated_at, is_deleted, deleted_at, deleted_by`
+
+    var client models.Client
+    err := r.db.Pool.QueryRow(
+        context.Background(),
+        query,
+        deletedBy,
+        id,
+    ).Scan(
+    		&client.ID,
+				&client.Email,
+				&client.Segment,
+				&client.ConsetnFlag,
+				&client.CreatedAt,
+				&client.UpdatedAt,
+				&client.IsDeleted,
+				&client.DeletedAt,
+				&client.DeletedBy,
+    )
+    if err != nil {
+        return nil, err
+    }
+    return &client, nil
+}
+
+func (r *ClientRepository) Restore(id int64) (*models.Client, error) {
+    query := `
+        UPDATE clients
+        SET is_deleted = false, deleted_at = NULL, deleted_by = NULL
+        WHERE id = $1 AND is_deleted = true
+        RETURNING id, email, segment, consent_flag, created_at, updated_at, is_deleted, deleted_at, deleted_by`
+
+    var client models.Client
+    err := r.db.Pool.QueryRow(
+        context.Background(),
+        query,
+        id,
+    ).Scan(
+        &client.ID,
+				&client.Email,
+				&client.Segment,
+				&client.ConsetnFlag,
+				&client.CreatedAt,
+				&client.UpdatedAt,
+				&client.IsDeleted,
+				&client.DeletedAt,
+				&client.DeletedBy,
+    )
+    if err != nil {
+        return nil, err
+    }
+    return &client, nil
 }

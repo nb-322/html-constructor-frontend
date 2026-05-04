@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"opd-backend/internal/dto"
 	"opd-backend/internal/services"
+	"opd-backend/internal/utils"
+
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -112,5 +114,88 @@ func (h *ClientHandler) UpdateClient(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"message": "клиент обновлён",
 		"client":  client,
+	})
+}
+
+// GetClientByID godoc
+// @Summary Получить клиента по ID
+// @Tags clients
+// @Produce json
+// @Param id path int true "ID клиента"
+// @Success 200 {object} dto.ClientResponse
+// @Router /api/clients/{id} [get]
+func (h *ClientHandler) GetClientByID(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid  id"})
+		return
+	}
+
+	client, err := h.service.GetClientByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "client not found"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"client": client,
+	})
+}
+
+// ArchiveClient godoc
+// @Summary Архивировать клиента
+// @Tags clients
+// @Produce json
+// @Param id path int true "ID клиента"
+// @Success 200 {object} dto.ArchiveClientResponse
+// @Router /api/clients/{id}/archive [patch]
+func (h *ClientHandler) ArchiveClient(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
+
+	userID, err := utils.GetUserID(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	client, err := h.service.ArchiveClient(id, userID)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "клиент архивирован",
+		"client": client,
+	})
+}
+
+// RestoreClient godoc
+// @Summary Восстановить клиента из архива
+// @Tags clients
+// @Produce json
+// @Param id path int true "ID клиента"
+// @Success 200 {object} dto.RestoreClientResponse
+// @Router /api/client/{id}/restore [patch]
+func (h *ClientHandler) RestoreClient(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
+
+	client, err := h.service.RestoreClient(id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "клиент восстановлен",
+		"client": client,
 	})
 }

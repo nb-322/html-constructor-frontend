@@ -117,7 +117,6 @@ func (h *CampaignHandler) UpdateStatus(c *gin.Context) {
 	})
 }
 
-// Добавить GetCampaignByID
 // GetCampaignByID godoc
 // @Summary Получить кампанию по ID
 // @Tags campaigns

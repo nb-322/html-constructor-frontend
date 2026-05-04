@@ -8,6 +8,14 @@ definitions:
         example: кампания архивирована
         type: string
     type: object
+  dto.ArchiveClientResponse:
+    properties:
+      client:
+        $ref: '#/definitions/dto.ClientResponse'
+      message:
+        example: клиент архивирован
+        type: string
+    type: object
   dto.ArchiveTemplateResponse:
     properties:
       message:
@@ -223,6 +231,14 @@ definitions:
         $ref: '#/definitions/dto.CampaignResponse'
       message:
         example: кампания восстановлена
+        type: string
+    type: object
+  dto.RestoreClientResponse:
+    properties:
+      client:
+        $ref: '#/definitions/dto.ClientResponse'
+      message:
+        example: клиент восстановлен
         type: string
     type: object
   dto.RestoreTemplateResponse:
@@ -460,6 +476,24 @@ paths:
       summary: Восстановить кампанию из архива
       tags:
       - campaigns
+  /api/client/{id}/restore:
+    patch:
+      parameters:
+      - description: ID клиента
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.RestoreClientResponse'
+      summary: Восстановить клиента из архива
+      tags:
+      - clients
   /api/clients:
     get:
       produces:
@@ -493,6 +527,23 @@ paths:
       tags:
       - clients
   /api/clients/{id}:
+    get:
+      parameters:
+      - description: ID клиента
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ClientResponse'
+      summary: Получить клиента по ID
+      tags:
+      - clients
     patch:
       consumes:
       - application/json
@@ -516,6 +567,24 @@ paths:
           schema:
             $ref: '#/definitions/dto.UpdateClientResponse'
       summary: Обновить клиента
+      tags:
+      - clients
+  /api/clients/{id}/archive:
+    patch:
+      parameters:
+      - description: ID клиента
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ArchiveClientResponse'
+      summary: Архивировать клиента
       tags:
       - clients
   /api/templates:

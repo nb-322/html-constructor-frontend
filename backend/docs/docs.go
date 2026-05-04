@@ -253,6 +253,34 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/client/{id}/restore": {
+            "patch": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "clients"
+                ],
+                "summary": "Восстановить клиента из архива",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID клиента",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.RestoreClientResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/clients": {
             "get": {
                 "produces": [
@@ -304,6 +332,32 @@ const docTemplate = `{
             }
         },
         "/api/clients/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "clients"
+                ],
+                "summary": "Получить клиента по ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID клиента",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ClientResponse"
+                        }
+                    }
+                }
+            },
             "patch": {
                 "consumes": [
                     "application/json"
@@ -338,6 +392,34 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/dto.UpdateClientResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/clients/{id}/archive": {
+            "patch": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "clients"
+                ],
+                "summary": "Архивировать клиента",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID клиента",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ArchiveClientResponse"
                         }
                     }
                 }
@@ -548,6 +630,18 @@ const docTemplate = `{
                 "message": {
                     "type": "string",
                     "example": "кампания архивирована"
+                }
+            }
+        },
+        "dto.ArchiveClientResponse": {
+            "type": "object",
+            "properties": {
+                "client": {
+                    "$ref": "#/definitions/dto.ClientResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "клиент архивирован"
                 }
             }
         },
@@ -860,6 +954,18 @@ const docTemplate = `{
                 "message": {
                     "type": "string",
                     "example": "кампания восстановлена"
+                }
+            }
+        },
+        "dto.RestoreClientResponse": {
+            "type": "object",
+            "properties": {
+                "client": {
+                    "$ref": "#/definitions/dto.ClientResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "клиент восстановлен"
                 }
             }
         },

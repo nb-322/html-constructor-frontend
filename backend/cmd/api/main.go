@@ -116,6 +116,9 @@ func main() {
 				clients.POST("", clientHandler.CreateClient)       // POST /api/clients
 				clients.GET("", clientHandler.GetAllClients)       // GET /api/clients
 				clients.PATCH("/:id", clientHandler.UpdateClient)		// PATCH /api/clients/:id
+				clients.GET("/:id", clientHandler.GetClientByID) // GET /api/clients/:id
+				clients.PATCH("/:id/archive", clientHandler.ArchiveClient) // PATCH /api/clients/:id/archive
+				clients.PATCH("/:id/restore", clientHandler.RestoreClient) // PATCH /api/clients/:id/restore
 			}
 
 			campaign := protected.Group("/campaigns")
@@ -123,6 +126,9 @@ func main() {
 				campaign.POST("", campaignHandler.CreateCampaign)       // POST /api/campaigns
 				campaign.GET("", campaignHandler.GetAllCampaigns)       // GET /api/campaigns
 				campaign.PATCH("/:id", campaignHandler.UpdateStatus)	// PATCH /api/campaigns/:id
+				campaign.GET("/:id", campaignHandler.GetCampaignByID) // GET /api/campaigns/:id
+				campaign.PATCH("/:id/archive", campaignHandler.ArchiveCampaign)	// PATCH /api/campaigns/:id/archive
+				campaign.PATCH("/:id/restore", campaignHandler.RestoreCampaign)	// PATCH /api/campaigns/:id/restore
 			}
 
 		}
