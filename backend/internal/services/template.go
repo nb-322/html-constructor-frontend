@@ -77,13 +77,13 @@ func (s *TemplateService) UpdateTemplate(
 
 // ArchiveTemplate архивирует шаблон
 func (s *TemplateService) ArchiveTemplate(id int64, userID int64) (*models.Template, error) {
-	template, err := s.repo.GetByID(id)
+	template, err := s.repo.GetByIDWithDeleted(id)
 	if err != nil {
 		return nil, err
 	}
 
 	if template.IsDeleted {
-		return nil, errors.New("шаблон уже архивирова")
+		return nil, errors.New("шаблон уже архивирован")
 	}
 
 	return s.repo.Archive(id, userID)

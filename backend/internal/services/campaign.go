@@ -46,9 +46,9 @@ func (s *CampaignService) GetCampaignByID(id int64) (*models.Campaign, error) {
 
 // ArchiveCampaign архивирует кампанию
 func (s *CampaignService) ArchiveCampaign(id int64, userID int64) (*models.Campaign, error) {
-    campaign, err := s.repo.GetByID(id)
+    campaign, err := s.repo.GetByIDWithDeleted(id)
     if err != nil {
-        return nil, errors.New("компания не найдена")
+        return nil, errors.New("кампания не найдена")
     }
 
     if campaign.IsDeleted {

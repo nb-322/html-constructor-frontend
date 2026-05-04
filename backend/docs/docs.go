@@ -253,34 +253,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/client/{id}/restore": {
-            "patch": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "clients"
-                ],
-                "summary": "Восстановить клиента из архива",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "ID клиента",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.RestoreClientResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/api/clients": {
             "get": {
                 "produces": [
@@ -420,6 +392,34 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/dto.ArchiveClientResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/clients/{id}/restore": {
+            "patch": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "clients"
+                ],
+                "summary": "Восстановить клиента из архива",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID клиента",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.RestoreClientResponse"
                         }
                     }
                 }

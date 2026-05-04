@@ -164,7 +164,7 @@ func (h *CampaignHandler) ArchiveCampaign(c *gin.Context) {
 
     campaign, err := h.service.ArchiveCampaign(id, userID)
     if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
         return
     }
 
@@ -190,7 +190,7 @@ func (h *CampaignHandler) RestoreCampaign(c *gin.Context) {
 
     campaign, err := h.service.RestoreCampaign(id)
     if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
         return
     }
 

@@ -28,7 +28,7 @@ func (s *ClientService) CreateClient(email, segment string, consentFlag bool) (*
 	client := &models.Client{
 		Email: 			       email,
 		Segment:       segment,
-		ConsetnFlag: consentFlag,
+		ConsentFlag: consentFlag,
 	}
 
 	return s.repo.Create(client)
@@ -57,7 +57,7 @@ func (s *ClientService) UpdateClient(id int64, req dto.UpdateClientRequest) (*mo
 		client.Segment = *req.Segment
 	}
 	if req.ConsentFlag != nil {
-		client.ConsetnFlag = *req.ConsentFlag
+		client.ConsentFlag = *req.ConsentFlag
 	}
 
 	return s.repo.Update(client)
@@ -65,7 +65,7 @@ func (s *ClientService) UpdateClient(id int64, req dto.UpdateClientRequest) (*mo
 
 // ArchiveClient архивирует кампанию
 func (s *ClientService) ArchiveClient(id int64, userID int64) (*models.Client, error) {
-	client, err := s.repo.GetByID(id)
+	client, err := s.repo.GetByIDWithDeleted(id)
 	if err != nil {
 		return nil, errors.New("клиент не найден")
 	}

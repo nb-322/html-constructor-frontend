@@ -6,7 +6,7 @@ type Client struct {
 	ID                  int64         `json:"id" db:"id"`
 	Email             string        `json:"email" db:"email"`
 	Segment       string        `json:"segment" db:"segment"`
-	ConsetnFlag bool         `json:"consent_flag" db:"consent_flag"`
+	ConsentFlag bool         `json:"consent_flag" db:"consent_flag"`
 	CreatedAt     time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt    time.Time `json:"updated_at" db:"updated_at"`
 	IsDeleted bool     `json:"is_deleted" db:"is_deleted"`

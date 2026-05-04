@@ -476,24 +476,6 @@ paths:
       summary: Восстановить кампанию из архива
       tags:
       - campaigns
-  /api/client/{id}/restore:
-    patch:
-      parameters:
-      - description: ID клиента
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.RestoreClientResponse'
-      summary: Восстановить клиента из архива
-      tags:
-      - clients
   /api/clients:
     get:
       produces:
@@ -585,6 +567,24 @@ paths:
           schema:
             $ref: '#/definitions/dto.ArchiveClientResponse'
       summary: Архивировать клиента
+      tags:
+      - clients
+  /api/clients/{id}/restore:
+    patch:
+      parameters:
+      - description: ID клиента
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.RestoreClientResponse'
+      summary: Восстановить клиента из архива
       tags:
       - clients
   /api/templates:

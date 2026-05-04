@@ -164,7 +164,7 @@ func (h *ClientHandler) ArchiveClient(c *gin.Context) {
 
 	client, err := h.service.ArchiveClient(id, userID)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 		return
 	}
 
@@ -180,7 +180,7 @@ func (h *ClientHandler) ArchiveClient(c *gin.Context) {
 // @Produce json
 // @Param id path int true "ID клиента"
 // @Success 200 {object} dto.RestoreClientResponse
-// @Router /api/client/{id}/restore [patch]
+// @Router /api/clients/{id}/restore [patch]
 func (h *ClientHandler) RestoreClient(c *gin.Context) {
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
@@ -190,7 +190,7 @@ func (h *ClientHandler) RestoreClient(c *gin.Context) {
 
 	client, err := h.service.RestoreClient(id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 		return
 	}
 

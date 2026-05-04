@@ -187,7 +187,7 @@ func (h *TemplateHandler) ArchiveTemplate(c *gin.Context) {
 
     template, err := h.service.ArchiveTemplate(id, userID)
     if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
         return
     }
 
@@ -213,7 +213,7 @@ func (h *TemplateHandler) RestoreTemplate(c *gin.Context) {
 
     template, err := h.service.RestoreTemplate(id)
     if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
         return
     }
 
