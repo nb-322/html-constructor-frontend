@@ -1,0 +1,202 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 820" width="1500" height="820" font-family="Segoe UI, system-ui, sans-serif">
+  <defs>
+    <!-- Crow's foot markers -->
+    <marker id="one" markerWidth="22" markerHeight="14" refX="20" refY="7" orient="auto">
+      <line x1="14" y1="0" x2="14" y2="14" stroke="#ffb74d" stroke-width="2"/>
+      <line x1="20" y1="0" x2="20" y2="14" stroke="#ffb74d" stroke-width="2"/>
+    </marker>
+    <marker id="many" markerWidth="22" markerHeight="14" refX="20" refY="7" orient="auto">
+      <line x1="20" y1="7" x2="6" y2="0" stroke="#ffb74d" stroke-width="2"/>
+      <line x1="20" y1="7" x2="6" y2="7" stroke="#ffb74d" stroke-width="2"/>
+      <line x1="20" y1="7" x2="6" y2="14" stroke="#ffb74d" stroke-width="2"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1500" height="820" fill="#1f2128"/>
+
+  <!-- Title -->
+  <text x="750" y="34" text-anchor="middle" fill="#ffffff" font-size="20" font-weight="800">ER-диаграмма «Конструктор HTML-рассылок (демо)» · PostgreSQL</text>
+  <text x="750" y="56" text-anchor="middle" fill="#9aa3ad" font-size="12">Кейс 13 · Команда 12-40_team2_Kuznetsov · Версия 1.1 · 6 таблиц</text>
+
+  <!-- ========== TABLES ========== -->
+
+  <!-- clients (top-left) -->
+  <g>
+    <rect x="60" y="120" width="260" height="200" rx="6" fill="#2a2d36" stroke="#3a99ff" stroke-width="2"/>
+    <rect x="60" y="120" width="260" height="30" rx="6" fill="#3a99ff"/>
+    <text x="78" y="141" fill="#fff" font-size="14" font-weight="700">clients</text>
+    <text x="78" y="170" fill="#ff9a3a" font-size="11" font-weight="700">🔑 id</text>
+    <text x="300" y="170" fill="#9aa3ad" font-size="11" text-anchor="end">INTEGER</text>
+    <text x="78" y="190" fill="#fff" font-size="11">email</text>
+    <text x="300" y="190" fill="#ff9a3a" font-size="11" text-anchor="end">VARCHAR(255)</text>
+    <text x="78" y="210" fill="#fff" font-size="11">segment</text>
+    <text x="300" y="210" fill="#ff9a3a" font-size="11" text-anchor="end">VARCHAR(50)</text>
+    <text x="78" y="230" fill="#fff" font-size="11">consent_flag</text>
+    <text x="300" y="230" fill="#bb86fc" font-size="11" text-anchor="end">BOOLEAN</text>
+    <text x="78" y="250" fill="#fff" font-size="11">created_at</text>
+    <text x="300" y="250" fill="#3a99ff" font-size="11" text-anchor="end">TIMESTAMP</text>
+    <text x="78" y="270" fill="#fff" font-size="11">updated_at</text>
+    <text x="300" y="270" fill="#3a99ff" font-size="11" text-anchor="end">TIMESTAMP</text>
+    <text x="78" y="295" fill="#666" font-size="10" font-style="italic">PK: id · UNIQUE(email)</text>
+  </g>
+
+  <!-- campaigns (top-center-right) -->
+  <g>
+    <rect x="610" y="120" width="280" height="220" rx="6" fill="#2a2d36" stroke="#3a99ff" stroke-width="2"/>
+    <rect x="610" y="120" width="280" height="30" rx="6" fill="#3a99ff"/>
+    <text x="628" y="141" fill="#fff" font-size="14" font-weight="700">campaigns</text>
+    <text x="628" y="170" fill="#ff9a3a" font-size="11" font-weight="700">🔑 id</text>
+    <text x="870" y="170" fill="#9aa3ad" font-size="11" text-anchor="end">INTEGER</text>
+    <text x="628" y="190" fill="#80cbc4" font-size="11">⇨ tpl_id</text>
+    <text x="870" y="190" fill="#9aa3ad" font-size="11" text-anchor="end">INTEGER  FK</text>
+    <text x="628" y="210" fill="#fff" font-size="11">segment</text>
+    <text x="870" y="210" fill="#ff9a3a" font-size="11" text-anchor="end">VARCHAR(50)</text>
+    <text x="628" y="230" fill="#fff" font-size="11">scheduled_at</text>
+    <text x="870" y="230" fill="#3a99ff" font-size="11" text-anchor="end">TIMESTAMP</text>
+    <text x="628" y="250" fill="#fff" font-size="11">status</text>
+    <text x="870" y="250" fill="#ff9a3a" font-size="11" text-anchor="end">VARCHAR(20)</text>
+    <text x="628" y="270" fill="#fff" font-size="11">created_at</text>
+    <text x="870" y="270" fill="#3a99ff" font-size="11" text-anchor="end">TIMESTAMP</text>
+    <text x="628" y="290" fill="#80cbc4" font-size="11">⇨ created_by</text>
+    <text x="870" y="290" fill="#9aa3ad" font-size="11" text-anchor="end">INTEGER  FK</text>
+    <text x="628" y="315" fill="#666" font-size="10" font-style="italic">PK: id · FK: tpl_id→templates, created_by→users</text>
+  </g>
+
+  <!-- templates (top-right) -->
+  <g>
+    <rect x="1180" y="120" width="280" height="220" rx="6" fill="#2a2d36" stroke="#3a99ff" stroke-width="2"/>
+    <rect x="1180" y="120" width="280" height="30" rx="6" fill="#3a99ff"/>
+    <text x="1198" y="141" fill="#fff" font-size="14" font-weight="700">templates</text>
+    <text x="1198" y="170" fill="#ff9a3a" font-size="11" font-weight="700">🔑 id</text>
+    <text x="1440" y="170" fill="#9aa3ad" font-size="11" text-anchor="end">INTEGER</text>
+    <text x="1198" y="190" fill="#fff" font-size="11">name</text>
+    <text x="1440" y="190" fill="#ff9a3a" font-size="11" text-anchor="end">VARCHAR(255)</text>
+    <text x="1198" y="210" fill="#fff" font-size="11">html_body</text>
+    <text x="1440" y="210" fill="#ef5350" font-size="11" text-anchor="end">TEXT</text>
+    <text x="1198" y="230" fill="#fff" font-size="11">created_at</text>
+    <text x="1440" y="230" fill="#3a99ff" font-size="11" text-anchor="end">TIMESTAMP</text>
+    <text x="1198" y="250" fill="#fff" font-size="11">updated_at</text>
+    <text x="1440" y="250" fill="#3a99ff" font-size="11" text-anchor="end">TIMESTAMP</text>
+    <text x="1198" y="270" fill="#80cbc4" font-size="11">⇨ created_by</text>
+    <text x="1440" y="270" fill="#9aa3ad" font-size="11" text-anchor="end">INTEGER  FK</text>
+    <text x="1198" y="290" fill="#80cbc4" font-size="11">⇨ updated_by</text>
+    <text x="1440" y="290" fill="#9aa3ad" font-size="11" text-anchor="end">INTEGER  FK</text>
+    <text x="1198" y="315" fill="#666" font-size="10" font-style="italic">PK: id · FK: created_by/updated_by→users</text>
+  </g>
+
+  <!-- delivery_log (bottom-left) -->
+  <g>
+    <rect x="60" y="500" width="260" height="240" rx="6" fill="#2a2d36" stroke="#3a99ff" stroke-width="2"/>
+    <rect x="60" y="500" width="260" height="30" rx="6" fill="#3a99ff"/>
+    <text x="78" y="521" fill="#fff" font-size="14" font-weight="700">delivery_log</text>
+    <text x="78" y="550" fill="#ff9a3a" font-size="11" font-weight="700">🔑 id</text>
+    <text x="300" y="550" fill="#9aa3ad" font-size="11" text-anchor="end">BIGINT</text>
+    <text x="78" y="570" fill="#80cbc4" font-size="11">⇨ camp_id</text>
+    <text x="300" y="570" fill="#9aa3ad" font-size="11" text-anchor="end">INTEGER  FK</text>
+    <text x="78" y="590" fill="#80cbc4" font-size="11">⇨ client_id</text>
+    <text x="300" y="590" fill="#9aa3ad" font-size="11" text-anchor="end">INTEGER  FK</text>
+    <text x="78" y="610" fill="#fff" font-size="11">status</text>
+    <text x="300" y="610" fill="#ff9a3a" font-size="11" text-anchor="end">VARCHAR(20)</text>
+    <text x="78" y="630" fill="#fff" font-size="11">ts</text>
+    <text x="300" y="630" fill="#3a99ff" font-size="11" text-anchor="end">TIMESTAMP</text>
+    <text x="78" y="650" fill="#fff" font-size="11">error</text>
+    <text x="300" y="650" fill="#ef5350" font-size="11" text-anchor="end">TEXT</text>
+    <text x="78" y="670" fill="#fff" font-size="11">request_id</text>
+    <text x="300" y="670" fill="#ff9a3a" font-size="11" text-anchor="end">VARCHAR(255)</text>
+    <text x="78" y="690" fill="#fff" font-size="11">attempt</text>
+    <text x="300" y="690" fill="#9aa3ad" font-size="11" text-anchor="end">SMALLINT</text>
+    <text x="78" y="715" fill="#666" font-size="10" font-style="italic">PK: id · UNIQUE(request_id)</text>
+  </g>
+
+  <!-- users (bottom-center) -->
+  <g>
+    <rect x="610" y="500" width="280" height="180" rx="6" fill="#2a2d36" stroke="#3a99ff" stroke-width="2"/>
+    <rect x="610" y="500" width="280" height="30" rx="6" fill="#3a99ff"/>
+    <text x="628" y="521" fill="#fff" font-size="14" font-weight="700">users</text>
+    <text x="628" y="550" fill="#ff9a3a" font-size="11" font-weight="700">🔑 id</text>
+    <text x="870" y="550" fill="#9aa3ad" font-size="11" text-anchor="end">INTEGER</text>
+    <text x="628" y="570" fill="#fff" font-size="11">login</text>
+    <text x="870" y="570" fill="#ff9a3a" font-size="11" text-anchor="end">VARCHAR(100)</text>
+    <text x="628" y="590" fill="#fff" font-size="11">role</text>
+    <text x="870" y="590" fill="#ff9a3a" font-size="11" text-anchor="end">VARCHAR(20)</text>
+    <text x="628" y="610" fill="#fff" font-size="11">full_name</text>
+    <text x="870" y="610" fill="#ff9a3a" font-size="11" text-anchor="end">VARCHAR(255)</text>
+    <text x="628" y="630" fill="#fff" font-size="11">created_at</text>
+    <text x="870" y="630" fill="#3a99ff" font-size="11" text-anchor="end">TIMESTAMP</text>
+    <text x="628" y="655" fill="#666" font-size="10" font-style="italic">PK: id · UNIQUE(login) · role ∈ {marketer, analyst, admin}</text>
+  </g>
+
+  <!-- template_changes_log (bottom-right) -->
+  <g>
+    <rect x="1180" y="500" width="280" height="220" rx="6" fill="#2a2d36" stroke="#3a99ff" stroke-width="2"/>
+    <rect x="1180" y="500" width="280" height="30" rx="6" fill="#3a99ff"/>
+    <text x="1198" y="521" fill="#fff" font-size="14" font-weight="700">template_changes_log</text>
+    <text x="1198" y="550" fill="#ff9a3a" font-size="11" font-weight="700">🔑 id</text>
+    <text x="1440" y="550" fill="#9aa3ad" font-size="11" text-anchor="end">BIGINT</text>
+    <text x="1198" y="570" fill="#80cbc4" font-size="11">⇨ tpl_id</text>
+    <text x="1440" y="570" fill="#9aa3ad" font-size="11" text-anchor="end">INTEGER  FK</text>
+    <text x="1198" y="590" fill="#fff" font-size="11">old_html</text>
+    <text x="1440" y="590" fill="#ef5350" font-size="11" text-anchor="end">TEXT</text>
+    <text x="1198" y="610" fill="#fff" font-size="11">new_html</text>
+    <text x="1440" y="610" fill="#ef5350" font-size="11" text-anchor="end">TEXT</text>
+    <text x="1198" y="630" fill="#80cbc4" font-size="11">⇨ changed_by</text>
+    <text x="1440" y="630" fill="#9aa3ad" font-size="11" text-anchor="end">INTEGER  FK</text>
+    <text x="1198" y="650" fill="#fff" font-size="11">changed_at</text>
+    <text x="1440" y="650" fill="#3a99ff" font-size="11" text-anchor="end">TIMESTAMP</text>
+    <text x="1198" y="690" fill="#666" font-size="10" font-style="italic">PK: id · FK: tpl_id→templates, changed_by→users</text>
+  </g>
+
+  <!-- ========== RELATIONS (orthogonal routing through corridors) ========== -->
+  <!-- All paths run through clean horizontal/vertical corridors at y=400 (middle) -->
+
+  <!-- R1: clients (1) — (n) delivery_log : client_id  (vertical, left side) -->
+  <path d="M 190 320 L 190 500" fill="none" stroke="#ffb74d" stroke-width="2"/>
+  <circle cx="190" cy="320" r="8" fill="#ffb74d"/><text x="190" y="324" text-anchor="middle" font-size="10" font-weight="700">1</text>
+  <circle cx="190" cy="500" r="8" fill="#ffb74d"/><text x="190" y="504" text-anchor="middle" font-size="10" font-weight="700">n</text>
+  <text x="200" y="415" fill="#ffb74d" font-size="11" font-weight="600">R1 · 1:n</text>
+
+  <!-- R2: campaigns (1) — (n) delivery_log : camp_id  (right-down-left, through middle corridor) -->
+  <path d="M 660 340 L 660 410 L 250 410 L 250 500" fill="none" stroke="#ffb74d" stroke-width="2"/>
+  <circle cx="660" cy="340" r="8" fill="#ffb74d"/><text x="660" y="344" text-anchor="middle" font-size="10" font-weight="700">1</text>
+  <circle cx="250" cy="500" r="8" fill="#ffb74d"/><text x="250" y="504" text-anchor="middle" font-size="10" font-weight="700">n</text>
+  <text x="450" y="402" fill="#ffb74d" font-size="11" font-weight="600">R2 · 1:n</text>
+
+  <!-- R3: templates (1) — (n) campaigns : tpl_id  (top corridor, between top tables) -->
+  <path d="M 1180 230 L 890 230" fill="none" stroke="#ffb74d" stroke-width="2"/>
+  <circle cx="1180" cy="230" r="8" fill="#ffb74d"/><text x="1180" y="234" text-anchor="middle" font-size="10" font-weight="700">1</text>
+  <circle cx="890" cy="230" r="8" fill="#ffb74d"/><text x="890" y="234" text-anchor="middle" font-size="10" font-weight="700">n</text>
+  <text x="1020" y="222" fill="#ffb74d" font-size="11" font-weight="600">R3 · 1:n</text>
+
+  <!-- R4: templates (1) — (n) template_changes_log : tpl_id (right vertical) -->
+  <path d="M 1380 340 L 1380 500" fill="none" stroke="#ffb74d" stroke-width="2"/>
+  <circle cx="1380" cy="340" r="8" fill="#ffb74d"/><text x="1380" y="344" text-anchor="middle" font-size="10" font-weight="700">1</text>
+  <circle cx="1380" cy="500" r="8" fill="#ffb74d"/><text x="1380" y="504" text-anchor="middle" font-size="10" font-weight="700">n</text>
+  <text x="1390" y="415" fill="#ffb74d" font-size="11" font-weight="600">R4 · 1:n</text>
+
+  <!-- R5: users (1) — (n) campaigns : created_by (vertical center) -->
+  <path d="M 750 500 L 750 340" fill="none" stroke="#ffb74d" stroke-width="2"/>
+  <circle cx="750" cy="500" r="8" fill="#ffb74d"/><text x="750" y="504" text-anchor="middle" font-size="10" font-weight="700">1</text>
+  <circle cx="750" cy="340" r="8" fill="#ffb74d"/><text x="750" y="344" text-anchor="middle" font-size="10" font-weight="700">n</text>
+  <text x="755" y="425" fill="#ffb74d" font-size="11" font-weight="600">R5 · 1:n</text>
+
+  <!-- R6: users (1) — (n) templates : created_by/updated_by (right corridor) -->
+  <path d="M 890 590 L 1100 590 L 1100 340 L 1180 340" fill="none" stroke="#ffb74d" stroke-width="2"/>
+  <circle cx="890" cy="590" r="8" fill="#ffb74d"/><text x="890" y="594" text-anchor="middle" font-size="10" font-weight="700">1</text>
+  <circle cx="1180" cy="340" r="8" fill="#ffb74d"/><text x="1180" y="344" text-anchor="middle" font-size="10" font-weight="700">n</text>
+  <text x="1110" y="455" fill="#ffb74d" font-size="11" font-weight="600">R6 · 1:n</text>
+
+  <!-- R7: users (1) — (n) template_changes_log : changed_by -->
+  <path d="M 890 630 L 1180 630" fill="none" stroke="#ffb74d" stroke-width="2"/>
+  <circle cx="890" cy="630" r="8" fill="#ffb74d"/><text x="890" y="634" text-anchor="middle" font-size="10" font-weight="700">1</text>
+  <circle cx="1180" cy="630" r="8" fill="#ffb74d"/><text x="1180" y="634" text-anchor="middle" font-size="10" font-weight="700">n</text>
+  <text x="1020" y="622" fill="#ffb74d" font-size="11" font-weight="600">R7 · 1:n</text>
+
+  <!-- ========== Legend (bottom) ========== -->
+  <g transform="translate(60, 770)">
+    <text x="0" y="0" fill="#9aa3ad" font-size="11" font-weight="700">Связи (FK):</text>
+    <text x="100" y="0" fill="#9aa3ad" font-size="11">R1 clients→delivery_log · R2 campaigns→delivery_log · R3 templates→campaigns · R4 templates→template_changes_log · R5 users→campaigns · R6 users→templates · R7 users→template_changes_log</text>
+    <text x="0" y="22" fill="#9aa3ad" font-size="11">Хранилище: PostgreSQL (master). 1С использует данные только для отчётов (read-only). Поле <tspan font-weight="700">segment</tspan> — VARCHAR на clients/campaigns, не отдельная таблица.</text>
+  </g>
+</svg>
