@@ -11,6 +11,6 @@ type Campaign struct {
 	CreatedAt 	time.Time `json:"created_at" db:"created_at"`
 	CreatedBy 	int64     `json:"created_by" db:"created_by"`
 	IsDeleted bool     `json:"is_deleted" db:"is_deleted"`
-  DeletedAt time.Time `json:"deleted_at" db:"deleted_at"`
-  DeletedBy int64     `json:"deleted_by" db:"deleted_by"`
+  DeletedAt *time.Time `json:"deleted_at" db:"deleted_at"`
+  DeletedBy *int64     `json:"deleted_by" db:"deleted_by"`
 }

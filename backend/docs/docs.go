@@ -132,6 +132,32 @@ const docTemplate = `{
             }
         },
         "/api/campaigns/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "campaigns"
+                ],
+                "summary": "Получить кампанию по ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID кампании",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CampaignResponse"
+                        }
+                    }
+                }
+            },
             "patch": {
                 "consumes": [
                     "application/json"
@@ -166,6 +192,62 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/dto.CampaignResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/campaigns/{id}/archive": {
+            "patch": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "campaigns"
+                ],
+                "summary": "Архивировать кампанию",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID кампании",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ArchiveCampaignResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/campaigns/{id}/restore": {
+            "patch": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "campaigns"
+                ],
+                "summary": "Восстановить кампанию из архива",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID кампании",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.RestoreCampaignResponse"
                         }
                     }
                 }
@@ -457,6 +539,18 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.ArchiveCampaignResponse": {
+            "type": "object",
+            "properties": {
+                "campaign": {
+                    "$ref": "#/definitions/dto.CampaignResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "кампания архивирована"
+                }
+            }
+        },
         "dto.ArchiveTemplateResponse": {
             "type": "object",
             "properties": {
@@ -494,7 +588,7 @@ const docTemplate = `{
                 },
                 "status": {
                     "type": "string",
-                    "example": "active"
+                    "example": "scheduled"
                 },
                 "tpl_id": {
                     "type": "integer",
@@ -534,16 +628,11 @@ const docTemplate = `{
         "dto.CreateCampaignRequest": {
             "type": "object",
             "required": [
-                "created_by",
                 "scheduled_at",
                 "segment",
                 "tpl_id"
             ],
             "properties": {
-                "created_by": {
-                    "type": "integer",
-                    "example": 2
-                },
                 "scheduled_at": {
                     "type": "string",
                     "example": "2023-10-10T10:00:00Z"
@@ -762,6 +851,18 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.RestoreCampaignResponse": {
+            "type": "object",
+            "properties": {
+                "campaign": {
+                    "$ref": "#/definitions/dto.CampaignResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "кампания восстановлена"
+                }
+            }
+        },
         "dto.RestoreTemplateResponse": {
             "type": "object",
             "properties": {
@@ -809,10 +910,13 @@ const docTemplate = `{
         },
         "dto.UpdateCampaignRequest": {
             "type": "object",
+            "required": [
+                "status"
+            ],
             "properties": {
                 "status": {
                     "type": "string",
-                    "example": "active"
+                    "example": "scheduled"
                 }
             }
         },

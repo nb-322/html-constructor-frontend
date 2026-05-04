@@ -1,5 +1,13 @@
 basePath: /
 definitions:
+  dto.ArchiveCampaignResponse:
+    properties:
+      campaign:
+        $ref: '#/definitions/dto.CampaignResponse'
+      message:
+        example: кампания архивирована
+        type: string
+    type: object
   dto.ArchiveTemplateResponse:
     properties:
       message:
@@ -26,7 +34,7 @@ definitions:
         example: sport
         type: string
       status:
-        example: active
+        example: scheduled
         type: string
       tpl_id:
         example: 1
@@ -55,9 +63,6 @@ definitions:
     type: object
   dto.CreateCampaignRequest:
     properties:
-      created_by:
-        example: 2
-        type: integer
       scheduled_at:
         example: "2023-10-10T10:00:00Z"
         type: string
@@ -68,7 +73,6 @@ definitions:
         example: 1
         type: integer
     required:
-    - created_by
     - scheduled_at
     - segment
     - tpl_id
@@ -213,6 +217,14 @@ definitions:
         example: 1
         type: integer
     type: object
+  dto.RestoreCampaignResponse:
+    properties:
+      campaign:
+        $ref: '#/definitions/dto.CampaignResponse'
+      message:
+        example: кампания восстановлена
+        type: string
+    type: object
   dto.RestoreTemplateResponse:
     properties:
       message:
@@ -248,8 +260,10 @@ definitions:
   dto.UpdateCampaignRequest:
     properties:
       status:
-        example: active
+        example: scheduled
         type: string
+    required:
+    - status
     type: object
   dto.UpdateClientRequest:
     properties:
@@ -368,6 +382,23 @@ paths:
       tags:
       - campaigns
   /api/campaigns/{id}:
+    get:
+      parameters:
+      - description: ID кампании
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.CampaignResponse'
+      summary: Получить кампанию по ID
+      tags:
+      - campaigns
     patch:
       consumes:
       - application/json
@@ -391,6 +422,42 @@ paths:
           schema:
             $ref: '#/definitions/dto.CampaignResponse'
       summary: Обновить статус кампании
+      tags:
+      - campaigns
+  /api/campaigns/{id}/archive:
+    patch:
+      parameters:
+      - description: ID кампании
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ArchiveCampaignResponse'
+      summary: Архивировать кампанию
+      tags:
+      - campaigns
+  /api/campaigns/{id}/restore:
+    patch:
+      parameters:
+      - description: ID кампании
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.RestoreCampaignResponse'
+      summary: Восстановить кампанию из архива
       tags:
       - campaigns
   /api/clients:
