@@ -19,7 +19,13 @@ CREATE TABLE IF NOT EXISTS campaigns (
     
     CONSTRAINT fk_campaigns_users
       FOREIGN KEY (created_by) 
-        REFERENCES users(id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
+      REFERENCES users(id)
+      ON DELETE CASCADE
+      ON UPDATE CASCADE,
+    
+    CONSTRAINT fk_campaigns_segment
+      FOREIGN KEY (segment)
+      REFERENCES segments(name)
+      ON DELETE RESTRICT
+      ON UPDATE RESTRICT
 );
