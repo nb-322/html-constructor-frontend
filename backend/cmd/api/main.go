@@ -64,6 +64,7 @@ func main() {
 	templateHandler := handlers.NewTemplateHandler(templateService)
 	clientHandler := handlers.NewClientHandler(clientService)
 	campaignHandler := handlers.NewCampaignHandler(campaignService)
+	userHandler := handlers.NewUserHandler(userService)
 
 	// 6. Настраиваем роутер Gin
 	r := gin.Default()
@@ -90,7 +91,6 @@ func main() {
 		// Публичные маршруты (без авторизации)
 		auth := api.Group("/auth")
 		{
-			auth.POST("/register", authHandler.Register)   // POST /api/auth/register
 			auth.POST("/login", authHandler.Login)         // POST /api/auth/login
 		}
 
@@ -123,15 +123,25 @@ func main() {
 				clients.GET("/archive", clientHandler.GetAllDeeltedClients) // GET /api/clients/archive
 			}
 
-			campaign := protected.Group("/campaigns")
+			campaigns := protected.Group("/campaigns")
 			{
-				campaign.POST("", campaignHandler.CreateCampaign)       // POST /api/campaigns
-				campaign.GET("", campaignHandler.GetAllCampaigns)       // GET /api/campaigns
-				campaign.PATCH("/:id", campaignHandler.UpdateStatus)	// PATCH /api/campaigns/:id
-				campaign.GET("/:id", campaignHandler.GetCampaignByID) // GET /api/campaigns/:id
-				campaign.PATCH("/:id/archive", campaignHandler.ArchiveCampaign)	// PATCH /api/campaigns/:id/archive
-				campaign.PATCH("/:id/restore", campaignHandler.RestoreCampaign)	// PATCH /api/campaigns/:id/restore
-				campaign.GET("/archive", campaignHandler.GetAllDeletedCampaigns) // GET /api/campaign/archive
+				campaigns.POST("", campaignHandler.CreateCampaign)       // POST /api/campaigns
+				campaigns.GET("", campaignHandler.GetAllCampaigns)       // GET /api/campaigns
+				campaigns.PATCH("/:id", campaignHandler.UpdateStatus)	// PATCH /api/campaigns/:id
+				campaigns.GET("/:id", campaignHandler.GetCampaignByID) // GET /api/campaigns/:id
+				campaigns.PATCH("/:id/archive", campaignHandler.ArchiveCampaign)	// PATCH /api/campaigns/:id/archive
+				campaigns.PATCH("/:id/restore", campaignHandler.RestoreCampaign)	// PATCH /api/campaigns/:id/restore
+				campaigns.GET("/archive", campaignHandler.GetAllDeletedCampaigns) // GET /api/campaign/archive
+			}
+
+			users := protected.Group("/users")
+			{
+				users.POST("/register", userHandler.Register)   // POST /api/users/register
+				users.GET("", userHandler.GetAllUsers) // GET /api/users
+				users.PATCH(":id", userHandler.UpdateUser) // PATCH /api/users/:id
+				users.PATCH("/:id/archive", userHandler.ArchiveUser)	// PATCH /api/users/:id/archive
+				users.PATCH("/:id/restore", userHandler.RestoreUser)	// PATCH /api/users/:id/restore
+				users.GET("/archive", userHandler.GetAllDeletedUsers) // GET /api/users/archive
 			}
 
 		}

@@ -16,35 +16,6 @@ func NewAuthHandler(service *services.UserService) *AuthHandler {
     return &AuthHandler{service: service}
 }
 
-// Register godoc
-// @Summary Регистрация пользователя
-// @Tags auth
-// @Accept json
-// @Produce json
-// @Param input body dto.RegisterRequest true "Данные регистрации"
-// @Success 200 {object} dto.RegisterResponse
-// @Router /api/auth/register [post]
-func (h *AuthHandler) Register(c *gin.Context) {
-    var req dto.RegisterRequest
-    if err := c.ShouldBindJSON(&req); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
-
-    user, err := h.service.Register(req.Login, req.Password, req.Role)
-    if err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
-
-    c.JSON(http.StatusCreated, gin.H{
-        "message": "пользователь создан",
-        "user_id": user.ID,
-        "login":   user.Login,
-        "role":    user.Role,
-    })
-}
-
 // Login godoc
 // @Summary Логин
 // @Tags auth

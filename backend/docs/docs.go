@@ -48,39 +48,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/auth/register": {
-            "post": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Регистрация пользователя",
-                "parameters": [
-                    {
-                        "description": "Данные регистрации",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.RegisterRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.RegisterResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/api/campaigns": {
             "get": {
                 "produces": [
@@ -675,6 +642,176 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/users": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Получить всех не архивированных пользователей",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetAllUsersResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/archive": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Получить всех архивированных пользователей",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetAllUsersResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/register": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Регистрация пользователя",
+                "parameters": [
+                    {
+                        "description": "Данные регистрации",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.RegisterRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.RegisterResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/{id}": {
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Обновить пользователя",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Данные пользователя",
+                        "name": "user",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateUserResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/{id}/archive": {
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Архивировать пользователя",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ArchiveUserResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/{id}/restore": {
+            "patch": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "users"
+                ],
+                "summary": "Восстановить пользователя из архива",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID пользователя",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.RestoreUserResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -711,6 +848,18 @@ const docTemplate = `{
                 },
                 "template": {
                     "$ref": "#/definitions/dto.TemplateResponse"
+                }
+            }
+        },
+        "dto.ArchiveUserResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "пользователь архивирован"
+                },
+                "user": {
+                    "$ref": "#/definitions/dto.UserResponse"
                 }
             }
         },
@@ -929,6 +1078,17 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.GetAllUsersResponse": {
+            "type": "object",
+            "properties": {
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.UserResponse"
+                    }
+                }
+            }
+        },
         "dto.GetTemplateByIDResponse": {
             "type": "object",
             "properties": {
@@ -1062,6 +1222,18 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.RestoreUserResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "пользователь восстановлен"
+                },
+                "user": {
+                    "$ref": "#/definitions/dto.UserResponse"
+                }
+            }
+        },
         "dto.TemplateResponse": {
             "type": "object",
             "properties": {
@@ -1168,6 +1340,62 @@ const docTemplate = `{
                 },
                 "template": {
                     "$ref": "#/definitions/dto.TemplateResponse"
+                }
+            }
+        },
+        "dto.UpdateUserRequest": {
+            "type": "object",
+            "properties": {
+                "login": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UpdateUserResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "пользователь обновлён"
+                },
+                "user": {
+                    "$ref": "#/definitions/dto.UserResponse"
+                }
+            }
+        },
+        "dto.UserResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string",
+                    "example": "2024-06-01T12:00:00Z"
+                },
+                "deleted_at": {
+                    "type": "string",
+                    "example": "2024-06-01T12:00:00Z"
+                },
+                "deleted_by": {
+                    "type": "integer",
+                    "example": 2
+                },
+                "id": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "is_deleted": {
+                    "type": "boolean",
+                    "example": false
+                },
+                "login": {
+                    "type": "string",
+                    "example": "mirea@example.com"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "admin"
                 }
             }
         }

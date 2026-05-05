@@ -91,7 +91,11 @@ func (r *TemplateRepository) GetByID(id int64) (*models.Template, error) {
 		WHERE id = $1 AND is_deleted = false`
 
 	var t models.Template
-	err := r.db.Pool.QueryRow(context.Background(), query, id).Scan(
+	err := r.db.Pool.QueryRow(
+		context.Background(),
+		query,
+		id,
+		).Scan(
 		&t.ID,
 		&t.Name,
 		&t.HTMLBody,
@@ -119,9 +123,21 @@ func (r *TemplateRepository) GetByIDWithDeleted(id int64) (*models.Template, err
         WHERE id = $1`
 
     var t models.Template
-    err := r.db.Pool.QueryRow(context.Background(), query, id).Scan(
-        &t.ID, &t.Name, &t.HTMLBody, &t.CreatedAt, &t.UpdatedAt,
-        &t.CreatedBy, &t.UpdatedBy, &t.IsDeleted, &t.DeletedAt, &t.DeletedBy,
+    err := r.db.Pool.QueryRow(
+			context.Background(),
+			query,
+			id,
+			).Scan(
+        &t.ID,
+				&t.Name,
+				&t.HTMLBody,
+				&t.CreatedAt,
+				&t.UpdatedAt,
+        &t.CreatedBy,
+				&t.UpdatedBy,
+				&t.IsDeleted,
+				&t.DeletedAt,
+				&t.DeletedBy,
     )
     if err != nil {
         return nil, err
@@ -272,7 +288,7 @@ func (r *TemplateRepository) GetAllDeleted() ([]*models.Template, error) {
 		SELECT id, name, html_body, created_at, updated_at, created_by, updated_by, is_deleted, deleted_at, deleted_by
 		FROM templates
 		WHERE is_deleted = true
-		ORDER BY created_at DESC`
+		ORDER BY deleted_at DESC`
 
 	rows, err := r.db.Pool.Query(context.Background(), query)
 	if err != nil {

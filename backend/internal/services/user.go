@@ -8,6 +8,7 @@ import (
     "golang.org/x/crypto/bcrypt"
     "opd-backend/internal/models"
     "opd-backend/internal/repositories"
+    "opd-backend/internal/dto"
 )
 
 type UserService struct {
@@ -71,4 +72,62 @@ func (s *UserService) Login(login, password string) (string, error) {
     }
 
     return tokenString, nil
+}
+
+func (s *UserService) GetAllUsers() ([] *models.User, error) {
+    return s.repo.GetAll()
+}
+
+
+func (s *UserService) UpdateUser(
+	id int64,
+	req dto.UpdateUserRequest,
+) (*models.User, error) {
+
+	user, err := s.repo.GetByID(id)
+	if err != nil {
+		return nil, err
+	}
+
+	// PATCH логика
+	if req.Login != nil {
+		user.Login = *req.Login
+	}
+
+	if req.Role != nil {
+		user.Role = *req.Role
+	}
+
+	return s.repo.Update(user)
+}
+
+
+func (s *UserService) ArchiveUser(id int64, userID int64) (*models.User, error) {
+	user, err := s.repo.GetByIDWithDeleted(id)
+	if err != nil {
+		return nil, err
+	}
+
+	if user.IsDeleted {
+		return nil, errors.New("пользователь уже архивирован")
+	}
+
+	return s.repo.Archive(id, userID)
+}
+
+func (s *UserService) RestoreUser(id int64) (*models.User, error) {
+    user, err := s.repo.GetByIDWithDeleted(id)
+    if err != nil {
+        return nil, err
+    }
+
+    if !user.IsDeleted {
+        return nil, errors.New("пользователь не архивирован")
+    }
+
+    return s.repo.Restore(id)
+}
+
+func (s *UserService) GetAllDeletedUsers() ([]*models.User, error) {
+	return s.repo.GetAllDeleted()
 }

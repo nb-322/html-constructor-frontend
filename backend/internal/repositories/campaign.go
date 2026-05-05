@@ -227,7 +227,7 @@ func (r *CampaignRepository) GetAllDeleted() ([]*models.Campaign, error) {
         SELECT id, tpl_id, segment, scheduled_at, status, created_by, created_at, is_deleted, deleted_at, deleted_by
         FROM campaigns
         WHERE is_deleted = true
-        ORDER BY created_at DESC`
+        ORDER BY deleted_at DESC`
 
     rows, err := r.db.Pool.Query(context.Background(), query)
     if err != nil {

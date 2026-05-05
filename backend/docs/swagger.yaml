@@ -24,6 +24,14 @@ definitions:
       template:
         $ref: '#/definitions/dto.TemplateResponse'
     type: object
+  dto.ArchiveUserResponse:
+    properties:
+      message:
+        example: пользователь архивирован
+        type: string
+      user:
+        $ref: '#/definitions/dto.UserResponse'
+    type: object
   dto.CampaignResponse:
     properties:
       created_at:
@@ -175,6 +183,13 @@ definitions:
           $ref: '#/definitions/dto.TemplateResponse'
         type: array
     type: object
+  dto.GetAllUsersResponse:
+    properties:
+      users:
+        items:
+          $ref: '#/definitions/dto.UserResponse'
+        type: array
+    type: object
   dto.GetTemplateByIDResponse:
     properties:
       template:
@@ -267,6 +282,14 @@ definitions:
       template:
         $ref: '#/definitions/dto.TemplateResponse'
     type: object
+  dto.RestoreUserResponse:
+    properties:
+      message:
+        example: пользователь восстановлен
+        type: string
+      user:
+        $ref: '#/definitions/dto.UserResponse'
+    type: object
   dto.TemplateResponse:
     properties:
       created_at:
@@ -343,6 +366,45 @@ definitions:
       template:
         $ref: '#/definitions/dto.TemplateResponse'
     type: object
+  dto.UpdateUserRequest:
+    properties:
+      login:
+        type: string
+      role:
+        type: string
+    type: object
+  dto.UpdateUserResponse:
+    properties:
+      message:
+        example: пользователь обновлён
+        type: string
+      user:
+        $ref: '#/definitions/dto.UserResponse'
+    type: object
+  dto.UserResponse:
+    properties:
+      created_at:
+        example: "2024-06-01T12:00:00Z"
+        type: string
+      deleted_at:
+        example: "2024-06-01T12:00:00Z"
+        type: string
+      deleted_by:
+        example: 2
+        type: integer
+      id:
+        example: 1
+        type: integer
+      is_deleted:
+        example: false
+        type: boolean
+      login:
+        example: mirea@example.com
+        type: string
+      role:
+        example: admin
+        type: string
+    type: object
 host: localhost:8081
 info:
   contact: {}
@@ -369,27 +431,6 @@ paths:
           schema:
             $ref: '#/definitions/dto.LoginResponse'
       summary: Логин
-      tags:
-      - auth
-  /api/auth/register:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: Данные регистрации
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/dto.RegisterRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.RegisterResponse'
-      summary: Регистрация пользователя
       tags:
       - auth
   /api/campaigns:
@@ -775,6 +816,115 @@ paths:
       summary: Получить шаблоны, созданные пользователем
       tags:
       - templates
+  /api/users:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetAllUsersResponse'
+      summary: Получить всех не архивированных пользователей
+      tags:
+      - users
+  /api/users/{id}:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Данные пользователя
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UpdateUserResponse'
+      summary: Обновить пользователя
+      tags:
+      - users
+  /api/users/{id}/archive:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ArchiveUserResponse'
+      summary: Архивировать пользователя
+      tags:
+      - users
+  /api/users/{id}/restore:
+    patch:
+      parameters:
+      - description: ID пользователя
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.RestoreUserResponse'
+      summary: Восстановить пользователя из архива
+      tags:
+      - users
+  /api/users/archive:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetAllUsersResponse'
+      summary: Получить всех архивированных пользователей
+      tags:
+      - users
+  /api/users/register:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные регистрации
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.RegisterResponse'
+      summary: Регистрация пользователя
+      tags:
+      - users
 security:
 - BearerAuth: []
 securityDefinitions:

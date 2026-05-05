@@ -240,7 +240,7 @@ func (r *ClientRepository) GetAllDeleted() ([]*models.Client, error) {
 	SELECT id, email, segment, consent_flag, created_at, updated_at, is_deleted, deleted_at, deleted_by
 	FROM clients
 	WHERE is_deleted = true
-	ORDER BY created_at DESC`
+	ORDER BY deleted_at DESC`
 
 	rows, err := r.db.Pool.Query(context.Background(), query)
 
