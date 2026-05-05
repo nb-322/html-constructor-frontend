@@ -20,6 +20,9 @@ type CampaignResponse struct {
     Status      string `json:"status" example:"scheduled"`
     CreatedAt   string `json:"created_at" example:"2023-10-10T10:00:00Z"`
     CreatedBy   int64  `json:"created_by" example:"2"`
+    IsDeleted bool     `json:"is_deleted" example:"false"`
+    DeletedAt string `json:"deleted_at" example:"2024-06-01T12:00:00Z"`
+    DeletedBy int64     `json:"deleted_by" example:"2"`
 }
 
 type CreateCampaignResponse struct {

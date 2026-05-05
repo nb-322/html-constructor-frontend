@@ -20,12 +20,11 @@ func (r *UserRepository) Create(user *models.User) (*models.User, error) {
 		VALUES ($1, $2, $3)
 		RETURNING id, login, role, created_at`
 
-	// Используем pgx API: QueryRow + Scan
 	err := r.db.Pool.QueryRow(
 		context.Background(),
 		query,
 		user.Login,
-		user.Password, // ⚠️ см. примечание ниже про поле модели
+		user.Password, 
 		user.Role,
 	).Scan(&user.ID, &user.Login, &user.Role, &user.CreatedAt)
 
@@ -44,7 +43,6 @@ func (r *UserRepository) GetByLogin(login string) (*models.User, error) {
 		FROM users
 		WHERE login = $1`
 
-	// Используем pgx API: QueryRow + Scan
 	err := r.db.Pool.QueryRow(context.Background(), query, login).
 		Scan(&user.ID, &user.Login, &user.Password, &user.Role, &user.CreatedAt)
 
@@ -54,3 +52,5 @@ func (r *UserRepository) GetByLogin(login string) (*models.User, error) {
 
 	return &user, nil
 }
+
+// func 

@@ -109,6 +109,7 @@ func main() {
 				templates.PATCH("/:id", templateHandler.UpdateTemplate)    // PATCH /api/templates/:id
 				templates.PATCH("/:id/archive", templateHandler.ArchiveTemplate) // PATCH /api/templates/:id/archive
 				templates.PATCH("/:id/restore", templateHandler.RestoreTemplate) // PATCH /api/templates/:id/restore
+				templates.GET("/archive", templateHandler.GetAllDeletedTemplates) // GET /api/templates/archive
 			}
 
 			clients := protected.Group("/clients")
@@ -119,6 +120,7 @@ func main() {
 				clients.GET("/:id", clientHandler.GetClientByID) // GET /api/clients/:id
 				clients.PATCH("/:id/archive", clientHandler.ArchiveClient) // PATCH /api/clients/:id/archive
 				clients.PATCH("/:id/restore", clientHandler.RestoreClient) // PATCH /api/clients/:id/restore
+				clients.GET("/archive", clientHandler.GetAllDeeltedClients) // GET /api/clients/archive
 			}
 
 			campaign := protected.Group("/campaigns")
@@ -129,6 +131,7 @@ func main() {
 				campaign.GET("/:id", campaignHandler.GetCampaignByID) // GET /api/campaigns/:id
 				campaign.PATCH("/:id/archive", campaignHandler.ArchiveCampaign)	// PATCH /api/campaigns/:id/archive
 				campaign.PATCH("/:id/restore", campaignHandler.RestoreCampaign)	// PATCH /api/campaigns/:id/restore
+				campaign.GET("/archive", campaignHandler.GetAllDeletedCampaigns) // GET /api/campaign/archive
 			}
 
 		}

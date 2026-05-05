@@ -18,6 +18,9 @@ type TemplateResponse struct {
 	CreatedAt   string `json:"created_at" example:"2024-06-01T12:00:00Z"`
 	UpdatedBy   int64  `json:"updated_by" example:"18"`
 	UpdatedAt   string `json:"updated_at" example:"2024-06-01T12:00:00Z"`
+	IsDeleted bool     `json:"is_deleted" example:"false"`
+  DeletedAt string `json:"deleted_at" example:"2024-06-01T12:00:00Z"`
+  DeletedBy int64     `json:"deleted_by" example:"2"`
 }
 
 type CreateTemplateResponse struct {

@@ -32,9 +32,18 @@ definitions:
       created_by:
         example: 2
         type: integer
+      deleted_at:
+        example: "2024-06-01T12:00:00Z"
+        type: string
+      deleted_by:
+        example: 2
+        type: integer
       id:
         example: 1
         type: integer
+      is_deleted:
+        example: false
+        type: boolean
       scheduled_at:
         example: "2023-10-10T10:00:00Z"
         type: string
@@ -56,12 +65,21 @@ definitions:
       created_at:
         example: "2024-06-01T12:00:00Z"
         type: string
+      deleted_at:
+        example: "2024-06-01T12:00:00Z"
+        type: string
+      deleted_by:
+        example: 2
+        type: integer
       email:
         example: mirea@mail.ru
         type: string
       id:
         example: 1
         type: integer
+      is_deleted:
+        example: false
+        type: boolean
       segment:
         example: sport
         type: string
@@ -257,12 +275,21 @@ definitions:
       created_by:
         example: 18
         type: integer
+      deleted_at:
+        example: "2024-06-01T12:00:00Z"
+        type: string
+      deleted_by:
+        example: 2
+        type: integer
       html_body:
         example: <h1>Hello</h1>
         type: string
       id:
         example: 1
         type: integer
+      is_deleted:
+        example: false
+        type: boolean
       name:
         example: Welcome template
         type: string
@@ -476,6 +503,18 @@ paths:
       summary: Восстановить кампанию из архива
       tags:
       - campaigns
+  /api/campaigns/archive:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetAllCampaignsResponse'
+      summary: Получить все архивированные кампании
+      tags:
+      - campaigns
   /api/clients:
     get:
       produces:
@@ -587,6 +626,18 @@ paths:
       summary: Восстановить клиента из архива
       tags:
       - clients
+  /api/clients/archive:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetAllClientsResponse'
+      summary: Получить всех архивированных клиентов
+      tags:
+      - clients
   /api/templates:
     get:
       produces:
@@ -596,7 +647,7 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/dto.GetAllTemplatesResponse'
-      summary: Получить все шаблоны
+      summary: Получить все не архивированные шаблоны
       tags:
       - templates
     post:
@@ -698,6 +749,18 @@ paths:
           schema:
             $ref: '#/definitions/dto.RestoreTemplateResponse'
       summary: Восстановить шаблон из архива
+      tags:
+      - templates
+  /api/templates/archive:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetAllTemplatesResponse'
+      summary: Получить все архивированные шаблоны
       tags:
       - templates
   /api/templates/user:

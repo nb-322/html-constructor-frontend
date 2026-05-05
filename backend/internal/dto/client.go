@@ -19,6 +19,9 @@ type ClientResponse struct {
 	ConsentFlag bool `json:"consent_flag" example:"true"`
 	CreatedAt string `json:"created_at" example:"2024-06-01T12:00:00Z"`
 	UpdatedAt string `json:"updated_at" example:"2026-11-05T12:00:00Z"`
+	IsDeleted bool     `json:"is_deleted" example:"false"`
+  DeletedAt string `json:"deleted_at" example:"2024-06-01T12:00:00Z"`
+  DeletedBy int64     `json:"deleted_by" example:"2"`
 }
 
 type CreateClientResponse struct {

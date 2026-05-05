@@ -199,3 +199,22 @@ func (h *CampaignHandler) RestoreCampaign(c *gin.Context) {
         "campaign": campaign,
     })
 }
+
+// GetAllDeletedCampaigns godoc
+// @Summary Получить все архивированные кампании
+// @Tags campaigns
+// @Produce json
+// @Success 200 {object} dto.GetAllCampaignsResponse
+// @Router /api/campaigns/archive [get]
+func (h *CampaignHandler) GetAllDeletedCampaigns(c *gin.Context) {
+	campaigns, err := h.service.GetAllDeletedCampaigns()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"campaigns": campaigns,
+	})
+}

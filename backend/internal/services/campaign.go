@@ -71,3 +71,8 @@ func (s *CampaignService) RestoreCampaign(id int64) (*models.Campaign, error) {
 
     return s.repo.Restore(id)
 }
+
+// GetAllDeletedCampaigns возвращает все архивированные кампании
+func (s *CampaignService) GetAllDeletedCampaigns() ([]*models.Campaign, error) {
+	return s.repo.GetAllDeleted()
+}

@@ -233,3 +233,42 @@ func (r *ClientRepository) Restore(id int64) (*models.Client, error) {
     }
     return &client, nil
 }
+
+// GetAllDeleted возвращает всех архивированных клиентов
+func (r *ClientRepository) GetAllDeleted() ([]*models.Client, error) {
+	query := `
+	SELECT id, email, segment, consent_flag, created_at, updated_at, is_deleted, deleted_at, deleted_by
+	FROM clients
+	WHERE is_deleted = true
+	ORDER BY created_at DESC`
+
+	rows, err := r.db.Pool.Query(context.Background(), query)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var clients []*models.Client
+	for rows.Next() {
+		var client models.Client
+		err := rows.Scan(
+			&client.ID,
+			&client.Email,
+			&client.Segment,
+			&client.ConsentFlag,
+			&client.CreatedAt,
+			&client.UpdatedAt,
+			&client.IsDeleted,
+			&client.DeletedAt,
+			&client.DeletedBy,
+		)
+		if err != nil {
+			return nil, err
+		}
+		clients = append(clients, &client)
+	}
+
+	return clients, nil
+}

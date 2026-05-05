@@ -199,3 +199,24 @@ func (h *ClientHandler) RestoreClient(c *gin.Context) {
 		"client": client,
 	})
 }
+
+// GetAllDeeltedClients godoc
+// @Summary Получить всех архивированных клиентов
+// @Tags clients
+// @Produce json
+// @Success 200 {object} dto.GetAllClientsResponse
+// @Router /api/clients/archive [get]
+func (h *ClientHandler) GetAllDeeltedClients(c *gin.Context) {
+
+	clients, err := h.service.GetAllDeletedClients()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"clients": clients,
+	})
+}

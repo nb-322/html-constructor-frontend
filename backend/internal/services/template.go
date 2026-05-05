@@ -102,3 +102,8 @@ func (s *TemplateService) RestoreTemplate(id int64) (*models.Template, error) {
 
     return s.repo.Restore(id)
 }
+
+// GetAllDeleted возвращает все архивированные шаблоны
+func (s *TemplateService) GetAllDeletedTemplates() ([]*models.Template, error) {
+	return s.repo.GetAllDeleted()
+}

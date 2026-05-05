@@ -54,7 +54,7 @@ func (h *TemplateHandler) CreateTemplate(c *gin.Context) {
 }
 
 // GetAllTemplates godoc
-// @Summary Получить все шаблоны
+// @Summary Получить все не архивированные шаблоны
 // @Tags templates
 // @Produce json
 // @Success 200 {object} dto.GetAllTemplatesResponse
@@ -221,4 +221,22 @@ func (h *TemplateHandler) RestoreTemplate(c *gin.Context) {
         "message":  "шаблон восстановлен",
         "template": template,
     })
+}
+
+// GetAllDeletedTemplates godoc
+// @Summary Получить все архивированные шаблоны
+// @Tags templates
+// @Produce json
+// @Success 200 {object} dto.GetAllTemplatesResponse
+// @Router /api/templates/archive [get]
+func (h *TemplateHandler) GetAllDeletedTemplates(c *gin.Context) {
+	templates, err := h.service.GetAllDeletedTemplates()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"templates": templates,
+	})
 }

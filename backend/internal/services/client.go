@@ -90,3 +90,8 @@ func (s *ClientService) RestoreClient(id int64) (*models.Client, error) {
 
     return s.repo.Restore(id)
 }
+
+// GetAllDeletedClients возвращает всех архивированных клиентов
+func (s *ClientService) GetAllDeletedClients() ([]*models.Client, error) {
+	return s.repo.GetAllDeleted()
+}

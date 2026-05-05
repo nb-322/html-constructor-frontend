@@ -131,6 +131,25 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/campaigns/archive": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "campaigns"
+                ],
+                "summary": "Получить все архивированные кампании",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetAllCampaignsResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/campaigns/{id}": {
             "get": {
                 "produces": [
@@ -303,6 +322,25 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/clients/archive": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "clients"
+                ],
+                "summary": "Получить всех архивированных клиентов",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetAllClientsResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/clients/{id}": {
             "get": {
                 "produces": [
@@ -433,7 +471,7 @@ const docTemplate = `{
                 "tags": [
                     "templates"
                 ],
-                "summary": "Получить все шаблоны",
+                "summary": "Получить все не архивированные шаблоны",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -470,6 +508,25 @@ const docTemplate = `{
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/dto.CreateTemplateResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/templates/archive": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "templates"
+                ],
+                "summary": "Получить все архивированные шаблоны",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetAllTemplatesResponse"
                         }
                     }
                 }
@@ -668,9 +725,21 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 2
                 },
+                "deleted_at": {
+                    "type": "string",
+                    "example": "2024-06-01T12:00:00Z"
+                },
+                "deleted_by": {
+                    "type": "integer",
+                    "example": 2
+                },
                 "id": {
                     "type": "integer",
                     "example": 1
+                },
+                "is_deleted": {
+                    "type": "boolean",
+                    "example": false
                 },
                 "scheduled_at": {
                     "type": "string",
@@ -701,6 +770,14 @@ const docTemplate = `{
                     "type": "string",
                     "example": "2024-06-01T12:00:00Z"
                 },
+                "deleted_at": {
+                    "type": "string",
+                    "example": "2024-06-01T12:00:00Z"
+                },
+                "deleted_by": {
+                    "type": "integer",
+                    "example": 2
+                },
                 "email": {
                     "type": "string",
                     "example": "mirea@mail.ru"
@@ -708,6 +785,10 @@ const docTemplate = `{
                 "id": {
                     "type": "integer",
                     "example": 1
+                },
+                "is_deleted": {
+                    "type": "boolean",
+                    "example": false
                 },
                 "segment": {
                     "type": "string",
@@ -992,6 +1073,14 @@ const docTemplate = `{
                     "type": "integer",
                     "example": 18
                 },
+                "deleted_at": {
+                    "type": "string",
+                    "example": "2024-06-01T12:00:00Z"
+                },
+                "deleted_by": {
+                    "type": "integer",
+                    "example": 2
+                },
                 "html_body": {
                     "type": "string",
                     "example": "\u003ch1\u003eHello\u003c/h1\u003e"
@@ -999,6 +1088,10 @@ const docTemplate = `{
                 "id": {
                     "type": "integer",
                     "example": 1
+                },
+                "is_deleted": {
+                    "type": "boolean",
+                    "example": false
                 },
                 "name": {
                     "type": "string",

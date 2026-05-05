@@ -220,3 +220,41 @@ func (r *CampaignRepository) Restore(id int64) (*models.Campaign, error) {
     }
     return &campaign, nil
 }
+
+// GetAllDeleted возвращает все архивированные кампании
+func (r *CampaignRepository) GetAllDeleted() ([]*models.Campaign, error) {
+    query := `
+        SELECT id, tpl_id, segment, scheduled_at, status, created_by, created_at, is_deleted, deleted_at, deleted_by
+        FROM campaigns
+        WHERE is_deleted = true
+        ORDER BY created_at DESC`
+
+    rows, err := r.db.Pool.Query(context.Background(), query)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    var campaigns []*models.Campaign
+    for rows.Next() {
+        var campaign models.Campaign
+        err := rows.Scan(
+            &campaign.ID,
+            &campaign.TemplateID,
+            &campaign.Segment,
+            &campaign.ScheduledAt,
+            &campaign.Status,
+            &campaign.CreatedBy,
+            &campaign.CreatedAt,
+            &campaign.IsDeleted,
+            &campaign.DeletedAt,
+            &campaign.DeletedBy,
+        )
+        if err != nil {
+            return nil, err
+        }
+        campaigns = append(campaigns, &campaign)
+    }
+
+    return campaigns, nil
+}

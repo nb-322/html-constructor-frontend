@@ -233,7 +233,7 @@ func (r *TemplateRepository) Archive(id int64, deletedBy int64) (*models.Templat
 	return &template, nil
 }
 
-// Restore архивирует шаблон
+// Restore восстанавливает шаблон
 func (r *TemplateRepository) Restore(id int64) (*models.Template, error) {
 	query := `
 	UPDATE templates
@@ -264,4 +264,42 @@ func (r *TemplateRepository) Restore(id int64) (*models.Template, error) {
 	}
 
 	return &template, nil
+}
+
+// GetAllDeleted возвращает все архивированные шаблоны
+func (r *TemplateRepository) GetAllDeleted() ([]*models.Template, error) {
+	query := `
+		SELECT id, name, html_body, created_at, updated_at, created_by, updated_by, is_deleted, deleted_at, deleted_by
+		FROM templates
+		WHERE is_deleted = true
+		ORDER BY created_at DESC`
+
+	rows, err := r.db.Pool.Query(context.Background(), query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var templates []*models.Template
+	for rows.Next() {
+		var t models.Template
+		err := rows.Scan(
+			&t.ID,
+			&t.Name,
+			&t.HTMLBody,
+			&t.CreatedAt,
+			&t.UpdatedAt,
+			&t.CreatedBy,
+			&t.UpdatedBy,
+			&t.IsDeleted,
+			&t.DeletedAt,
+			&t.DeletedBy,
+		)
+		if err != nil {
+			return nil, err
+		}
+		templates = append(templates, &t)
+	}
+
+	return templates, nil
 }
