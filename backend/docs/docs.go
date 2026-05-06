@@ -430,6 +430,39 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/segments": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "segments"
+                ],
+                "summary": "Создать сегмент",
+                "parameters": [
+                    {
+                        "description": "Данные сегмента",
+                        "name": "segment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateSegmentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.CreateSegmentResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/templates": {
             "get": {
                 "produces": [
@@ -1016,6 +1049,35 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.CreateSegmentRequest": {
+            "type": "object",
+            "required": [
+                "description",
+                "name"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "VIP клиенты"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "VIP"
+                }
+            }
+        },
+        "dto.CreateSegmentResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "сегмент создан"
+                },
+                "segment": {
+                    "$ref": "#/definitions/dto.SegmentRespone"
+                }
+            }
+        },
         "dto.CreateTemplateRequest": {
             "type": "object",
             "required": [
@@ -1231,6 +1293,23 @@ const docTemplate = `{
                 },
                 "user": {
                     "$ref": "#/definitions/dto.UserResponse"
+                }
+            }
+        },
+        "dto.SegmentRespone": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "example": "VIP клиенты"
+                },
+                "is_active": {
+                    "type": "boolean",
+                    "example": true
+                },
+                "name": {
+                    "type": "string",
+                    "example": "VIP"
                 }
             }
         },

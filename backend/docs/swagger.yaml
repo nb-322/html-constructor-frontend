@@ -142,6 +142,26 @@ definitions:
         example: клиент создан
         type: string
     type: object
+  dto.CreateSegmentRequest:
+    properties:
+      description:
+        example: VIP клиенты
+        type: string
+      name:
+        example: VIP
+        type: string
+    required:
+    - description
+    - name
+    type: object
+  dto.CreateSegmentResponse:
+    properties:
+      message:
+        example: сегмент создан
+        type: string
+      segment:
+        $ref: '#/definitions/dto.SegmentRespone'
+    type: object
   dto.CreateTemplateRequest:
     properties:
       html_body:
@@ -289,6 +309,18 @@ definitions:
         type: string
       user:
         $ref: '#/definitions/dto.UserResponse'
+    type: object
+  dto.SegmentRespone:
+    properties:
+      description:
+        example: VIP клиенты
+        type: string
+      is_active:
+        example: true
+        type: boolean
+      name:
+        example: VIP
+        type: string
     type: object
   dto.TemplateResponse:
     properties:
@@ -679,6 +711,27 @@ paths:
       summary: Получить всех архивированных клиентов
       tags:
       - clients
+  /api/segments:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные сегмента
+        in: body
+        name: segment
+        required: true
+        schema:
+          $ref: '#/definitions/dto.CreateSegmentRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.CreateSegmentResponse'
+      summary: Создать сегмент
+      tags:
+      - segments
   /api/templates:
     get:
       produces:

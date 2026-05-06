@@ -25,7 +25,6 @@ func (r *SegmentRepository) Create(segment *models.Segment) (*models.Segment, er
 		query,
 		segment.Name,
 		segment.Description,
-		segment.IsActive,
 	).Scan(
 		&segment.Name,
 		&segment.Description,

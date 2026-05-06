@@ -6,11 +6,16 @@ type CreateSegmentRequest struct {
 }
 
 type UpdateSegmentRequest struct {
-	Description *string `json:description`
+	Description *string `json:"description"`
 }
 
 type SegmentRespone struct {
 	Name string `json:"name" example:"VIP"`
 	Description string `json:"description" example:"VIP клиенты"`
 	IsActive bool `json:"is_active" example:"true"`
+}
+
+type CreateSegmentResponse struct {
+	Message string `json:"message" example:"сегмент создан"`
+	Segment SegmentRespone `json:"segment"`
 }
