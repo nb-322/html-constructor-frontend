@@ -47,6 +47,7 @@ func main() {
 	templateRepo := repositories.NewTemplateRepository(db)
 	clientRepo := repositories.NewClientRepository(db)
 	campaignRepo := repositories.NewCampaignRepository(db)
+	segmentRepo := repositories.NewSegmentRepository(db)
 
 	// 4. Инициализируем сервисы
 	jwtSecret := os.Getenv("JWT_SECRET")
@@ -58,6 +59,7 @@ func main() {
 	templateService := services.NewTemplateService(templateRepo)
 	clientService := services.NewClientService(clientRepo)
 	campaignService := services.NewCampaignService(campaignRepo)
+	segmentService := services.NewSegmentService(segmentRepo)
 
 	// 5. Инициализируем обработчики (handlers)
 	authHandler := handlers.NewAuthHandler(userService)
@@ -65,6 +67,7 @@ func main() {
 	clientHandler := handlers.NewClientHandler(clientService)
 	campaignHandler := handlers.NewCampaignHandler(campaignService)
 	userHandler := handlers.NewUserHandler(userService)
+	segmentHandler := handlers.NewSegmentHandler(segmentService)
 
 	// 6. Настраиваем роутер Gin
 	r := gin.Default()
@@ -144,6 +147,10 @@ func main() {
 				users.GET("/archive", userHandler.GetAllDeletedUsers) // GET /api/users/archive
 			}
 
+			segments := protected.Group("/segments")
+			{
+				segments.POST("", segmentHandler.CreateSegment)       // POST /api/segments
+			}
 		}
 	}
 
