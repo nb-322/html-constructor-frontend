@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Template struct {
-    ID        int64     `json:"id" db:"id"`
+    ID        int64     `json:"tpl_id" db:"tpl_id"`
     Name      string    `json:"name" db:"name"`
     HTMLBody  string    `json:"html_body" db:"html_body"`
     CreatedAt time.Time `json:"created_at" db:"created_at"`

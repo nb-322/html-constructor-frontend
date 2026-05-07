@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Client struct {
-	ID                  int64         `json:"id" db:"id"`
+	ID                  int64         `json:"client_id" db:"client_id"`
 	Email             string        `json:"email" db:"email"`
 	Segment       string        `json:"segment" db:"segment"`
 	ConsentFlag bool         `json:"consent_flag" db:"consent_flag"`

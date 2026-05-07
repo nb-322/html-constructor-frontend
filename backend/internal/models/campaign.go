@@ -3,7 +3,7 @@ package models
 import "time"
 
 type Campaign struct {
-	ID 				int64     `json:"id" db:"id"`
+	ID 				int64     `json:"camp_id" db:"camp_id"`
 	TemplateID 	int64     `json:"tpl_id" db:"tpl_id"`
 	Segment 		string    `json:"segment" db:"segment"`
 	ScheduledAt 	time.Time `json:"scheduled_at" db:"scheduled_at"`

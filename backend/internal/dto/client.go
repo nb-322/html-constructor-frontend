@@ -13,7 +13,7 @@ type UpdateClientRequest struct {
 }
 
 type ClientResponse struct {
-	ID int64 `json:"id" example:"1"`
+	ID int64 `json:"client_id" example:"1"`
 	Email string `json:"email" example:"mirea@mail.ru"`
 	Segment string `json:"segment" example:"sport"`
 	ConsentFlag bool `json:"consent_flag" example:"true"`

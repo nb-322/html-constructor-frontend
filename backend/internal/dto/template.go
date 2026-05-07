@@ -11,7 +11,7 @@ type UpdateTemplateRequest struct {
 }
 
 type TemplateResponse struct {
-	ID       int64  `json:"id" example:"1"`
+	ID       int64  `json:"tpl_id" example:"1"`
 	Name     string `json:"name" example:"Welcome template"`
 	HTMLBody string `json:"html_body" example:"<h1>Hello</h1>"`
 	CreatedBy   int64  `json:"created_by" example:"18"`

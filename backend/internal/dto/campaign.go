@@ -13,7 +13,7 @@ type UpdateCampaignRequest struct {
 }
 
 type CampaignResponse struct {
-    ID          int64  `json:"id" example:"1"`
+    ID          int64  `json:"camp_id" example:"1"`
     TemplateID  int64  `json:"tpl_id" example:"1"`
     Segment     string `json:"segment" example:"sport"`
     ScheduledAt string `json:"scheduled_at" example:"2023-10-10T10:00:00Z"`
