@@ -667,6 +667,25 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/templates/pending": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "template-reviews"
+                ],
+                "summary": "Получить шаблоны на рассмотрении",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetPendingTemplatesResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/templates/user": {
             "get": {
                 "produces": [
@@ -752,6 +771,34 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/templates/{id}/approve": {
+            "patch": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "template-reviews"
+                ],
+                "summary": "Одобрить шаблон",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID шаблона",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateTemplateResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/templates/{id}/archive": {
             "patch": {
                 "consumes": [
@@ -783,6 +830,46 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/templates/{id}/reject": {
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "template-reviews"
+                ],
+                "summary": "Отклонить шаблон",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID шаблона",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Комментарий",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.RejectTemplateRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateTemplateResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/templates/{id}/restore": {
             "patch": {
                 "produces": [
@@ -806,6 +893,62 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/dto.RestoreTemplateResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/templates/{id}/reviews": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "template-reviews"
+                ],
+                "summary": "Получить историю решений по шаблону",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID шаблона",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetTemplateReviewsResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/templates/{id}/submit": {
+            "patch": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "template-reviews"
+                ],
+                "summary": "Отправить шаблон на рассмотрение",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID шаблона",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateTemplateResponse"
                         }
                     }
                 }
@@ -1046,6 +1189,10 @@ const docTemplate = `{
         "dto.CampaignResponse": {
             "type": "object",
             "properties": {
+                "camp_id": {
+                    "type": "integer",
+                    "example": 1
+                },
                 "created_at": {
                     "type": "string",
                     "example": "2023-10-10T10:00:00Z"
@@ -1061,10 +1208,6 @@ const docTemplate = `{
                 "deleted_by": {
                     "type": "integer",
                     "example": 2
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
                 },
                 "is_deleted": {
                     "type": "boolean",
@@ -1091,6 +1234,10 @@ const docTemplate = `{
         "dto.ClientResponse": {
             "type": "object",
             "properties": {
+                "client_id": {
+                    "type": "integer",
+                    "example": 1
+                },
                 "consent_flag": {
                     "type": "boolean",
                     "example": true
@@ -1110,10 +1257,6 @@ const docTemplate = `{
                 "email": {
                     "type": "string",
                     "example": "mirea@mail.ru"
-                },
-                "id": {
-                    "type": "integer",
-                    "example": 1
                 },
                 "is_deleted": {
                     "type": "boolean",
@@ -1309,11 +1452,33 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.GetPendingTemplatesResponse": {
+            "type": "object",
+            "properties": {
+                "templates": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.TemplateResponse"
+                    }
+                }
+            }
+        },
         "dto.GetTemplateByIDResponse": {
             "type": "object",
             "properties": {
                 "template": {
                     "$ref": "#/definitions/dto.TemplateResponse"
+                }
+            }
+        },
+        "dto.GetTemplateReviewsResponse": {
+            "type": "object",
+            "properties": {
+                "reviews": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.TemplateReviewResponse"
+                    }
                 }
             }
         },
@@ -1403,6 +1568,17 @@ const docTemplate = `{
                 "user_id": {
                     "type": "integer",
                     "example": 1
+                }
+            }
+        },
+        "dto.RejectTemplateRequest": {
+            "type": "object",
+            "required": [
+                "comment"
+            ],
+            "properties": {
+                "comment": {
+                    "type": "string"
                 }
             }
         },
@@ -1506,10 +1682,6 @@ const docTemplate = `{
                     "type": "string",
                     "example": "\u003ch1\u003eHello\u003c/h1\u003e"
                 },
-                "id": {
-                    "type": "integer",
-                    "example": 1
-                },
                 "is_deleted": {
                     "type": "boolean",
                     "example": false
@@ -1518,6 +1690,14 @@ const docTemplate = `{
                     "type": "string",
                     "example": "Welcome template"
                 },
+                "status": {
+                    "type": "string",
+                    "example": "черновик"
+                },
+                "tpl_id": {
+                    "type": "integer",
+                    "example": 1
+                },
                 "updated_at": {
                     "type": "string",
                     "example": "2024-06-01T12:00:00Z"
@@ -1525,6 +1705,29 @@ const docTemplate = `{
                 "updated_by": {
                     "type": "integer",
                     "example": 18
+                }
+            }
+        },
+        "dto.TemplateReviewResponse": {
+            "type": "object",
+            "properties": {
+                "admin_id": {
+                    "type": "integer"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "reviewed_at": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                },
+                "tpl_id": {
+                    "type": "integer"
                 }
             }
         },

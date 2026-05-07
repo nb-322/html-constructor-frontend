@@ -42,6 +42,9 @@ definitions:
     type: object
   dto.CampaignResponse:
     properties:
+      camp_id:
+        example: 1
+        type: integer
       created_at:
         example: "2023-10-10T10:00:00Z"
         type: string
@@ -53,9 +56,6 @@ definitions:
         type: string
       deleted_by:
         example: 2
-        type: integer
-      id:
-        example: 1
         type: integer
       is_deleted:
         example: false
@@ -75,6 +75,9 @@ definitions:
     type: object
   dto.ClientResponse:
     properties:
+      client_id:
+        example: 1
+        type: integer
       consent_flag:
         example: true
         type: boolean
@@ -90,9 +93,6 @@ definitions:
       email:
         example: mirea@mail.ru
         type: string
-      id:
-        example: 1
-        type: integer
       is_deleted:
         example: false
         type: boolean
@@ -225,10 +225,24 @@ definitions:
           $ref: '#/definitions/dto.UserResponse'
         type: array
     type: object
+  dto.GetPendingTemplatesResponse:
+    properties:
+      templates:
+        items:
+          $ref: '#/definitions/dto.TemplateResponse'
+        type: array
+    type: object
   dto.GetTemplateByIDResponse:
     properties:
       template:
         $ref: '#/definitions/dto.TemplateResponse'
+    type: object
+  dto.GetTemplateReviewsResponse:
+    properties:
+      reviews:
+        items:
+          $ref: '#/definitions/dto.TemplateReviewResponse'
+        type: array
     type: object
   dto.GetTemplatesByUserIDResponse:
     properties:
@@ -292,6 +306,13 @@ definitions:
       user_id:
         example: 1
         type: integer
+    type: object
+  dto.RejectTemplateRequest:
+    properties:
+      comment:
+        type: string
+    required:
+    - comment
     type: object
   dto.RestoreCampaignResponse:
     properties:
@@ -362,20 +383,38 @@ definitions:
       html_body:
         example: <h1>Hello</h1>
         type: string
-      id:
-        example: 1
-        type: integer
       is_deleted:
         example: false
         type: boolean
       name:
         example: Welcome template
         type: string
+      status:
+        example: черновик
+        type: string
+      tpl_id:
+        example: 1
+        type: integer
       updated_at:
         example: "2024-06-01T12:00:00Z"
         type: string
       updated_by:
         example: 18
+        type: integer
+    type: object
+  dto.TemplateReviewResponse:
+    properties:
+      admin_id:
+        type: integer
+      comment:
+        type: string
+      id:
+        type: integer
+      reviewed_at:
+        type: string
+      status:
+        type: string
+      tpl_id:
         type: integer
     type: object
   dto.UpdateCampaignRequest:
@@ -930,6 +969,24 @@ paths:
       summary: Обновить шаблон
       tags:
       - templates
+  /api/templates/{id}/approve:
+    patch:
+      parameters:
+      - description: ID шаблона
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UpdateTemplateResponse'
+      summary: Одобрить шаблон
+      tags:
+      - template-reviews
   /api/templates/{id}/archive:
     patch:
       consumes:
@@ -950,6 +1007,32 @@ paths:
       summary: Архивировать шаблон
       tags:
       - templates
+  /api/templates/{id}/reject:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID шаблона
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Комментарий
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RejectTemplateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UpdateTemplateResponse'
+      summary: Отклонить шаблон
+      tags:
+      - template-reviews
   /api/templates/{id}/restore:
     patch:
       parameters:
@@ -968,6 +1051,42 @@ paths:
       summary: Восстановить шаблон из архива
       tags:
       - templates
+  /api/templates/{id}/reviews:
+    get:
+      parameters:
+      - description: ID шаблона
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetTemplateReviewsResponse'
+      summary: Получить историю решений по шаблону
+      tags:
+      - template-reviews
+  /api/templates/{id}/submit:
+    patch:
+      parameters:
+      - description: ID шаблона
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UpdateTemplateResponse'
+      summary: Отправить шаблон на рассмотрение
+      tags:
+      - template-reviews
   /api/templates/archive:
     get:
       produces:
@@ -980,6 +1099,18 @@ paths:
       summary: Получить все архивированные шаблоны
       tags:
       - templates
+  /api/templates/pending:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetPendingTemplatesResponse'
+      summary: Получить шаблоны на рассмотрении
+      tags:
+      - template-reviews
   /api/templates/user:
     get:
       produces:

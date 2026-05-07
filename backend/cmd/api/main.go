@@ -48,6 +48,7 @@ func main() {
 	clientRepo := repositories.NewClientRepository(db)
 	campaignRepo := repositories.NewCampaignRepository(db)
 	segmentRepo := repositories.NewSegmentRepository(db)
+	reviewRepo := repositories.NewTemplateReviewRepository(db)
 
 	// 4. Инициализируем сервисы
 	jwtSecret := os.Getenv("JWT_SECRET")
@@ -60,6 +61,7 @@ func main() {
 	clientService := services.NewClientService(clientRepo)
 	campaignService := services.NewCampaignService(campaignRepo)
 	segmentService := services.NewSegmentService(segmentRepo)
+	reviewService := services.NewTemplateReviewService(reviewRepo, templateRepo)
 
 	// 5. Инициализируем обработчики (handlers)
 	authHandler := handlers.NewAuthHandler(userService)
@@ -68,6 +70,7 @@ func main() {
 	campaignHandler := handlers.NewCampaignHandler(campaignService)
 	userHandler := handlers.NewUserHandler(userService)
 	segmentHandler := handlers.NewSegmentHandler(segmentService)
+	reviewHandler := handlers.NewTemplateReviewHandler(reviewService)
 
 	// 6. Настраиваем роутер Gin
 	r := gin.Default()
@@ -113,6 +116,11 @@ func main() {
 				templates.PATCH("/:id/archive", templateHandler.ArchiveTemplate) // PATCH /api/templates/:id/archive
 				templates.PATCH("/:id/restore", templateHandler.RestoreTemplate) // PATCH /api/templates/:id/restore
 				templates.GET("/archive", templateHandler.GetAllDeletedTemplates) // GET /api/templates/archive
+				templates.PATCH("/:id/submit", reviewHandler.SubmitTemplateForReview) // PATCH /api/templates/:id/submit
+				templates.GET("/pending", reviewHandler.GetPendingTemplates) // GET /api/templates/pending
+				templates.PATCH("/:id/approve", reviewHandler.ApproveTemplate) // PATCH /api/templates/:id/approve
+				templates.PATCH("/:id/reject", reviewHandler.RejectTemplate) // PATCH /api/templates/:id/reject
+				templates.GET("/:id/reviews", reviewHandler.GetTemplateReviews) // GET /api/templates/:id/reviews
 			}
 
 			clients := protected.Group("/clients")

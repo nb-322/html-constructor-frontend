@@ -19,7 +19,7 @@ func (r *TemplateRepository) Create(template *models.Template) (*models.Template
 	query := `
 		INSERT INTO templates (name, html_body, created_by, updated_by, created_at, updated_at)
 		VALUES ($1, $2, $3, $4, NOW(), NOW())
-		RETURNING tpl_id, name, html_body, created_at, updated_at, created_by, updated_by`
+		RETURNING tpl_id, name, html_body, status, created_at, updated_at, created_by, updated_by`
 
 	err := r.db.Pool.QueryRow(
 		context.Background(),
@@ -32,6 +32,7 @@ func (r *TemplateRepository) Create(template *models.Template) (*models.Template
 		&template.ID,
 		&template.Name,
 		&template.HTMLBody,
+		&template.Status,
 		&template.CreatedAt,
 		&template.UpdatedAt,
 		&template.CreatedBy,
@@ -48,7 +49,7 @@ func (r *TemplateRepository) Create(template *models.Template) (*models.Template
 // GetAll возвращает все шаблоны, кроме удаленных
 func (r *TemplateRepository) GetAll() ([]*models.Template, error) {
 	query := `
-		SELECT tpl_id, name, html_body, created_at, updated_at, created_by, updated_by, is_deleted, deleted_at, deleted_by
+		SELECT tpl_id, name, html_body, status, created_at, updated_at, created_by, updated_by, is_deleted, deleted_at, deleted_by
 		FROM templates
 		WHERE is_deleted = false
 		ORDER BY created_at DESC`
@@ -66,6 +67,7 @@ func (r *TemplateRepository) GetAll() ([]*models.Template, error) {
 			&t.ID,
 			&t.Name,
 			&t.HTMLBody,
+			&t.Status,
 			&t.CreatedAt,
 			&t.UpdatedAt,
 			&t.CreatedBy,
@@ -86,7 +88,7 @@ func (r *TemplateRepository) GetAll() ([]*models.Template, error) {
 // GetByID возвращает шаблон по ID
 func (r *TemplateRepository) GetByID(id int64) (*models.Template, error) {
 	query := `
-		SELECT tpl_id, name, html_body, created_at, updated_at, created_by, updated_by, is_deleted, deleted_at, deleted_by
+		SELECT tpl_id, name, html_body, status, created_at, updated_at, created_by, updated_by, is_deleted, deleted_at, deleted_by
 		FROM templates
 		WHERE tpl_id = $1 AND is_deleted = false`
 
@@ -95,10 +97,11 @@ func (r *TemplateRepository) GetByID(id int64) (*models.Template, error) {
 		context.Background(),
 		query,
 		id,
-		).Scan(
+	).Scan(
 		&t.ID,
 		&t.Name,
 		&t.HTMLBody,
+		&t.Status,
 		&t.CreatedAt,
 		&t.UpdatedAt,
 		&t.CreatedBy,
@@ -117,38 +120,39 @@ func (r *TemplateRepository) GetByID(id int64) (*models.Template, error) {
 
 // GetByIDWithDeleted возвращает архивированный шаблон по id
 func (r *TemplateRepository) GetByIDWithDeleted(id int64) (*models.Template, error) {
-    query := `
-		SELECT tpl_id, name, html_body, created_at, updated_at, created_by, updated_by, is_deleted, deleted_at, deleted_by
+	query := `
+		SELECT tpl_id, name, html_body, status, created_at, updated_at, created_by, updated_by, is_deleted, deleted_at, deleted_by
         FROM templates
 		WHERE tpl_id = $1`
 
-    var t models.Template
-    err := r.db.Pool.QueryRow(
-			context.Background(),
-			query,
-			id,
-			).Scan(
-        &t.ID,
-				&t.Name,
-				&t.HTMLBody,
-				&t.CreatedAt,
-				&t.UpdatedAt,
-        &t.CreatedBy,
-				&t.UpdatedBy,
-				&t.IsDeleted,
-				&t.DeletedAt,
-				&t.DeletedBy,
-    )
-    if err != nil {
-        return nil, err
-    }
-    return &t, nil
+	var t models.Template
+	err := r.db.Pool.QueryRow(
+		context.Background(),
+		query,
+		id,
+	).Scan(
+		&t.ID,
+		&t.Name,
+		&t.HTMLBody,
+		&t.Status,
+		&t.CreatedAt,
+		&t.UpdatedAt,
+		&t.CreatedBy,
+		&t.UpdatedBy,
+		&t.IsDeleted,
+		&t.DeletedAt,
+		&t.DeletedBy,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return &t, nil
 }
 
 // GetByUserID возвращает шаблоны, созданные определённым пользователем
 func (r *TemplateRepository) GetByUserID(userID int64) ([]*models.Template, error) {
 	query := `
-		SELECT tpl_id, name, html_body, created_at, updated_at, created_by, updated_by, is_deleted, deleted_at, deleted_by
+		SELECT tpl_id, name, html_body, status, created_at, updated_at, created_by, updated_by, is_deleted, deleted_at, deleted_by
 		FROM templates
 		WHERE created_by = $1 AND is_deleted = false
 		ORDER BY created_at DESC`
@@ -166,6 +170,7 @@ func (r *TemplateRepository) GetByUserID(userID int64) ([]*models.Template, erro
 			&t.ID,
 			&t.Name,
 			&t.HTMLBody,
+			&t.Status,
 			&t.CreatedAt,
 			&t.UpdatedAt,
 			&t.CreatedBy,
@@ -189,7 +194,7 @@ func (r *TemplateRepository) Update(template *models.Template) (*models.Template
 		UPDATE templates
 		SET name = $1, html_body = $2, updated_by = $3, updated_at = NOW()
 		WHERE tpl_id = $4
-		RETURNING tpl_id, name, html_body, created_at, updated_at, created_by, updated_by`
+		RETURNING tpl_id, name, html_body, status, created_at, updated_at, created_by, updated_by`
 
 	err := r.db.Pool.QueryRow(
 		context.Background(),
@@ -202,6 +207,7 @@ func (r *TemplateRepository) Update(template *models.Template) (*models.Template
 		&template.ID,
 		&template.Name,
 		&template.HTMLBody,
+		&template.Status,
 		&template.CreatedAt,
 		&template.UpdatedAt,
 		&template.CreatedBy,
@@ -221,7 +227,7 @@ func (r *TemplateRepository) Archive(id int64, deletedBy int64) (*models.Templat
 	UPDATE templates
 	SET is_deleted = true, deleted_at = NOW(), deleted_by = $1
 	WHERE tpl_id = $2 AND is_deleted = false
-	RETURNING tpl_id, name, html_body, created_at, updated_at, created_by, updated_by, is_deleted, deleted_at, deleted_by`
+	RETURNING tpl_id, name, html_body, status, created_at, updated_at, created_by, updated_by, is_deleted, deleted_at, deleted_by`
 
 	var template models.Template
 	err := r.db.Pool.QueryRow(
@@ -233,6 +239,7 @@ func (r *TemplateRepository) Archive(id int64, deletedBy int64) (*models.Templat
 		&template.ID,
 		&template.Name,
 		&template.HTMLBody,
+		&template.Status,
 		&template.CreatedAt,
 		&template.UpdatedAt,
 		&template.CreatedBy,
@@ -255,7 +262,7 @@ func (r *TemplateRepository) Restore(id int64) (*models.Template, error) {
 	UPDATE templates
 	SET is_deleted = false, deleted_at = NULL, deleted_by = NULL
 	WHERE tpl_id = $1 AND is_deleted = true
-	RETURNING tpl_id, name, html_body, created_at, updated_at, created_by, updated_by, is_deleted, deleted_at, deleted_by`
+	RETURNING tpl_id, name, html_body, status, created_at, updated_at, created_by, updated_by, is_deleted, deleted_at, deleted_by`
 
 	var template models.Template
 	err := r.db.Pool.QueryRow(
@@ -266,6 +273,7 @@ func (r *TemplateRepository) Restore(id int64) (*models.Template, error) {
 		&template.ID,
 		&template.Name,
 		&template.HTMLBody,
+		&template.Status,
 		&template.CreatedAt,
 		&template.UpdatedAt,
 		&template.CreatedBy,
@@ -285,7 +293,7 @@ func (r *TemplateRepository) Restore(id int64) (*models.Template, error) {
 // GetAllDeleted возвращает все архивированные шаблоны
 func (r *TemplateRepository) GetAllDeleted() ([]*models.Template, error) {
 	query := `
-		SELECT tpl_id, name, html_body, created_at, updated_at, created_by, updated_by, is_deleted, deleted_at, deleted_by
+		SELECT tpl_id, name, html_body, status, created_at, updated_at, created_by, updated_by, is_deleted, deleted_at, deleted_by
 		FROM templates
 		WHERE is_deleted = true
 		ORDER BY deleted_at DESC`
@@ -303,6 +311,7 @@ func (r *TemplateRepository) GetAllDeleted() ([]*models.Template, error) {
 			&t.ID,
 			&t.Name,
 			&t.HTMLBody,
+			&t.Status,
 			&t.CreatedAt,
 			&t.UpdatedAt,
 			&t.CreatedBy,

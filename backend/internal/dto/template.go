@@ -14,6 +14,7 @@ type TemplateResponse struct {
 	ID       int64  `json:"tpl_id" example:"1"`
 	Name     string `json:"name" example:"Welcome template"`
 	HTMLBody string `json:"html_body" example:"<h1>Hello</h1>"`
+	Status   string `json:"status" example:"черновик"`
 	CreatedBy   int64  `json:"created_by" example:"18"`
 	CreatedAt   string `json:"created_at" example:"2024-06-01T12:00:00Z"`
 	UpdatedBy   int64  `json:"updated_by" example:"18"`
