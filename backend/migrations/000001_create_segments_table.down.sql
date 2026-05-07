@@ -1,2 +1,2 @@
--- 000007_create_segments_table.down.sql
+-- 000001_create_segments_table.down.sql
 DROP TABLE IF EXISTS segments;

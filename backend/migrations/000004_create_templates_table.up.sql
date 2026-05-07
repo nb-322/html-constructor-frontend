@@ -1,6 +1,6 @@
--- 000005_create_templates_table.up.sql
+-- 000004_create_templates_table.up.sql
 CREATE TABLE IF NOT EXISTS templates (
-    id SERIAL PRIMARY KEY,
+  tpl_id SERIAL PRIMARY KEY,
     name VARCHAR(255),
     html_body TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS templates (
     is_deleted BOOLEAN DEFAULT FALSE,
     deleted_at TIMESTAMP WITH TIME ZONE NULL,
     deleted_by INTEGER NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'черновик' CHECK (status IN ('черновик', 'на_рассмотрении', 'одобрено', 'отклонено')),
 
     CONSTRAINT fk_temlates_users_created
         FOREIGN KEY (created_by) 

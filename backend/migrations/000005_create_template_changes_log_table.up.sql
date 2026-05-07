@@ -1,4 +1,4 @@
--- 000003_create_template_changes_log_table.up.sql
+-- 000005_create_template_changes_log_table.up.sql
 CREATE TABLE IF NOT EXISTS template_changes_log (
     id SERIAL PRIMARY KEY,
     tpl_id INTEGER NOT NULL,
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS template_changes_log (
 
     CONSTRAINT fk_template_changes_log_templates
         FOREIGN KEY (tpl_id) 
-        REFERENCES templates(id)
+      REFERENCES templates(tpl_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
     

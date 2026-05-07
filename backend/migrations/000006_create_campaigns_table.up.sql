@@ -1,6 +1,6 @@
--- 000003_create_campaigns_table.up.sql
+-- 000006_create_campaigns_table.up.sql
 CREATE TABLE IF NOT EXISTS campaigns (
-    id SERIAL PRIMARY KEY,
+  camp_id SERIAL PRIMARY KEY,
     tpl_id INTEGER NOT NULL,
     segment VARCHAR(255),
     scheduled_at TIMESTAMP WITH TIME ZONE,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS campaigns (
 
     CONSTRAINT fk_campaigns_templates
         FOREIGN KEY (tpl_id) 
-        REFERENCES templates(id)
+      REFERENCES templates(tpl_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE,
     

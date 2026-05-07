@@ -1,6 +1,6 @@
--- 000001_create_clients_table.up.sql
+-- 000002_create_clients_table.up.sql
 CREATE TABLE IF NOT EXISTS clients (
-    id SERIAL PRIMARY KEY,
+    client_id SERIAL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     segment VARCHAR(255),
     consent_flag BOOLEAN,

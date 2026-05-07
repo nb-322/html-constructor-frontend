@@ -1,4 +1,4 @@
--- 000004_create_users_table.up.sql
+-- 000003_create_users_table.up.sql
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     login VARCHAR(100),

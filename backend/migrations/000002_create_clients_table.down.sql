@@ -1,2 +1,2 @@
--- 000001_create_clients_table.down.sql
+-- 000002_create_clients_table.down.sql
 DROP TABLE IF EXISTS clients;
