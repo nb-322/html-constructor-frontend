@@ -51,7 +51,7 @@ func (h *SegmentHandler) CreateSegment(c *gin.Context) {
 // @Success 200 {object} dto.GetAllSegmentsResponse
 // @Router /api/segments [get]
 func (h *SegmentHandler) GetAllSegments(c *gin.Context) {
-	segments, err := h.service.GetAllDeletedSegments()
+	segments, err := h.service.GetAllSegments()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -67,10 +67,10 @@ func (h *SegmentHandler) GetAllSegments(c *gin.Context) {
 // @Tags segments
 // @Accept json
 // @Produce json
-// @Param id path int true "Название сегмента"
+// @Param name path string true "Название сегмента"
 // @Param segment body dto.UpdateSegmentRequest true "Данные сегмента"
 // @Success 200 {object} dto.UpdateSegmentResponse
-// @Router /api/segments/{id} [patch]
+// @Router /api/segments/{name} [patch]
 func (h *SegmentHandler) UpdateSegment(c *gin.Context) {
 	name := c.Param("name")
 	if name == "" {
@@ -101,9 +101,9 @@ func (h *SegmentHandler) UpdateSegment(c *gin.Context) {
 // @Tags segments
 // @Accept json
 // @Produce json
-// @Param id path int true "Название сегмента"
+// @Param name path string true "Название сегмента"
 // @Success 200 {object} dto.ArchiveSegmentResponse
-// @Router /api/segments/{id}/archive [patch]
+// @Router /api/segments/{name}/archive [patch]
 func (h *SegmentHandler) ArchiveSegment(c *gin.Context) {
   name := c.Param("name")
 	if name == "" {
@@ -123,12 +123,13 @@ func (h *SegmentHandler) ArchiveSegment(c *gin.Context) {
     })
 }
 
-// @Summary Восстановить шаблон из архива
-// @Tags templates
+// RestoreSegment godoc
+// @Summary Восстановить сегмент из архива
+// @Tags segments
 // @Produce json
-// @Param id path int true "ID шаблона"
-// @Success 200 {object} dto.RestoreTemplateResponse
-// @Router /api/templates/{id}/restore [patch]
+// @Param name path string true "Название сегмента"
+// @Success 200 {object} dto.RestoreSegmentResponse
+// @Router /api/segments/{name}/restore [patch]
 func (h *SegmentHandler) RestoreSegment(c *gin.Context) {
   name := c.Param("name")
 	if name == "" {
@@ -149,4 +150,20 @@ func (h *SegmentHandler) RestoreSegment(c *gin.Context) {
 }
 
 
-// Добавить ещё
+// GetAllDeletedSegments godoc
+// @Summary Получить все архивированные сегменты
+// @Tags segments
+// @Produce json
+// @Success 200 {object} dto.GetAllSegmentsResponse
+// @Router /api/segments/archive [get]
+func (h *SegmentHandler) GetAllDeletedSegments(c *gin.Context) {
+	segments, err := h.service.GetAllDeletedSegments()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"segments": segments,
+	})
+}

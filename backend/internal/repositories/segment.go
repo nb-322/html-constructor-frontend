@@ -96,7 +96,7 @@ func (r *SegmentRepository) GetByNameWithDeleted(name string) (*models.Segment, 
     query := `
         SELECT name, description, is_active
 				FROM segments
-				WHERE is_active = $1`
+				WHERE name = $1`
 
     var s models.Segment
     err := r.db.Pool.QueryRow(

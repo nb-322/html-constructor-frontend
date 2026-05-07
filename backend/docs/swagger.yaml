@@ -16,6 +16,14 @@ definitions:
         example: клиент архивирован
         type: string
     type: object
+  dto.ArchiveSegmentResponse:
+    properties:
+      message:
+        example: сегмент архивирован
+        type: string
+      segment:
+        $ref: '#/definitions/dto.SegmentResponse'
+    type: object
   dto.ArchiveTemplateResponse:
     properties:
       message:
@@ -160,7 +168,7 @@ definitions:
         example: сегмент создан
         type: string
       segment:
-        $ref: '#/definitions/dto.SegmentRespone'
+        $ref: '#/definitions/dto.SegmentResponse'
     type: object
   dto.CreateTemplateRequest:
     properties:
@@ -194,6 +202,13 @@ definitions:
       clients:
         items:
           $ref: '#/definitions/dto.ClientResponse'
+        type: array
+    type: object
+  dto.GetAllSegmentsResponse:
+    properties:
+      segments:
+        items:
+          $ref: '#/definitions/dto.SegmentResponse'
         type: array
     type: object
   dto.GetAllTemplatesResponse:
@@ -294,6 +309,14 @@ definitions:
         example: клиент восстановлен
         type: string
     type: object
+  dto.RestoreSegmentResponse:
+    properties:
+      message:
+        example: сегмент восстановлен
+        type: string
+      segment:
+        $ref: '#/definitions/dto.SegmentResponse'
+    type: object
   dto.RestoreTemplateResponse:
     properties:
       message:
@@ -310,7 +333,7 @@ definitions:
       user:
         $ref: '#/definitions/dto.UserResponse'
     type: object
-  dto.SegmentRespone:
+  dto.SegmentResponse:
     properties:
       description:
         example: VIP клиенты
@@ -382,6 +405,19 @@ definitions:
       message:
         example: клиент обновлён
         type: string
+    type: object
+  dto.UpdateSegmentRequest:
+    properties:
+      description:
+        type: string
+    type: object
+  dto.UpdateSegmentResponse:
+    properties:
+      message:
+        example: сегмент обновлён
+        type: string
+      segment:
+        $ref: '#/definitions/dto.SegmentResponse'
     type: object
   dto.UpdateTemplateRequest:
     properties:
@@ -712,6 +748,17 @@ paths:
       tags:
       - clients
   /api/segments:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetAllSegmentsResponse'
+      summary: Получить все не архивированные сегменты
+      tags:
+      - segments
     post:
       consumes:
       - application/json
@@ -730,6 +777,82 @@ paths:
           schema:
             $ref: '#/definitions/dto.CreateSegmentResponse'
       summary: Создать сегмент
+      tags:
+      - segments
+  /api/segments/{name}:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Название сегмента
+        in: path
+        name: name
+        required: true
+        type: string
+      - description: Данные сегмента
+        in: body
+        name: segment
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateSegmentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.UpdateSegmentResponse'
+      summary: Обновить шаблон
+      tags:
+      - segments
+  /api/segments/{name}/archive:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Название сегмента
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ArchiveSegmentResponse'
+      summary: Архивировать сегмент
+      tags:
+      - segments
+  /api/segments/{name}/restore:
+    patch:
+      parameters:
+      - description: Название сегмента
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.RestoreSegmentResponse'
+      summary: Восстановить сегмент из архива
+      tags:
+      - segments
+  /api/segments/archive:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.GetAllSegmentsResponse'
+      summary: Получить все архивированные сегменты
       tags:
       - segments
   /api/templates:

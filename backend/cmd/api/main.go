@@ -150,6 +150,11 @@ func main() {
 			segments := protected.Group("/segments")
 			{
 				segments.POST("", segmentHandler.CreateSegment)       // POST /api/segments
+				segments.GET("", segmentHandler.GetAllSegments) // GET /api/segments
+				segments.PATCH("/:name", segmentHandler.UpdateSegment) // PATCH /api/segments/:name
+				segments.PATCH("/:name/archive", segmentHandler.ArchiveSegment) // PATCH /api/segments/:name/archive
+				segments.PATCH("/:name/restore", segmentHandler.RestoreSegment) // PATCH /api/segments/:name/restore
+				segments.GET("/archive", segmentHandler.GetAllDeletedSegments) // GET /api/segments/archive
 			}
 		}
 	}

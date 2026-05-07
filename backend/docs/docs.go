@@ -431,6 +431,23 @@ const docTemplate = `{
             }
         },
         "/api/segments": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "segments"
+                ],
+                "summary": "Получить все не архивированные сегменты",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetAllSegmentsResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "consumes": [
                     "application/json"
@@ -458,6 +475,124 @@ const docTemplate = `{
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/dto.CreateSegmentResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/segments/archive": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "segments"
+                ],
+                "summary": "Получить все архивированные сегменты",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.GetAllSegmentsResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/segments/{name}": {
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "segments"
+                ],
+                "summary": "Обновить шаблон",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Название сегмента",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Данные сегмента",
+                        "name": "segment",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateSegmentRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.UpdateSegmentResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/segments/{name}/archive": {
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "segments"
+                ],
+                "summary": "Архивировать сегмент",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Название сегмента",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ArchiveSegmentResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/segments/{name}/restore": {
+            "patch": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "segments"
+                ],
+                "summary": "Восстановить сегмент из архива",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Название сегмента",
+                        "name": "name",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.RestoreSegmentResponse"
                         }
                     }
                 }
@@ -872,6 +1007,18 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.ArchiveSegmentResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "сегмент архивирован"
+                },
+                "segment": {
+                    "$ref": "#/definitions/dto.SegmentResponse"
+                }
+            }
+        },
         "dto.ArchiveTemplateResponse": {
             "type": "object",
             "properties": {
@@ -1074,7 +1221,7 @@ const docTemplate = `{
                     "example": "сегмент создан"
                 },
                 "segment": {
-                    "$ref": "#/definitions/dto.SegmentRespone"
+                    "$ref": "#/definitions/dto.SegmentResponse"
                 }
             }
         },
@@ -1125,6 +1272,17 @@ const docTemplate = `{
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/dto.ClientResponse"
+                    }
+                }
+            }
+        },
+        "dto.GetAllSegmentsResponse": {
+            "type": "object",
+            "properties": {
+                "segments": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.SegmentResponse"
                     }
                 }
             }
@@ -1272,6 +1430,18 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.RestoreSegmentResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "сегмент восстановлен"
+                },
+                "segment": {
+                    "$ref": "#/definitions/dto.SegmentResponse"
+                }
+            }
+        },
         "dto.RestoreTemplateResponse": {
             "type": "object",
             "properties": {
@@ -1296,7 +1466,7 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.SegmentRespone": {
+        "dto.SegmentResponse": {
             "type": "object",
             "properties": {
                 "description": {
@@ -1396,6 +1566,26 @@ const docTemplate = `{
                 "message": {
                     "type": "string",
                     "example": "клиент обновлён"
+                }
+            }
+        },
+        "dto.UpdateSegmentRequest": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UpdateSegmentResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "сегмент обновлён"
+                },
+                "segment": {
+                    "$ref": "#/definitions/dto.SegmentResponse"
                 }
             }
         },
