@@ -49,6 +49,7 @@ func main() {
 	campaignRepo := repositories.NewCampaignRepository(db)
 	segmentRepo := repositories.NewSegmentRepository(db)
 	reviewRepo := repositories.NewTemplateReviewRepository(db)
+	changesLogRepo := repositories.NewChangesLogRepository(db)
 
 	// 4. Инициализируем сервисы
 	jwtSecret := os.Getenv("JWT_SECRET")
@@ -57,7 +58,7 @@ func main() {
 	}
 
 	userService := services.NewUserService(userRepo, jwtSecret)
-	templateService := services.NewTemplateService(templateRepo)
+	templateService := services.NewTemplateService(templateRepo, changesLogRepo)
 	clientService := services.NewClientService(clientRepo)
 	campaignService := services.NewCampaignService(campaignRepo)
 	segmentService := services.NewSegmentService(segmentRepo)
@@ -121,6 +122,7 @@ func main() {
 				templates.PATCH("/:id/approve", reviewHandler.ApproveTemplate) // PATCH /api/templates/:id/approve
 				templates.PATCH("/:id/reject", reviewHandler.RejectTemplate) // PATCH /api/templates/:id/reject
 				templates.GET("/:id/reviews", reviewHandler.GetTemplateReviews) // GET /api/templates/:id/reviews
+				templates.GET("/:id/history", templateHandler.GetTemplateHistory) // GET /api/templates/:id/history
 			}
 
 			clients := protected.Group("/clients")

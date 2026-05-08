@@ -830,6 +830,37 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/templates/{id}/history": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "templates"
+                ],
+                "summary": "Получить историю изменений шаблона",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "ID шаблона",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.ChangeLog"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/templates/{id}/reject": {
             "patch": {
                 "consumes": [
@@ -1868,6 +1899,29 @@ const docTemplate = `{
                 "role": {
                     "type": "string",
                     "example": "admin"
+                }
+            }
+        },
+        "models.ChangeLog": {
+            "type": "object",
+            "properties": {
+                "changed_at": {
+                    "type": "string"
+                },
+                "changed_by": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "new_html": {
+                    "type": "string"
+                },
+                "old_html": {
+                    "type": "string"
+                },
+                "tpl_id": {
+                    "type": "integer"
                 }
             }
         }

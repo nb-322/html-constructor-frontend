@@ -9,10 +9,14 @@ import (
 
 type TemplateService struct {
 	repo *repositories.TemplateRepository
+	changesLogRepo *repositories.ChangesLogRepository
 }
 
-func NewTemplateService(repo *repositories.TemplateRepository) *TemplateService {
-	return &TemplateService{repo: repo}
+func NewTemplateService(
+    repo *repositories.TemplateRepository,
+    changeLogRepo *repositories.ChangesLogRepository,
+) *TemplateService {
+    return &TemplateService{repo, changeLogRepo}
 }
 
 // CreateTemplate создаёт новый шаблон
@@ -61,6 +65,19 @@ func (s *TemplateService) UpdateTemplate(
 		return nil, err
 	}
 
+	if req.HTMLBody != nil && *req.HTMLBody != template.HTMLBody {
+        changeLog := &models.ChangeLog{
+            TplID:     id,
+            OldHTML:   template.HTMLBody,
+            NewHTML:   *req.HTMLBody,
+            ChangedBy: userID,
+        }
+        _, err = s.changesLogRepo.Create(changeLog)
+        if err != nil {
+            return nil, err
+        }
+    }
+
 	// PATCH логика
 	if req.Name != nil {
 		template.Name = *req.Name
@@ -106,4 +123,9 @@ func (s *TemplateService) RestoreTemplate(id int64) (*models.Template, error) {
 // GetAllDeleted возвращает все архивированные шаблоны
 func (s *TemplateService) GetAllDeletedTemplates() ([]*models.Template, error) {
 	return s.repo.GetAllDeleted()
+}
+
+// GetTemplateHistory возвращает историю изменений шаблона
+func (s *TemplateService) GetTemplateHistory(id int64) ([]*models.ChangeLog, error) {
+	return s.changesLogRepo.GetByTemplateID(id)
 }

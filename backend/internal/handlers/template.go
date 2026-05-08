@@ -240,3 +240,26 @@ func (h *TemplateHandler) GetAllDeletedTemplates(c *gin.Context) {
 		"templates": templates,
 	})
 }
+
+// GetTemplateHistory godoc
+// @Summary Получить историю изменений шаблона
+// @Tags templates
+// @Produce json
+// @Param id path int true "ID шаблона"
+// @Success 200 {object} []models.ChangeLog
+// @Router /api/templates/{id}/history [get]
+func (h *TemplateHandler) GetTemplateHistory(c *gin.Context) {
+	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid id"})
+		return
+	}
+
+	logs, err := h.service.GetTemplateHistory(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"history": logs})
+}

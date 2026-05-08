@@ -512,6 +512,21 @@ definitions:
         example: admin
         type: string
     type: object
+  models.ChangeLog:
+    properties:
+      changed_at:
+        type: string
+      changed_by:
+        type: integer
+      id:
+        type: integer
+      new_html:
+        type: string
+      old_html:
+        type: string
+      tpl_id:
+        type: integer
+    type: object
 host: localhost:8081
 info:
   contact: {}
@@ -1005,6 +1020,26 @@ paths:
           schema:
             $ref: '#/definitions/dto.ArchiveTemplateResponse'
       summary: Архивировать шаблон
+      tags:
+      - templates
+  /api/templates/{id}/history:
+    get:
+      parameters:
+      - description: ID шаблона
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ChangeLog'
+            type: array
+      summary: Получить историю изменений шаблона
       tags:
       - templates
   /api/templates/{id}/reject:
