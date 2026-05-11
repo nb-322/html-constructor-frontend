@@ -3,7 +3,7 @@ package dto
 type RegisterRequest struct {
 	Login    string `json:"login" binding:"required" example:"user123"`
 	Password string `json:"password" binding:"required" example:"pass123"`
-	Role     string `json:"role" binding:"required,oneof=marketer analyst admin" example:"marketer"`
+	Role     string `json:"role" binding:"required,oneof=маркетолог аналитик админ" example:"marketer"`
 }
 
 type LoginRequest struct {

@@ -8,7 +8,7 @@ type UpdateUserRequest struct {
 type UserResponse struct {
 	ID        int       `json:"id" example:"1"`
   Login     string    `json:"login" example:"mirea@example.com"`
-  Role      string    `json:"role" example:"admin"`
+  Role      string    `json:"role" example:"маркетолог"`
   CreatedAt string `json:"created_at" example:"2024-06-01T12:00:00Z"`
   IsDeleted bool     `json:"is_deleted" example:"false"`
   DeletedAt string `json:"deleted_at" example:"2024-06-01T12:00:00Z"`

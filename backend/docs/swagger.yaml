@@ -282,9 +282,9 @@ definitions:
         type: string
       role:
         enum:
-        - marketer
-        - analyst
-        - admin
+        - маркетолог
+        - аналитик
+        - админ
         example: marketer
         type: string
     required:
@@ -509,7 +509,7 @@ definitions:
         example: mirea@example.com
         type: string
       role:
-        example: admin
+        example: маркетолог
         type: string
     type: object
   models.ChangeLog:

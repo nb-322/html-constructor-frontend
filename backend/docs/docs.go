@@ -1573,9 +1573,9 @@ const docTemplate = `{
                 "role": {
                     "type": "string",
                     "enum": [
-                        "marketer",
-                        "analyst",
-                        "admin"
+                        "маркетолог",
+                        "аналитик",
+                        "админ"
                     ],
                     "example": "marketer"
                 }
@@ -1898,7 +1898,7 @@ const docTemplate = `{
                 },
                 "role": {
                     "type": "string",
-                    "example": "admin"
+                    "example": "маркетолог"
                 }
             }
         },
