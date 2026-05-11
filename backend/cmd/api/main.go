@@ -76,7 +76,6 @@ func main() {
 	// 6. Настраиваем роутер Gin
 	r := gin.Default()
 
-	// Swagger UI
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	r.Use(func(c *gin.Context) {
