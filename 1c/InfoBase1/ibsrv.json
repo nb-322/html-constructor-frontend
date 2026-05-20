@@ -2,5 +2,9 @@
   "http-server": {
     "allow-methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     "cors-hosts": ["*"]
+  },
+  "jwtAuthentication": {
+        "iss": "opd-token-jwt-team-12-kruto",
+        "sharedKey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Nzk1MzM1NTMsImlzc3VlZF9hdCI6MTc3ODY2OTU1Mywicm9sZSI6ItCx0L7QtdGGIiwidGVsZWdyYW1faWQiOjAsInVzZXJfaWQiOjF9.eZUb-baQs2x0H8BU5OmadWHM5GgaGztCtSaMHOiqPWY"
   }
 }
