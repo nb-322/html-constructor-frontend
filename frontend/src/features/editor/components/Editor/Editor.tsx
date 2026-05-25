@@ -25,10 +25,11 @@ const Editor = () => {
         clearElements();
         if (!id) return;
         apiGetTemplate(Number(id)).then((data) => {
-            if (data.name) setName(data.name);
-            if (data.html_body) {
+            const tpl = data.template ?? data;
+            if (tpl.name) setName(tpl.name);
+            if (tpl.html_body) {
                 try {
-                    const parsed = JSON.parse(data.html_body);
+                    const parsed = JSON.parse(tpl.html_body);
                     if (Array.isArray(parsed)) loadElements(parsed);
                 } catch { /* html_body is raw HTML, can't restore elements */ }
             }
