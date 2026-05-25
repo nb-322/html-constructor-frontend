@@ -73,7 +73,7 @@ export const apiGetArchivedUsers = () => get('/api/users/archive');
 export const apiRegisterUser = (data: { login: string; password: string; role: string }) =>
     request('/api/users/register', {
         method: 'POST',
-        headers: authHeaders(),
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
     });
 export const apiUpdateUser = (id: number, data: { login: string; role: string }) => patch(`/api/users/${id}`, data);
