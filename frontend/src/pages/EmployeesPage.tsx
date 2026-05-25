@@ -23,7 +23,7 @@ export default function EmployeesPage() {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
     const [employeeToDelete, setEmployeeToDelete] = useState<number | null>(null);
-    const [formData, setFormData] = useState({ login: '', password: '', role: 'editor' });
+    const [formData, setFormData] = useState({ login: '', password: '', role: 'маркетолог' });
 
     const load = async () => {
         setLoading(true);
@@ -40,7 +40,7 @@ export default function EmployeesPage() {
     const handleCreate = async () => {
         try { await apiRegisterUser({ login: formData.login, password: formData.password, role: formData.role }); await load(); } catch { /* ignore */ }
         setCreateModalOpen(false);
-        setFormData({ login: '', password: '', role: 'editor' });
+        setFormData({ login: '', password: '', role: 'маркетолог' });
     };
 
     const handleEdit = (e: Employee) => {
@@ -54,7 +54,7 @@ export default function EmployeesPage() {
         try { await apiUpdateUser(editingEmployee.id, { login: formData.login, role: formData.role }); await load(); } catch { /* ignore */ }
         setEditModalOpen(false);
         setEditingEmployee(null);
-        setFormData({ login: '', password: '', role: 'editor' });
+        setFormData({ login: '', password: '', role: 'маркетолог' });
     };
 
     const handleDeleteClick = (id: number) => { setEmployeeToDelete(id); setDeleteModalOpen(true); };
@@ -75,8 +75,8 @@ export default function EmployeesPage() {
         return new Date(d).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' });
     };
 
-    const getRoleLabel = (role: string) => ({ admin: 'Администратор', editor: 'Редактор', viewer: 'Наблюдатель', marketer: 'Маркетолог', manager: 'Менеджер' }[role] || role);
-    const getRoleColor = (role: string) => ({ admin: 'bg-destructive/10 text-destructive border-destructive/20', editor: 'bg-primary/10 text-primary border-primary/20' }[role] || 'bg-muted text-muted-foreground border-border');
+    const getRoleLabel = (role: string) => role;
+    const getRoleColor = (role: string) => ({ 'админ': 'bg-destructive/10 text-destructive border-destructive/20', 'маркетолог': 'bg-primary/10 text-primary border-primary/20' }[role] || 'bg-muted text-muted-foreground border-border');
 
     return (
         <div className="flex h-screen bg-background">
@@ -116,7 +116,7 @@ export default function EmployeesPage() {
                         </div>
                         <div className="flex gap-3">
                             <button onClick={() => setShowDeleted(!showDeleted)} className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition text-card-foreground flex items-center gap-2 bg-transparent"><Trash2 className="w-4 h-4" />{showDeleted ? 'Показать активные' : 'Показать удаленные'}</button>
-                            <button onClick={() => { setFormData({ login: '', password: '', role: 'editor' }); setCreateModalOpen(true); }} className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90 flex items-center gap-2"><UserPlus className="w-5 h-5" />Создать сотрудника</button>
+                            <button onClick={() => { setFormData({ login: '', password: '', role: 'маркетолог' }); setCreateModalOpen(true); }} className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90 flex items-center gap-2"><UserPlus className="w-5 h-5" />Создать сотрудника</button>
                         </div>
                     </div>
 
@@ -177,7 +177,7 @@ export default function EmployeesPage() {
                             <div><label className="block text-sm font-medium text-card-foreground mb-2">Логин</label><input type="text" value={formData.login} onChange={(e) => setFormData({ ...formData, login: e.target.value })} className="w-full px-4 py-3 bg-input-background border border-border rounded-lg text-foreground focus:ring-2 focus:ring-primary outline-none" /></div>
                             <div><label className="block text-sm font-medium text-card-foreground mb-2">Роль</label>
                                 <select value={formData.role} onChange={(e) => setFormData({ ...formData, role: e.target.value })} className="w-full px-4 py-3 bg-input-background border border-border rounded-lg text-foreground focus:ring-2 focus:ring-primary outline-none">
-                                    <option value="viewer">Наблюдатель</option><option value="editor">Редактор</option><option value="admin">Администратор</option><option value="marketer">Маркетолог</option>
+                                    <option value="маркетолог">Маркетолог</option><option value="аналитик">Аналитик</option><option value="админ">Администратор</option>
                                 </select>
                             </div>
                         </div>
@@ -198,7 +198,7 @@ export default function EmployeesPage() {
                             <div><label className="block text-sm font-medium text-card-foreground mb-2">Пароль</label><input type="password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} placeholder="Минимум 8 символов" className="w-full px-4 py-3 bg-input-background border border-border rounded-lg text-foreground focus:ring-2 focus:ring-primary outline-none" /></div>
                             <div><label className="block text-sm font-medium text-card-foreground mb-2">Роль</label>
                                 <select value={formData.role} onChange={(e) => setFormData({ ...formData, role: e.target.value })} className="w-full px-4 py-3 bg-input-background border border-border rounded-lg text-foreground focus:ring-2 focus:ring-primary outline-none">
-                                    <option value="viewer">Наблюдатель</option><option value="editor">Редактор</option><option value="admin">Администратор</option><option value="marketer">Маркетолог</option>
+                                    <option value="маркетолог">Маркетолог</option><option value="аналитик">Аналитик</option><option value="админ">Администратор</option>
                                 </select>
                             </div>
                             <div className="bg-muted rounded-lg p-4 text-sm text-muted-foreground">

@@ -28,7 +28,7 @@ const Register = () => {
 
         setLoading(true);
         try {
-            await apiRegisterUser({ login: email, password, role: 'marketer' });
+            await apiRegisterUser({ login: email, password, role: 'маркетолог' });
             navigate('/auth');
         } catch {
             setError('Ошибка регистрации. Проверьте данные и попробуйте снова.');
