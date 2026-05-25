@@ -42,17 +42,17 @@ const Auth = () => {
                     <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-card-foreground mb-2">
-                                Email
+                                Логин
                             </label>
                             <input
                                 id="email"
-                                type="email"
+                                type="text"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                                 disabled={isLoading}
                                 className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-foreground"
-                                placeholder="ivan@example.com"
+                                placeholder="ivan"
                             />
                         </div>
 
