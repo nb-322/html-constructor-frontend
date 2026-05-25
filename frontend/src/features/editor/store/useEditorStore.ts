@@ -11,6 +11,7 @@ interface EditorState {
   updateElement: (id: string, data: Partial<EditorElement>) => void
   removeElement: (id: string) => void
   clearElements: () => void
+  loadElements: (elements: EditorElement[]) => void
 
   canvasWidth: number
   canvasHeight: number
@@ -49,7 +50,8 @@ export const useEditorStore = create<EditorState>((set) => ({
       selectedId: state.selectedId === id ? null : state.selectedId,
     })),
 
-  clearElements: () => set({elements:[]}),
+  clearElements: () => set({ elements: [] }),
+  loadElements: (elements) => set({ elements, selectedId: null }),
 
   canvasWidth: 0,
   canvasHeight: 0,
