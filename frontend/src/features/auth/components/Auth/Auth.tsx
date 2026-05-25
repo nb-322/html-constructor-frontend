@@ -14,17 +14,8 @@ const Auth = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-
-        if (!email.trim()) {
-            setError('Пожалуйста, введите логин');
-            return;
-        }
-
-        if (!password.trim()) {
-            setError('Пожалуйста, введите пароль');
-            return;
-        }
-
+        if (!email.trim()) { setError('Пожалуйста, введите логин'); return; }
+        if (!password.trim()) { setError('Пожалуйста, введите пароль'); return; }
         try {
             await login(email, password);
             setEmail('');
@@ -51,11 +42,11 @@ const Auth = () => {
                     <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-card-foreground mb-2">
-                                Логин
+                                Email
                             </label>
                             <input
                                 id="email"
-                                type="text"
+                                type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
@@ -83,16 +74,24 @@ const Auth = () => {
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground bg-transparent p-0"
                                 >
                                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                                 </button>
                             </div>
                         </div>
 
-                        {error && (
-                            <p className="text-destructive text-sm">{error}</p>
-                        )}
+                        <div className="flex items-center justify-between">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" className="w-4 h-4 text-primary rounded border-border" />
+                                <span className="text-sm text-muted-foreground">Запомнить меня</span>
+                            </label>
+                            <a href="#" className="text-sm text-primary hover:opacity-80">
+                                Забыли пароль?
+                            </a>
+                        </div>
+
+                        {error && <p className="text-destructive text-sm">{error}</p>}
 
                         <button
                             type="submit"
@@ -102,18 +101,6 @@ const Auth = () => {
                             {isLoading ? 'Вход...' : 'Войти'}
                         </button>
                     </form>
-
-                    <div className="mt-6 text-center">
-                        <p className="text-muted-foreground">
-                            Нет аккаунта?{' '}
-                            <button
-                                onClick={() => navigate('/register')}
-                                className="text-primary hover:opacity-80 font-medium bg-transparent p-0"
-                            >
-                                Зарегистрироваться
-                            </button>
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>

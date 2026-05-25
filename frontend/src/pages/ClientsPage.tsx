@@ -1,102 +1,109 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Upload, Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, Search, X, UserPlus, Shield, Clock, Trash2, RotateCcw } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import {
+    apiGetClients, apiGetArchivedClients,
+    apiCreateClient, apiUpdateClient, apiArchiveClient, apiRestoreClient,
+    apiGetSegments,
+} from '../api/api.ts';
 
 interface Client {
-    id: string;
-    name: string;
+    client_id: number;
     email: string;
-    status: 'active' | 'unsubscribed';
     segment: string;
-    addedDate: string;
-    campaigns: number;
-    deleted?: boolean;
+    consent_flag: boolean;
+    created_at: string;
+    updated_at: string;
 }
+
+interface Segment { name: string; }
 
 export default function ClientsPage() {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
 
-    const [clients, setClients] = useState<Client[]>([
-        { id: '1', name: 'Анна Смирнова', email: 'anna.smirnova@example.com', status: 'active', segment: 'VIP клиенты', addedDate: '15 янв 2026', campaigns: 5 },
-        { id: '2', name: 'Петр Иванов', email: 'petr.ivanov@example.com', status: 'active', segment: 'Активные клиенты', addedDate: '20 фев 2026', campaigns: 3 },
-        { id: '3', name: 'Мария Петрова', email: 'maria.petrova@example.com', status: 'unsubscribed', segment: 'Все клиенты', addedDate: '10 мар 2026', campaigns: 1 },
-        { id: '4', name: 'Алексей Козлов', email: 'alexey.kozlov@example.com', status: 'active', segment: 'Новые подписчики', addedDate: '05 апр 2026', campaigns: 7 },
-    ]);
-
+    const [clients, setClients] = useState<Client[]>([]);
+    const [segments, setSegments] = useState<Segment[]>([]);
+    const [showDeleted, setShowDeleted] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [search, setSearch] = useState('');
     const [editModalOpen, setEditModalOpen] = useState(false);
     const [addModalOpen, setAddModalOpen] = useState(false);
     const [importModalOpen, setImportModalOpen] = useState(false);
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [editingClient, setEditingClient] = useState<Client | null>(null);
-    const [clientToDelete, setClientToDelete] = useState<string | null>(null);
-    const [formData, setFormData] = useState({ name: '', email: '', status: 'active' as 'active' | 'unsubscribed', segment: '' });
-    const [showDeleted, setShowDeleted] = useState(false);
+    const [clientToDelete, setClientToDelete] = useState<number | null>(null);
+    const [formData, setFormData] = useState({ email: '', consent_flag: true, segment: '' });
 
-    const handleEdit = (client: Client) => {
-        setEditingClient(client);
-        setFormData({ name: client.name, email: client.email, status: client.status, segment: client.segment });
+    const load = async () => {
+        setLoading(true);
+        try {
+            const fn = showDeleted ? apiGetArchivedClients : apiGetClients;
+            const data = await fn();
+            setClients(data.clients || []);
+        } catch { setClients([]); }
+        setLoading(false);
+    };
+
+    useEffect(() => { load(); }, [showDeleted]);
+    useEffect(() => { apiGetSegments().then(d => setSegments(d.segments || [])).catch(() => {}); }, []);
+
+    const handleEdit = (c: Client) => {
+        setEditingClient(c);
+        setFormData({ email: c.email, consent_flag: c.consent_flag, segment: c.segment });
         setEditModalOpen(true);
     };
 
-    const saveClient = () => {
-        if (editingClient) {
-            setClients(clients.map(c => c.id === editingClient.id ? { ...c, ...formData } : c));
-            setEditModalOpen(false);
-            setEditingClient(null);
-            setFormData({ name: '', email: '', status: 'active', segment: '' });
-        }
+    const saveClient = async () => {
+        if (!editingClient) return;
+        try { await apiUpdateClient(editingClient.client_id, formData); await load(); } catch { /* ignore */ }
+        setEditModalOpen(false);
+        setEditingClient(null);
+        setFormData({ email: '', consent_flag: true, segment: '' });
     };
 
-    const addClient = () => {
-        const newClient: Client = {
-            id: Date.now().toString(),
-            name: formData.name,
-            email: formData.email,
-            status: formData.status,
-            segment: formData.segment,
-            addedDate: new Date().toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' }),
-            campaigns: 0,
-        };
-        setClients([...clients, newClient]);
+    const addClient = async () => {
+        try { await apiCreateClient(formData); await load(); } catch { /* ignore */ }
         setAddModalOpen(false);
-        setFormData({ name: '', email: '', status: 'active', segment: '' });
+        setFormData({ email: '', consent_flag: true, segment: '' });
     };
 
-    const handleDeleteClick = (id: string) => { setClientToDelete(id); setDeleteModalOpen(true); };
+    const handleDeleteClick = (id: number) => { setClientToDelete(id); setDeleteModalOpen(true); };
 
-    const confirmDelete = () => {
-        if (clientToDelete) {
-            setClients(clients.map(c => c.id === clientToDelete ? { ...c, deleted: true } : c));
-            setDeleteModalOpen(false);
-            setClientToDelete(null);
-        }
+    const confirmDelete = async () => {
+        if (clientToDelete == null) return;
+        try { await apiArchiveClient(clientToDelete); await load(); } catch { /* ignore */ }
+        setDeleteModalOpen(false);
+        setClientToDelete(null);
     };
 
-    const restoreClient = (id: string) => setClients(clients.map(c => c.id === id ? { ...c, deleted: false } : c));
-    const activeClients = clients.filter(c => !c.deleted);
-    const deletedClients = clients.filter(c => c.deleted);
+    const restoreClient = async (id: number) => {
+        try { await apiRestoreClient(id); await load(); } catch { /* ignore */ }
+    };
+
+    const formatDate = (d: string) => {
+        if (!d) return '—';
+        return new Date(d).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric' });
+    };
+
+    const filtered = clients.filter(c => c.email.toLowerCase().includes(search.toLowerCase()) || c.segment.toLowerCase().includes(search.toLowerCase()));
 
     const ClientForm = () => (
         <div className="space-y-4">
-            <div><label className="block text-sm font-medium text-card-foreground mb-2">Имя</label><input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} placeholder="Иван Иванов" className="w-full px-4 py-3 bg-input-background border border-border rounded-lg text-foreground focus:ring-2 focus:ring-primary outline-none" /></div>
             <div><label className="block text-sm font-medium text-card-foreground mb-2">Email</label><input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="ivan@example.com" className="w-full px-4 py-3 bg-input-background border border-border rounded-lg text-foreground focus:ring-2 focus:ring-primary outline-none" /></div>
-            <div>
-                <label className="block text-sm font-medium text-card-foreground mb-2">Статус</label>
-                <select value={formData.status} onChange={(e) => setFormData({ ...formData, status: e.target.value as 'active' | 'unsubscribed' })} className="w-full px-4 py-3 bg-input-background border border-border rounded-lg text-foreground focus:ring-2 focus:ring-primary outline-none">
-                    <option value="active">Активен</option>
-                    <option value="unsubscribed">Отписался</option>
-                </select>
-            </div>
             <div>
                 <label className="block text-sm font-medium text-card-foreground mb-2">Сегмент</label>
                 <select value={formData.segment} onChange={(e) => setFormData({ ...formData, segment: e.target.value })} className="w-full px-4 py-3 bg-input-background border border-border rounded-lg text-foreground focus:ring-2 focus:ring-primary outline-none">
                     <option value="">Выберите сегмент</option>
-                    <option value="Все клиенты">Все клиенты</option>
-                    <option value="Активные клиенты">Активные клиенты</option>
-                    <option value="Новые подписчики">Новые подписчики</option>
-                    <option value="VIP клиенты">VIP клиенты</option>
+                    {segments.map(s => <option key={s.name} value={s.name}>{s.name}</option>)}
+                </select>
+            </div>
+            <div>
+                <label className="block text-sm font-medium text-card-foreground mb-2">Согласие на рассылку</label>
+                <select value={formData.consent_flag ? 'true' : 'false'} onChange={(e) => setFormData({ ...formData, consent_flag: e.target.value === 'true' })} className="w-full px-4 py-3 bg-input-background border border-border rounded-lg text-foreground focus:ring-2 focus:ring-primary outline-none">
+                    <option value="true">Активен</option>
+                    <option value="false">Отписался</option>
                 </select>
             </div>
         </div>
@@ -124,7 +131,7 @@ export default function ClientsPage() {
                         <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-primary-foreground"><User className="w-5 h-5" /></div>
                         <div className="flex-1">
                             <p className="font-medium text-sm text-card-foreground truncate">{user?.name || 'Пользователь'}</p>
-                            <p className="text-xs text-muted-foreground truncate">{user?.email || user?.role || ''}</p>
+                            <p className="text-xs text-muted-foreground truncate">{user?.role || ''}</p>
                         </div>
                         <button onClick={() => { logout(); navigate('/auth', { replace: true }); }} className="text-muted-foreground hover:text-foreground p-0 bg-transparent"><LogOut className="w-5 h-5" /></button>
                     </div>
@@ -141,62 +148,62 @@ export default function ClientsPage() {
                         <div className="flex gap-3">
                             <button onClick={() => setShowDeleted(!showDeleted)} className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition text-card-foreground flex items-center gap-2 bg-transparent"><Trash2 className="w-4 h-4" />{showDeleted ? 'Показать активные' : 'Показать удаленные'}</button>
                             <button onClick={() => setImportModalOpen(true)} className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition text-card-foreground flex items-center gap-2 bg-transparent"><Upload className="w-4 h-4" />Импорт CSV</button>
-                            <button onClick={() => { setFormData({ name: '', email: '', status: 'active', segment: '' }); setAddModalOpen(true); }} className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90 flex items-center gap-2"><UserPlus className="w-5 h-5" />Добавить клиента</button>
+                            <button onClick={() => { setFormData({ email: '', consent_flag: true, segment: '' }); setAddModalOpen(true); }} className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90 flex items-center gap-2"><UserPlus className="w-5 h-5" />Добавить клиента</button>
                         </div>
                     </div>
 
                     <div className="mb-4">
                         <div className="relative">
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                            <input type="text" placeholder="Поиск клиентов..." className="w-full pl-10 pr-4 py-3 bg-card border border-border rounded-lg text-foreground focus:ring-2 focus:ring-primary outline-none" />
+                            <input type="text" placeholder="Поиск клиентов..." value={search} onChange={(e) => setSearch(e.target.value)} className="w-full pl-10 pr-4 py-3 bg-card border border-border rounded-lg text-foreground focus:ring-2 focus:ring-primary outline-none" />
                         </div>
                     </div>
 
-                    <div className="bg-card rounded-lg shadow-sm border border-border overflow-hidden">
-                        <div className="overflow-x-auto">
-                            <table className="w-full">
-                                <thead className="bg-background border-b border-border">
-                                    <tr>
-                                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Имя</th>
-                                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Email</th>
-                                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Статус</th>
-                                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Сегмент</th>
-                                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Кампаний</th>
-                                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Дата добавления</th>
-                                        <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Действия</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-border">
-                                    {(showDeleted ? deletedClients : activeClients).map((client) => (
-                                        <tr key={client.id} className="hover:bg-background">
-                                            <td className="px-6 py-4"><p className="font-medium text-foreground">{client.name}</p></td>
-                                            <td className="px-6 py-4 text-muted-foreground">{client.email}</td>
-                                            <td className="px-6 py-4">
-                                                <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${client.status === 'active' ? 'bg-muted text-primary' : 'bg-destructive/10 text-destructive'}`}>
-                                                    {client.status === 'active' ? 'Активен' : 'Отписался'}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 text-muted-foreground">{client.segment}</td>
-                                            <td className="px-6 py-4 text-muted-foreground">{client.campaigns}</td>
-                                            <td className="px-6 py-4 text-muted-foreground">{client.addedDate}</td>
-                                            <td className="px-6 py-4">
-                                                <div className="flex gap-2">
-                                                    {!showDeleted ? (
-                                                        <>
-                                                            <button onClick={() => handleEdit(client)} className="text-primary hover:opacity-80 text-sm font-medium bg-transparent p-0">Редактировать</button>
-                                                            <button onClick={() => handleDeleteClick(client.id)} className="text-destructive hover:opacity-80 text-sm font-medium bg-transparent p-0">Удалить</button>
-                                                        </>
-                                                    ) : (
-                                                        <button onClick={() => restoreClient(client.id)} className="text-primary hover:opacity-80 text-sm font-medium flex items-center gap-1 bg-transparent p-0"><RotateCcw className="w-3 h-3" />Восстановить</button>
-                                                    )}
-                                                </div>
-                                            </td>
+                    {loading ? (
+                        <div className="text-center py-12 text-muted-foreground">Загрузка...</div>
+                    ) : (
+                        <div className="bg-card rounded-lg shadow-sm border border-border overflow-hidden">
+                            <div className="overflow-x-auto">
+                                <table className="w-full">
+                                    <thead className="bg-background border-b border-border">
+                                        <tr>
+                                            <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Email</th>
+                                            <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Статус</th>
+                                            <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Сегмент</th>
+                                            <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Дата добавления</th>
+                                            <th className="px-6 py-4 text-left text-sm font-semibold text-foreground">Действия</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody className="divide-y divide-border">
+                                        {filtered.map((client) => (
+                                            <tr key={client.client_id} className="hover:bg-background">
+                                                <td className="px-6 py-4"><p className="font-medium text-foreground">{client.email}</p></td>
+                                                <td className="px-6 py-4">
+                                                    <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${client.consent_flag ? 'bg-muted text-primary' : 'bg-destructive/10 text-destructive'}`}>
+                                                        {client.consent_flag ? 'Активен' : 'Отписался'}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 text-muted-foreground">{client.segment}</td>
+                                                <td className="px-6 py-4 text-muted-foreground">{formatDate(client.created_at)}</td>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex gap-2">
+                                                        {!showDeleted ? (
+                                                            <>
+                                                                <button onClick={() => handleEdit(client)} className="text-primary hover:opacity-80 text-sm font-medium bg-transparent p-0">Редактировать</button>
+                                                                <button onClick={() => handleDeleteClick(client.client_id)} className="text-destructive hover:opacity-80 text-sm font-medium bg-transparent p-0">Удалить</button>
+                                                            </>
+                                                        ) : (
+                                                            <button onClick={() => restoreClient(client.client_id)} className="text-primary hover:opacity-80 text-sm font-medium flex items-center gap-1 bg-transparent p-0"><RotateCcw className="w-3 h-3" />Восстановить</button>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </main>
 
@@ -251,7 +258,7 @@ export default function ClientsPage() {
                         </div>
                         <div className="bg-muted rounded-lg p-4 text-sm">
                             <p className="font-medium text-card-foreground mb-2">Формат CSV:</p>
-                            <code className="text-xs text-muted-foreground">имя,email,статус,сегмент<br />Иван Иванов,ivan@example.com,active,VIP клиенты</code>
+                            <code className="text-xs text-muted-foreground">email,сегмент<br />ivan@example.com,VIP клиенты</code>
                         </div>
                         <div className="flex gap-3 justify-end mt-6">
                             <button onClick={() => setImportModalOpen(false)} className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition text-card-foreground bg-transparent">Отмена</button>
