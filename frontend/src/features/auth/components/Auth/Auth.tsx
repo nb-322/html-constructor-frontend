@@ -104,13 +104,7 @@ const Auth = () => {
 
                     <div className="mt-6 text-center">
                         <p className="text-muted-foreground text-sm">
-                            Нет аккаунта?{' '}
-                            <button
-                                onClick={() => navigate('/register')}
-                                className="text-primary hover:opacity-80 font-medium bg-transparent p-0"
-                            >
-                                Зарегистрироваться
-                            </button>
+                            Нет аккаунта? Обратитесь к администратору
                         </p>
                     </div>
                 </div>
