@@ -98,7 +98,7 @@ export default function CampaignsPage() {
                     <nav className="space-y-2">
                         <Link to="/templates" className="flex items-center gap-3 px-4 py-3 rounded-lg text-card-foreground hover:bg-accent"><FileText className="w-5 h-5" /><span>Шаблоны</span></Link>
                         <Link to="/pending-templates" className="flex items-center gap-3 px-4 py-3 rounded-lg text-card-foreground hover:bg-accent"><Clock className="w-5 h-5" /><span>Шаблоны на утверждении</span></Link>
-                        <Link to="/campaigns" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-muted text-primary"><Send className="w-5 h-5" /><span>Кампании</span></Link>
+                        <Link to="/campaigns" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-muted text-primary"><Send className="w-5 h-5" /><span>Компании</span></Link>
                         <Link to="/clients" className="flex items-center gap-3 px-4 py-3 rounded-lg text-card-foreground hover:bg-accent"><Users className="w-5 h-5" /><span>Клиенты</span></Link>
                         <Link to="/reports" className="flex items-center gap-3 px-4 py-3 rounded-lg text-card-foreground hover:bg-accent"><BarChart3 className="w-5 h-5" /><span>Отчеты</span></Link>
                         <Link to="/employees" className="flex items-center gap-3 px-4 py-3 rounded-lg text-card-foreground hover:bg-accent"><Shield className="w-5 h-5" /><span>Сотрудники</span></Link>
@@ -121,15 +121,15 @@ export default function CampaignsPage() {
                 <div className="max-w-6xl mx-auto p-8">
                     <div className="mb-8 flex items-center justify-between">
                         <div>
-                            <h1 className="text-3xl font-bold text-foreground mb-2">Кампании</h1>
-                            <p className="text-muted-foreground">Управляйте своими email-кампаниями</p>
+                            <h1 className="text-3xl font-bold text-foreground mb-2">Компании</h1>
+                            <p className="text-muted-foreground">Управляйте своими email-компаниями</p>
                         </div>
                         <div className="flex gap-3">
                             <button onClick={() => setShowDeleted(!showDeleted)} className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition text-card-foreground flex items-center gap-2 bg-transparent">
                                 <Trash2 className="w-4 h-4" />{showDeleted ? 'Показать активные' : 'Показать удаленные'}
                             </button>
                             <button onClick={() => setCreateModalOpen(true)} className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90 flex items-center gap-2">
-                                <Plus className="w-5 h-5" />Создать кампанию
+                                <Plus className="w-5 h-5" />Создать компанию
                             </button>
                         </div>
                     </div>
@@ -192,7 +192,7 @@ export default function CampaignsPage() {
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setCreateModalOpen(false)}>
                     <div className="bg-card border border-border rounded-lg p-6 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-xl font-semibold text-foreground">Создать кампанию</h2>
+                            <h2 className="text-xl font-semibold text-foreground">Создать компанию</h2>
                             <button onClick={() => setCreateModalOpen(false)} className="text-muted-foreground hover:text-foreground bg-transparent p-0"><X className="w-5 h-5" /></button>
                         </div>
                         <div className="space-y-4">
@@ -230,7 +230,7 @@ export default function CampaignsPage() {
                             <h2 className="text-xl font-semibold text-foreground">Подтверждение удаления</h2>
                             <button onClick={() => setDeleteModalOpen(false)} className="text-muted-foreground hover:text-foreground bg-transparent p-0"><X className="w-5 h-5" /></button>
                         </div>
-                        <p className="text-muted-foreground mb-6">Вы точно хотите удалить эту кампанию?</p>
+                        <p className="text-muted-foreground mb-6">Вы точно хотите удалить эту компанию?</p>
                         <div className="flex gap-3 justify-end">
                             <button onClick={() => setDeleteModalOpen(false)} className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition text-card-foreground bg-transparent">Отмена</button>
                             <button onClick={confirmDelete} className="px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:opacity-90 transition">Удалить</button>
@@ -243,7 +243,7 @@ export default function CampaignsPage() {
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setDetailsModalOpen(false)}>
                     <div className="bg-card border border-border rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-6">
-                            <h2 className="text-2xl font-semibold text-foreground">Кампания #{selectedCampaign.camp_id}</h2>
+                            <h2 className="text-2xl font-semibold text-foreground">Компания #{selectedCampaign.camp_id}</h2>
                             <button onClick={() => setDetailsModalOpen(false)} className="text-muted-foreground hover:text-foreground bg-transparent p-0"><X className="w-5 h-5" /></button>
                         </div>
                         <div className="space-y-6">
@@ -281,7 +281,7 @@ export default function CampaignsPage() {
                             {selectedCampaign.status === 'draft' && (
                                 <div className="border-t border-border pt-6">
                                     <div className="bg-warning/10 border border-warning/20 rounded-lg p-4">
-                                        <p className="text-sm text-card-foreground"><span className="font-medium">Черновик:</span> Завершите настройку кампании перед отправкой</p>
+                                        <p className="text-sm text-card-foreground"><span className="font-medium">Черновик:</span> Завершите настройку компании перед отправкой</p>
                                     </div>
                                 </div>
                             )}
