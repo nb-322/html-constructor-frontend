@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../../contexts/AuthContext';
+import { apiRegisterUser } from '../../../../api/api.ts';
 import { Mail, Eye, EyeOff, User } from 'lucide-react';
 
 const Register = () => {
     const navigate = useNavigate();
-    const { register } = useAuth();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [agreed, setAgreed] = useState(false);
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -20,12 +21,19 @@ const Register = () => {
             setError('Пожалуйста, заполните все поля');
             return;
         }
+        if (!agreed) {
+            setError('Необходимо согласиться с условиями использования');
+            return;
+        }
 
+        setLoading(true);
         try {
-            await register(email, password, 'marketer');
+            await apiRegisterUser({ login: email, password, role: 'marketer' });
             navigate('/auth');
         } catch {
-            setError('Ошибка регистрации');
+            setError('Ошибка регистрации. Проверьте данные и попробуйте снова.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -65,11 +73,11 @@ const Register = () => {
 
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-card-foreground mb-2">
-                                Логин
+                                Email
                             </label>
                             <input
                                 id="email"
-                                type="text"
+                                type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
@@ -103,15 +111,32 @@ const Register = () => {
                             </div>
                         </div>
 
+                        <div className="flex items-start gap-3">
+                            <input
+                                id="agree"
+                                type="checkbox"
+                                checked={agreed}
+                                onChange={(e) => setAgreed(e.target.checked)}
+                                className="mt-1 w-4 h-4 accent-primary cursor-pointer"
+                            />
+                            <label htmlFor="agree" className="text-sm text-muted-foreground cursor-pointer">
+                                Я согласен с{' '}
+                                <span className="text-primary hover:opacity-80 cursor-pointer">условиями использования</span>
+                                {' '}и{' '}
+                                <span className="text-primary hover:opacity-80 cursor-pointer">политикой конфиденциальности</span>
+                            </label>
+                        </div>
+
                         {error && (
                             <p className="text-destructive text-sm">{error}</p>
                         )}
 
                         <button
                             type="submit"
-                            className="w-full bg-primary text-primary-foreground py-3 rounded-lg hover:opacity-90 transition font-medium"
+                            disabled={loading}
+                            className="w-full bg-primary text-primary-foreground py-3 rounded-lg hover:opacity-90 transition font-medium disabled:opacity-60"
                         >
-                            Создать аккаунт
+                            {loading ? 'Регистрация...' : 'Создать аккаунт'}
                         </button>
                     </form>
 
