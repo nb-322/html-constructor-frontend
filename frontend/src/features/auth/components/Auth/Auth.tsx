@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import {useAuth} from "../../../../contexts/AuthContext.tsx";
+import { useAuth } from '../../../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import './Auth.css';
+import { Mail, Eye, EyeOff } from 'lucide-react';
 
 const Auth = () => {
     const { login, isLoading } = useAuth();
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -26,58 +27,95 @@ const Auth = () => {
 
         try {
             await login(email, password);
-            console.log('Login successful');
             setEmail('');
             setPassword('');
-            setError('');
             navigate('/', { replace: true });
-        } catch (err) {
-            setError('Login failed. Check console for details.');
-            console.error('Login error:', err);
+        } catch {
+            setError('Неверный логин или пароль');
         }
     };
 
     return (
-        <div className="auth-container">
-            <h3>Авторизация</h3>
-            <form onSubmit={handleSubmit} noValidate className="auth-form">
-                <div className="auth-input-group">
-                    <input
-                        type="text"
-                        placeholder="Логин"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="auth-input"
-                        disabled={isLoading}
-                    />
+        <div className="min-h-screen bg-background flex items-center justify-center p-6">
+            <div className="w-full max-w-md">
+                <div className="text-center mb-8">
+                    <div className="inline-flex items-center gap-2 mb-6">
+                        <Mail className="w-10 h-10 text-primary" />
+                        <span className="text-2xl font-bold text-foreground">EmailBuilder</span>
+                    </div>
+                    <h1 className="text-3xl font-bold text-foreground mb-2">Вход в систему</h1>
+                    <p className="text-muted-foreground">Войдите в свой аккаунт</p>
                 </div>
-                <div className="auth-input-group">
-                    <input
-                        type="password"
-                        placeholder="Пароль"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="auth-input"
-                        disabled={isLoading}
-                    />
+
+                <div className="bg-card border border-border rounded-2xl shadow-xl p-8">
+                    <form onSubmit={handleSubmit} className="space-y-6" autoComplete="off">
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium text-card-foreground mb-2">
+                                Логин
+                            </label>
+                            <input
+                                id="email"
+                                type="text"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                disabled={isLoading}
+                                className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none text-foreground"
+                                placeholder="ivan@example.com"
+                            />
+                        </div>
+
+                        <div>
+                            <label htmlFor="password" className="block text-sm font-medium text-card-foreground mb-2">
+                                Пароль
+                            </label>
+                            <div className="relative">
+                                <input
+                                    id="password"
+                                    type={showPassword ? 'text' : 'password'}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    disabled={isLoading}
+                                    className="w-full px-4 py-3 bg-input-background border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none pr-12 text-foreground"
+                                    placeholder="••••••••"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                >
+                                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                                </button>
+                            </div>
+                        </div>
+
+                        {error && (
+                            <p className="text-destructive text-sm">{error}</p>
+                        )}
+
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className="w-full bg-primary text-primary-foreground py-3 rounded-lg hover:opacity-90 transition font-medium disabled:opacity-50"
+                        >
+                            {isLoading ? 'Вход...' : 'Войти'}
+                        </button>
+                    </form>
+
+                    <div className="mt-6 text-center">
+                        <p className="text-muted-foreground">
+                            Нет аккаунта?{' '}
+                            <button
+                                onClick={() => navigate('/register')}
+                                className="text-primary hover:opacity-80 font-medium bg-transparent p-0"
+                            >
+                                Зарегистрироваться
+                            </button>
+                        </p>
+                    </div>
                 </div>
-                <button
-                    type="submit"
-                    disabled={isLoading}
-                    className="auth-button"
-                >
-                    {isLoading ? 'Logging in...' : 'Login'}
-                </button>
-            </form>
-            {error && <p className="auth-error">{error}</p>}
-            <p className="auth-link">
-                <button
-                    onClick={() => navigate('/register')}
-                    className="auth-link-button"
-                >
-                    Нет аккаунта? Зарегистрироваться
-                </button>
-            </p>
+            </div>
         </div>
     );
 };

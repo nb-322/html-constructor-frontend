@@ -1,11 +1,11 @@
 .Canvas {
     flex: 1;
-    border: 2px solid var(--primary-cyan);
-    border-radius: 16px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
     margin: 0;
     position: relative;
     box-sizing: border-box;
     background: white;
-    box-shadow: 0 8px 32px rgba(0, 217, 255, 0.2);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     overflow: hidden;
 }
