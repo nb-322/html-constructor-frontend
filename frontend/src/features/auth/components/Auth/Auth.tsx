@@ -101,6 +101,18 @@ const Auth = () => {
                             {isLoading ? 'Вход...' : 'Войти'}
                         </button>
                     </form>
+
+                    <div className="mt-6 text-center">
+                        <p className="text-muted-foreground text-sm">
+                            Нет аккаунта?{' '}
+                            <button
+                                onClick={() => navigate('/register')}
+                                className="text-primary hover:opacity-80 font-medium bg-transparent p-0"
+                            >
+                                Зарегистрироваться
+                            </button>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
