@@ -24,6 +24,7 @@ export default function EmployeesPage() {
     const [editingEmployee, setEditingEmployee] = useState<Employee | null>(null);
     const [employeeToDelete, setEmployeeToDelete] = useState<number | null>(null);
     const [formData, setFormData] = useState({ login: '', password: '', role: 'маркетолог' });
+    const [createError, setCreateError] = useState('');
 
     const load = async () => {
         setLoading(true);
@@ -38,9 +39,16 @@ export default function EmployeesPage() {
     useEffect(() => { load(); }, [showDeleted]);
 
     const handleCreate = async () => {
-        try { await apiRegisterUser({ login: formData.login, password: formData.password, role: formData.role }); await load(); } catch { /* ignore */ }
-        setCreateModalOpen(false);
-        setFormData({ login: '', password: '', role: 'маркетолог' });
+        setCreateError('');
+        try {
+            await apiRegisterUser({ login: formData.login, password: formData.password, role: formData.role });
+            await load();
+            setCreateModalOpen(false);
+            setFormData({ login: '', password: '', role: 'маркетолог' });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            setCreateError(msg || 'Ошибка создания сотрудника');
+        }
     };
 
     const handleEdit = (e: Employee) => {
@@ -116,7 +124,7 @@ export default function EmployeesPage() {
                         </div>
                         <div className="flex gap-3">
                             <button onClick={() => setShowDeleted(!showDeleted)} className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition text-card-foreground flex items-center gap-2 bg-transparent"><Trash2 className="w-4 h-4" />{showDeleted ? 'Показать активные' : 'Показать удаленные'}</button>
-                            <button onClick={() => { setFormData({ login: '', password: '', role: 'маркетолог' }); setCreateModalOpen(true); }} className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90 flex items-center gap-2"><UserPlus className="w-5 h-5" />Создать сотрудника</button>
+                            <button onClick={() => { setFormData({ login: '', password: '', role: 'маркетолог' }); setCreateError(''); setCreateModalOpen(true); }} className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90 flex items-center gap-2"><UserPlus className="w-5 h-5" />Создать сотрудника</button>
                         </div>
                     </div>
 
@@ -206,7 +214,8 @@ export default function EmployeesPage() {
                                 <ul className="space-y-1 text-xs"><li>• <strong>Маркетолог:</strong> Создание шаблонов и кампаний</li><li>• <strong>Аналитик:</strong> Просмотр отчётов и статистики</li><li>• <strong>Админ:</strong> Полный доступ</li></ul>
                             </div>
                         </div>
-                        <div className="flex gap-3 justify-end mt-6">
+                        {createError && <p className="text-destructive text-sm mt-3">{createError}</p>}
+                        <div className="flex gap-3 justify-end mt-4">
                             <button onClick={() => setCreateModalOpen(false)} className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition text-card-foreground bg-transparent">Отмена</button>
                             <button onClick={handleCreate} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition">Создать</button>
                         </div>

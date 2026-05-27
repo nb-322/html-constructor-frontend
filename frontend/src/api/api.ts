@@ -9,7 +9,11 @@ const authHeaders = (): HeadersInit => ({
 
 const request = async (url: string, options: RequestInit = {}) => {
     const res = await fetch(`${BASE_URL}${url}`, options);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    if (!res.ok) {
+        let msg = `HTTP ${res.status}`;
+        try { const body = await res.json(); msg = body.error || body.message || msg; } catch { /* ignore */ }
+        throw new Error(msg);
+    }
     return res.json();
 };
 
