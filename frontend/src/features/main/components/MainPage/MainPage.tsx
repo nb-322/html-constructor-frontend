@@ -43,7 +43,9 @@ const MainPage = () => {
         try {
             const fn = showDeleted ? apiGetArchivedTemplates : apiGetUserTemplates;
             const data = await fn();
-            setTemplates(data.templates || []);
+            const all: Template[] = data.templates || [];
+            // В архиве показываем всё, в активных — только черновики
+            setTemplates(showDeleted ? all : all.filter(t => t.status === 'черновик'));
         } catch {
             setTemplates([]);
         } finally {
