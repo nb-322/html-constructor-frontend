@@ -43,9 +43,7 @@ const MainPage = () => {
         try {
             const fn = showDeleted ? apiGetArchivedTemplates : apiGetUserTemplates;
             const data = await fn();
-            const all: Template[] = data.templates || [];
-            // В архиве показываем всё, в активных — только черновики
-            setTemplates(showDeleted ? all : all.filter(t => t.status === 'черновик'));
+            setTemplates(data.templates || []);
         } catch {
             setTemplates([]);
         } finally {
@@ -70,6 +68,17 @@ const MainPage = () => {
 
     const restoreTemplate = async (id: number) => {
         try { await apiRestoreTemplate(id); await loadTemplates(); } catch { /* ignore */ }
+    };
+
+    const getStatusBadge = (status: string) => {
+        const map: Record<string, { label: string; cls: string }> = {
+            'черновик':        { label: 'Черновик',        cls: 'bg-muted text-muted-foreground' },
+            'на утверждении':  { label: 'На утверждении',  cls: 'bg-yellow-100 text-yellow-700' },
+            'утверждён':       { label: 'Утверждён',       cls: 'bg-green-100 text-green-700' },
+            'отклонён':        { label: 'Отклонён',        cls: 'bg-red-100 text-red-600' },
+        };
+        const s = map[status] ?? { label: status, cls: 'bg-muted text-muted-foreground' };
+        return <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${s.cls}`}>{s.label}</span>;
     };
 
     const formatDate = (dateStr: string) => {
@@ -198,12 +207,12 @@ const MainPage = () => {
                                     </div>
                                     <div className="h-1/3 p-4 flex flex-col justify-between">
                                         <div className="flex items-center justify-between">
-                                            <h3 className="font-semibold text-foreground">{template.name}</h3>
-                                            {showDeleted && (
+                                            <h3 className="font-semibold text-foreground truncate mr-2">{template.name}</h3>
+                                            {showDeleted ? (
                                                 <button onClick={() => restoreTemplate(template.tpl_id)} className="text-primary hover:opacity-80 bg-transparent p-0">
                                                     <RotateCcw className="w-4 h-4" />
                                                 </button>
-                                            )}
+                                            ) : getStatusBadge(template.status)}
                                         </div>
                                         <p className="text-xs text-muted-foreground">Изменено {formatDate(template.updated_at)}</p>
                                     </div>
