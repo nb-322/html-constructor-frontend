@@ -15,23 +15,24 @@ export const ElementWrapper: React.FC<ElementWrapperProps> = ({ element, childre
     const isSelected = selectedId === element.id;
     const { startDrag } = useDrag(element);
     const { startResize } = useResize(element);
-    const dragStartedRef = useRef(false);
     const [isDragging, setIsDragging] = React.useState(false);
 
-    // Для кнопок не показываем outline
-    const shouldShowOutline = true;
+    const isEditableTarget = (target: EventTarget | null): boolean => {
+        if (!target) return false;
+        const el = target as HTMLElement;
+        return el.contentEditable === "true" || !!el.closest('[contenteditable="true"]');
+    };
 
     const handleMouseDown = (e: React.MouseEvent) => {
-        // Если это не resize хэндл
-        if ((e.target as HTMLElement).getAttribute("data-resize-handle") !== "true") {
-            dragStartedRef.current = false;
-            setIsDragging(true);
-            // Выбираем элемент при клике, если еще не выбран
-            if (!isSelected) {
-                selectElement(element.id);
-            }
-            startDrag(e, () => setIsDragging(false));
-        }
+        if ((e.target as HTMLElement).getAttribute("data-resize-handle") === "true") return;
+
+        // Если элемент уже выбран и кликнули на contentEditable — не начинаем drag
+        if (isSelected && isEditableTarget(e.target)) return;
+
+        if (!isSelected) selectElement(element.id);
+
+        setIsDragging(true);
+        startDrag(e, () => setIsDragging(false));
     };
 
     const handleResizeMouseDown = (e: React.MouseEvent) => {
@@ -48,17 +49,18 @@ export const ElementWrapper: React.FC<ElementWrapperProps> = ({ element, childre
                 top: element.y,
                 width: element.width,
                 height: element.height,
-                outline: shouldShowOutline ? (isSelected ? "2px solid #00D9FF" : "2px solid rgba(0, 217, 255, 0.3)") : "none",
+                outline: isSelected ? "2px solid #00D9FF" : "2px solid rgba(0, 217, 255, 0.3)",
                 outlineOffset: "-2px",
                 boxSizing: "border-box",
                 cursor: isSelected ? "move" : "pointer",
                 transition: isDragging ? "none" : "outline 0.1s ease",
-                userSelect: "none",
+                // Разрешаем выделение текста когда элемент выбран
+                userSelect: isSelected ? "text" : "none",
             }}
             onMouseDown={handleMouseDown}
         >
             {children}
-            {isSelected && !isDragging && shouldShowOutline && (
+            {isSelected && !isDragging && (
                 <div
                     data-resize-handle="true"
                     onMouseDown={handleResizeMouseDown}

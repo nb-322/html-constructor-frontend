@@ -9,24 +9,35 @@ interface Props {
 
 export function ButtonElement({ element }: Props) {
     const updateElement = useEditorStore(s => s.updateElement);
-    const imgRef = useRef<HTMLDivElement>(null);
+    const selectedId = useEditorStore(s => s.selectedId);
+    const isSelected = selectedId === element.id;
+    const btnRef = useRef<HTMLDivElement>(null);
 
     useLayoutEffect(() => {
-        if (!imgRef.current) return;
-        const h = imgRef.current.scrollHeight;
+        if (!btnRef.current) return;
+        const h = btnRef.current.scrollHeight;
         if (h !== element.height) updateElement(element.id, { height: h });
     }, []);
 
     if (element.type !== "button") return null;
 
     return (
-
         <ElementWrapper element={element}>
             <div
-                ref={imgRef}
+                ref={btnRef}
+                contentEditable={isSelected}
+                suppressContentEditableWarning
+                draggable={false}
+                onBlur={() => {
+                    if (!btnRef.current) return;
+                    updateElement(element.id, { text: btnRef.current.innerText });
+                }}
                 style={{
                     width: "100%",
                     height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     wordWrap: "break-word",
                     overflowWrap: "break-word",
                     color: element.styles.color,
@@ -35,34 +46,15 @@ export function ButtonElement({ element }: Props) {
                     background: element.styles.background,
                     borderRadius: element.styles.borderRadius,
                     boxSizing: "border-box",
+                    padding: "0 8px",
+                    textAlign: "center",
+                    lineHeight: "normal",
+                    cursor: isSelected ? "text" : "pointer",
                     transition: "height 0.15s ease, width 0.15s ease",
+                    outline: "none",
                 }}
             >
-                <button
-
-                    draggable={false}
-                    style={{
-                        all: "unset",
-                        display: "flex",          // делаем флекс-контейнером
-                        alignItems: "center",     // вертикально по центру
-                        justifyContent: "center", // горизонтально по центру
-                        width: "100%",
-                        height: "100%",
-                        boxSizing: "border-box",
-                        cursor: "pointer",
-                        font: "inherit",          // наследует шрифт из настроек элемента
-                        color: element.styles.color,
-                        background: "none",
-                        border: "none",
-                        boxShadow: "none",
-                        borderRadius: element.styles.borderRadius,
-                        padding: "0 8px",         // минимальные отступы, чтобы текст не прилипал
-                        textAlign: "center",      // на случай, если flex не применится (но он применится)
-                        lineHeight: "normal",     // убираем возможные перекосы
-                    }}
-                    className={""}
-                    value={element.text}
-                >{element.text}</button>
+                {element.text}
             </div>
         </ElementWrapper>
     );
