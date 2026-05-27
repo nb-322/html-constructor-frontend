@@ -6,12 +6,14 @@ import {
     apiGetUserTemplates, apiGetArchivedTemplates,
     apiArchiveTemplate, apiRestoreTemplate,
 } from '../../../../api/api.ts';
+import TemplatePreview from './TemplatePreview.tsx';
 
 interface Template {
     tpl_id: number;
     name: string;
     status: string;
     updated_at: string;
+    html_body?: string;
     deleted?: boolean;
 }
 
@@ -34,7 +36,6 @@ const MainPage = () => {
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [revokeModalOpen, setRevokeModalOpen] = useState(false);
     const [templateToDelete, setTemplateToDelete] = useState<number | null>(null);
-    const [templateToRevoke, setTemplateToRevoke] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
 
     const loadTemplates = async () => {
@@ -53,7 +54,7 @@ const MainPage = () => {
     useEffect(() => { loadTemplates(); }, [showDeleted]);
 
     const handleDeleteClick = (id: number) => { setTemplateToDelete(id); setDeleteModalOpen(true); setMenuOpen(null); };
-    const handleRevokeClick = (id: number) => { setTemplateToRevoke(id); setRevokeModalOpen(true); setMenuOpen(null); };
+    const handleRevokeClick = (id: number) => { void id; setRevokeModalOpen(true); setMenuOpen(null); };
 
     const confirmDelete = async () => {
         if (templateToDelete == null) return;
@@ -62,7 +63,7 @@ const MainPage = () => {
         setTemplateToDelete(null);
     };
 
-    const confirmRevoke = () => { setRevokeModalOpen(false); setTemplateToRevoke(null); };
+    const confirmRevoke = () => { setRevokeModalOpen(false); };
 
     const restoreTemplate = async (id: number) => {
         try { await apiRestoreTemplate(id); await loadTemplates(); } catch { /* ignore */ }
@@ -143,7 +144,11 @@ const MainPage = () => {
                                     key={template.tpl_id}
                                     className="aspect-[3/4] bg-card border border-border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition group relative"
                                 >
-                                    <div className={`h-2/3 ${THUMBNAILS[index % THUMBNAILS.length]} relative`}>
+                                    <div className={`h-2/3 relative overflow-hidden`}>
+                                        <TemplatePreview
+                                            htmlBody={template.html_body || ''}
+                                            fallbackClass={THUMBNAILS[index % THUMBNAILS.length]}
+                                        />
                                         {!showDeleted && (
                                             <>
                                                 <div className="absolute inset-0 bg-card/10 backdrop-blur-[1px] flex items-center justify-center opacity-0 group-hover:opacity-100 transition">

@@ -89,9 +89,9 @@ export default function ClientsPage() {
 
     const filtered = clients.filter(c => c.email.toLowerCase().includes(search.toLowerCase()) || c.segment.toLowerCase().includes(search.toLowerCase()));
 
-    const ClientForm = () => (
+    const clientFormJSX = (
         <div className="space-y-4">
-            <div><label className="block text-sm font-medium text-card-foreground mb-2">Email</label><input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="ivan@example.com" className="w-full px-4 py-3 bg-input-background border border-border rounded-lg text-foreground focus:ring-2 focus:ring-primary outline-none" /></div>
+            <div><label className="block text-sm font-medium text-card-foreground mb-2">Email</label><input type="text" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="ivan@example.com" className="w-full px-4 py-3 bg-input-background border border-border rounded-lg text-foreground focus:ring-2 focus:ring-primary outline-none" /></div>
             <div>
                 <label className="block text-sm font-medium text-card-foreground mb-2">Сегмент</label>
                 <select value={formData.segment} onChange={(e) => setFormData({ ...formData, segment: e.target.value })} className="w-full px-4 py-3 bg-input-background border border-border rounded-lg text-foreground focus:ring-2 focus:ring-primary outline-none">
@@ -211,7 +211,7 @@ export default function ClientsPage() {
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setEditModalOpen(false)}>
                     <div className="bg-card border border-border rounded-lg p-6 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-4"><h2 className="text-xl font-semibold text-foreground">Редактировать клиента</h2><button onClick={() => setEditModalOpen(false)} className="text-muted-foreground hover:text-foreground bg-transparent p-0"><X className="w-5 h-5" /></button></div>
-                        <ClientForm />
+                        {clientFormJSX}
                         <div className="flex gap-3 justify-end mt-6">
                             <button onClick={() => setEditModalOpen(false)} className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition text-card-foreground bg-transparent">Отмена</button>
                             <button onClick={saveClient} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition">Сохранить</button>
@@ -224,7 +224,7 @@ export default function ClientsPage() {
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setAddModalOpen(false)}>
                     <div className="bg-card border border-border rounded-lg p-6 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-between mb-4"><h2 className="text-xl font-semibold text-foreground">Добавить клиента</h2><button onClick={() => setAddModalOpen(false)} className="text-muted-foreground hover:text-foreground bg-transparent p-0"><X className="w-5 h-5" /></button></div>
-                        <ClientForm />
+                        {clientFormJSX}
                         <div className="flex gap-3 justify-end mt-6">
                             <button onClick={() => setAddModalOpen(false)} className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition text-card-foreground bg-transparent">Отмена</button>
                             <button onClick={addClient} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition">Добавить</button>
