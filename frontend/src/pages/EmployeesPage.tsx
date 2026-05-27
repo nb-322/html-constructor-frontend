@@ -203,7 +203,7 @@ export default function EmployeesPage() {
                             </div>
                             <div className="bg-muted rounded-lg p-4 text-sm text-muted-foreground">
                                 <p className="font-medium text-card-foreground mb-2">Права доступа:</p>
-                                <ul className="space-y-1 text-xs"><li>• <strong>Наблюдатель:</strong> Только просмотр</li><li>• <strong>Редактор:</strong> Создание и редактирование</li><li>• <strong>Администратор:</strong> Полный доступ</li></ul>
+                                <ul className="space-y-1 text-xs"><li>• <strong>Маркетолог:</strong> Создание шаблонов и кампаний</li><li>• <strong>Аналитик:</strong> Просмотр отчётов и статистики</li><li>• <strong>Админ:</strong> Полный доступ</li></ul>
                             </div>
                         </div>
                         <div className="flex gap-3 justify-end mt-6">
