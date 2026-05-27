@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import {
     apiGetCampaigns, apiGetArchivedCampaigns,
     apiCreateCampaign, apiArchiveCampaign, apiRestoreCampaign,
-    apiGetSegments, apiGetTemplates,
+    apiGetSegments, apiGetUserTemplates,
 } from '../api/api.ts';
 
 interface Campaign {
@@ -50,7 +50,7 @@ export default function CampaignsPage() {
 
     useEffect(() => {
         apiGetSegments().then(d => setSegments(d.segments || [])).catch(() => {});
-        apiGetTemplates().then(d => setTemplates(d.templates || [])).catch(() => {});
+        apiGetUserTemplates().then(d => setTemplates(d.templates || [])).catch(() => {});
     }, []);
 
     const handleDetails = (c: Campaign) => { setSelectedCampaign(c); setDetailsModalOpen(true); };
