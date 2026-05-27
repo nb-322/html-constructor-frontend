@@ -1,10 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Plus, Settings, User, LogOut, Mail, Eye, FileText, Send, Users, BarChart3, Trash2, X, Shield, MoreVertical, Ban, RotateCcw, Clock } from 'lucide-react';
+import { Plus, Settings, User, LogOut, Mail, Eye, FileText, Send, Users, BarChart3, Trash2, X, Shield, MoreVertical, Ban, RotateCcw, Clock, SendHorizonal } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../../../contexts/AuthContext';
 import {
     apiGetUserTemplates, apiGetArchivedTemplates,
-    apiArchiveTemplate, apiRestoreTemplate,
+    apiArchiveTemplate, apiRestoreTemplate, apiSubmitTemplate,
 } from '../../../../api/api.ts';
 import TemplatePreview from './TemplatePreview.tsx';
 
@@ -55,6 +55,7 @@ const MainPage = () => {
 
     const handleDeleteClick = (id: number) => { setTemplateToDelete(id); setDeleteModalOpen(true); setMenuOpen(null); };
     const handleRevokeClick = (id: number) => { void id; setRevokeModalOpen(true); setMenuOpen(null); };
+    const handleSubmit = async (id: number) => { setMenuOpen(null); try { await apiSubmitTemplate(id); await loadTemplates(); } catch { /* ignore */ } };
 
     const confirmDelete = async () => {
         if (templateToDelete == null) return;
@@ -168,10 +169,16 @@ const MainPage = () => {
                                                         <MoreVertical className="w-4 h-4" />
                                                     </button>
                                                     {menuOpen === template.tpl_id && (
-                                                        <div className="absolute right-0 mt-2 w-48 bg-card border border-border rounded-lg shadow-lg z-10">
+                                                        <div className="absolute right-0 mt-2 w-52 bg-card border border-border rounded-lg shadow-lg z-10">
+                                                            <button
+                                                                onClick={() => handleSubmit(template.tpl_id)}
+                                                                className="w-full px-4 py-3 text-left hover:bg-accent flex items-center gap-2 text-card-foreground bg-transparent"
+                                                            >
+                                                                <SendHorizonal className="w-4 h-4" />На утверждение
+                                                            </button>
                                                             <button
                                                                 onClick={() => handleDeleteClick(template.tpl_id)}
-                                                                className="w-full px-4 py-3 text-left hover:bg-accent flex items-center gap-2 text-card-foreground bg-transparent"
+                                                                className="w-full px-4 py-3 text-left hover:bg-accent flex items-center gap-2 text-card-foreground border-t border-border bg-transparent"
                                                             >
                                                                 <Trash2 className="w-4 h-4" />Удалить
                                                             </button>
