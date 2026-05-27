@@ -70,6 +70,9 @@ export default function TemplatePreview({ htmlBody, fallbackClass }: Props) {
                             {el.text}
                         </div>
                     );
+                    if (el.type === 'divider' || el.type === 'rectangle') return (
+                        <div key={el.id} style={{ ...base }} />
+                    );
                     return null;
                 })}
             </div>
