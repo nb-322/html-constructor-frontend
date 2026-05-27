@@ -5,7 +5,10 @@ import TextEditor from "./TextEditor/TextEditor.tsx";
 import ButtonEditor from "./ButtonEditor/ButtonEditor.tsx";
 import XEditor from "./EditorFields/XEditor.tsx";
 import YEditor from "./EditorFields/YEditor.tsx";
+import WidthEditor from "./EditorFields/WidthEditor.tsx";
+import HeightEditor from "./EditorFields/HeightEditor.tsx";
 import BackgroundEditor from "./EditorFields/BackgroundEditor.tsx";
+import BorderRadiusEditor from "./EditorFields/BorderRadiusEditor.tsx";
 
 const PropertiesEditor = () => {
     const selectedElement = useEditorStore(state =>
@@ -27,7 +30,10 @@ const PropertiesEditor = () => {
                 <div key={selectedElement.id}>
                     <XEditor/>
                     <YEditor/>
+                    <WidthEditor/>
+                    <HeightEditor/>
                     <BackgroundEditor/>
+                    <BorderRadiusEditor/>
                 </div>
             )}
         </div>
