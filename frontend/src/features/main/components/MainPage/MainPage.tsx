@@ -53,6 +53,12 @@ const MainPage = () => {
     const [historyReviews, setHistoryReviews] = useState<Review[]>([]);
     const [historyTemplateName, setHistoryTemplateName] = useState('');
 
+    const [toast, setToast] = useState<{ msg: string; ok: boolean } | null>(null);
+    const showToast = (msg: string, ok = true) => {
+        setToast({ msg, ok });
+        setTimeout(() => setToast(null), 3000);
+    };
+
     const loadTemplates = async () => {
         setLoading(true);
         try {
@@ -70,7 +76,16 @@ const MainPage = () => {
 
     const handleDeleteClick = (id: number) => { setTemplateToDelete(id); setDeleteModalOpen(true); setMenuOpen(null); };
     const handleRevokeClick = (id: number) => { void id; setRevokeModalOpen(true); setMenuOpen(null); };
-    const handleSubmit = async (id: number) => { setMenuOpen(null); try { await apiSubmitTemplate(id); await loadTemplates(); } catch { /* ignore */ } };
+    const handleSubmit = async (id: number) => {
+        setMenuOpen(null);
+        try {
+            await apiSubmitTemplate(id);
+            await loadTemplates();
+            showToast('Шаблон отправлен на утверждение');
+        } catch (e) {
+            showToast(e instanceof Error ? e.message : 'Ошибка при отправке', false);
+        }
+    };
 
     const handleHistoryClick = async (id: number, name: string) => {
         setMenuOpen(null);
@@ -93,7 +108,13 @@ const MainPage = () => {
 
     const confirmDelete = async () => {
         if (templateToDelete == null) return;
-        try { await apiArchiveTemplate(templateToDelete); await loadTemplates(); } catch { /* ignore */ }
+        try {
+            await apiArchiveTemplate(templateToDelete);
+            await loadTemplates();
+            showToast('Шаблон удалён');
+        } catch (e) {
+            showToast(e instanceof Error ? e.message : 'Ошибка удаления', false);
+        }
         setDeleteModalOpen(false);
         setTemplateToDelete(null);
     };
@@ -101,7 +122,13 @@ const MainPage = () => {
     const confirmRevoke = () => { setRevokeModalOpen(false); };
 
     const restoreTemplate = async (id: number) => {
-        try { await apiRestoreTemplate(id); await loadTemplates(); } catch { /* ignore */ }
+        try {
+            await apiRestoreTemplate(id);
+            await loadTemplates();
+            showToast('Шаблон восстановлен');
+        } catch (e) {
+            showToast(e instanceof Error ? e.message : 'Ошибка восстановления', false);
+        }
     };
 
     const getStatusBadge = (status: string) => {
@@ -292,6 +319,12 @@ const MainPage = () => {
                             <button onClick={confirmRevoke} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition">Отозвать</button>
                         </div>
                     </div>
+                </div>
+            )}
+
+            {toast && (
+                <div className={`fixed bottom-6 right-6 z-50 px-5 py-3 rounded-lg shadow-lg text-sm font-medium transition-all ${toast.ok ? 'bg-green-600 text-white' : 'bg-destructive text-destructive-foreground'}`}>
+                    {toast.msg}
                 </div>
             )}
 
