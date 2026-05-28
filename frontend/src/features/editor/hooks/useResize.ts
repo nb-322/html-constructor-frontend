@@ -5,9 +5,7 @@ const snap = (value: number) => Math.round(value / GRID_SIZE) * GRID_SIZE;
 
 export const useResize = (element: EditorElement) => {
     const canvasWidth = useEditorStore(s => s.canvasWidth);
-    const canvasHeight = useEditorStore(s => s.canvasHeight);
     const updateElement = useEditorStore(s => s.updateElement);
-    const setCanvasSize = useEditorStore(s => s.setCanvasSize);
     const snapGrid = useEditorStore(s => s.snapGrid);
 
     const startResize = (e: React.MouseEvent) => {
@@ -25,7 +23,7 @@ export const useResize = (element: EditorElement) => {
             const newWidth = Math.max(GRID_SIZE, Math.min(canvasWidth - element.x, snappedWidth));
             const newHeight = Math.max(GRID_SIZE, snappedHeight);
             updateElement(element.id, { width: newWidth, height: newHeight });
-            if (element.y + newHeight > canvasHeight) setCanvasSize(canvasWidth, element.y + newHeight);
+            // Canvas auto-expands via useEffect in Canvas.tsx watching elements
         };
         const up = () => {
             window.removeEventListener("mousemove", move);
