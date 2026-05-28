@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Settings, User, LogOut, Mail, FileText, Send, Users, BarChart3, Shield, Clock, Check, X as XIcon } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { apiGetPendingTemplates, apiApproveTemplate, apiRejectTemplate } from '../api/api.ts';
+import { apiGetPendingTemplates, apiApproveTemplate, apiRejectTemplate, apiGetUsers } from '../api/api.ts';
 
 interface PendingTemplate {
     tpl_id: number;
@@ -24,6 +24,7 @@ export default function PendingTemplatesPage() {
     const navigate = useNavigate();
 
     const [pendingTemplates, setPendingTemplates] = useState<PendingTemplate[]>([]);
+    const [userMap, setUserMap] = useState<Record<number, string>>({});
     const [loading, setLoading] = useState(true);
     const [rejectModalOpen, setRejectModalOpen] = useState(false);
     const [templateToReject, setTemplateToReject] = useState<number | null>(null);
@@ -32,8 +33,14 @@ export default function PendingTemplatesPage() {
     const load = async () => {
         setLoading(true);
         try {
-            const data = await apiGetPendingTemplates();
-            setPendingTemplates(data.templates || []);
+            const [tplData, usersData] = await Promise.all([
+                apiGetPendingTemplates(),
+                apiGetUsers().catch(() => ({ users: [] })),
+            ]);
+            setPendingTemplates(tplData.templates || []);
+            const map: Record<number, string> = {};
+            for (const u of usersData.users || []) map[u.id] = u.login;
+            setUserMap(map);
         } catch {
             setPendingTemplates([]);
         } finally {
@@ -109,7 +116,7 @@ export default function PendingTemplatesPage() {
                                     <div className="h-1/3 p-4 flex flex-col justify-between">
                                         <div>
                                             <h3 className="font-semibold text-foreground mb-1">{template.name}</h3>
-                                            <p className="text-xs text-muted-foreground mb-1">ID автора: {template.created_by}</p>
+                                            <p className="text-xs text-muted-foreground mb-1">Автор: {userMap[template.created_by] || `#${template.created_by}`}</p>
                                             <p className="text-xs text-muted-foreground">{formatDate(template.created_at)}</p>
                                         </div>
                                         <div className="flex gap-2 mt-3">
