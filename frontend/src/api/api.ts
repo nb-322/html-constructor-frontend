@@ -41,6 +41,7 @@ export const apiGetArchivedTemplates = () => get('/api/templates/archive');
 export const apiGetTemplate = (id: number) => get(`/api/templates/${id}`);
 export const apiCreateTemplate = (data: { name: string; html_body: string; status?: string }) => post('/api/templates', data);
 export const apiUpdateTemplate = (id: number, data: { name: string; html_body: string; status?: string }) => patch(`/api/templates/${id}`, data);
+export const apiGetTemplateReviews = (id: number) => get(`/api/templates/${id}/reviews`);
 export const apiArchiveTemplate = (id: number) => patch(`/api/templates/${id}/archive`);
 export const apiRestoreTemplate = (id: number) => patch(`/api/templates/${id}/restore`);
 export const apiApproveTemplate = (id: number) => patch(`/api/templates/${id}/approve`);

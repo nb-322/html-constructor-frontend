@@ -1,12 +1,22 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Plus, Settings, User, LogOut, Mail, Eye, FileText, Send, Users, BarChart3, Trash2, X, Shield, MoreVertical, Ban, RotateCcw, Clock, SendHorizonal } from 'lucide-react';
+import { Plus, Settings, User, LogOut, Mail, Eye, FileText, Send, Users, BarChart3, Trash2, X, Shield, MoreVertical, Ban, RotateCcw, Clock, SendHorizonal, History } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../../../contexts/AuthContext';
 import {
     apiGetUserTemplates, apiGetArchivedTemplates,
     apiArchiveTemplate, apiRestoreTemplate, apiSubmitTemplate,
+    apiGetTemplateReviews,
 } from '../../../../api/api.ts';
 import TemplatePreview from './TemplatePreview.tsx';
+
+interface Review {
+    id: number;
+    tpl_id: number;
+    admin_id: number;
+    status: string;
+    comment: string | null;
+    reviewed_at: string;
+}
 
 interface Template {
     tpl_id: number;
@@ -38,6 +48,11 @@ const MainPage = () => {
     const [templateToDelete, setTemplateToDelete] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
 
+    const [historyModalOpen, setHistoryModalOpen] = useState(false);
+    const [historyLoading, setHistoryLoading] = useState(false);
+    const [historyReviews, setHistoryReviews] = useState<Review[]>([]);
+    const [historyTemplateName, setHistoryTemplateName] = useState('');
+
     const loadTemplates = async () => {
         setLoading(true);
         try {
@@ -56,6 +71,25 @@ const MainPage = () => {
     const handleDeleteClick = (id: number) => { setTemplateToDelete(id); setDeleteModalOpen(true); setMenuOpen(null); };
     const handleRevokeClick = (id: number) => { void id; setRevokeModalOpen(true); setMenuOpen(null); };
     const handleSubmit = async (id: number) => { setMenuOpen(null); try { await apiSubmitTemplate(id); await loadTemplates(); } catch { /* ignore */ } };
+
+    const handleHistoryClick = async (id: number, name: string) => {
+        setMenuOpen(null);
+        setHistoryTemplateName(name);
+        setHistoryReviews([]);
+        setHistoryModalOpen(true);
+        setHistoryLoading(true);
+        try {
+            const data = await apiGetTemplateReviews(id);
+            const sorted = (data.reviews || []).sort((a: Review, b: Review) =>
+                new Date(b.reviewed_at).getTime() - new Date(a.reviewed_at).getTime()
+            );
+            setHistoryReviews(sorted);
+        } catch {
+            setHistoryReviews([]);
+        } finally {
+            setHistoryLoading(false);
+        }
+    };
 
     const confirmDelete = async () => {
         if (templateToDelete == null) return;
@@ -188,6 +222,12 @@ const MainPage = () => {
                                                                 <SendHorizonal className="w-4 h-4" />На утверждение
                                                             </button>
                                                             <button
+                                                                onClick={() => handleHistoryClick(template.tpl_id, template.name)}
+                                                                className="w-full px-4 py-3 text-left hover:bg-accent flex items-center gap-2 text-card-foreground border-t border-border bg-transparent"
+                                                            >
+                                                                <History className="w-4 h-4" />История
+                                                            </button>
+                                                            <button
                                                                 onClick={() => handleDeleteClick(template.tpl_id)}
                                                                 className="w-full px-4 py-3 text-left hover:bg-accent flex items-center gap-2 text-card-foreground border-t border-border bg-transparent"
                                                             >
@@ -250,6 +290,55 @@ const MainPage = () => {
                         <div className="flex gap-3 justify-end">
                             <button onClick={() => setRevokeModalOpen(false)} className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition text-card-foreground bg-transparent">Отмена</button>
                             <button onClick={confirmRevoke} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition">Отозвать</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {historyModalOpen && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setHistoryModalOpen(false)}>
+                    <div className="bg-card border border-border rounded-lg p-6 max-w-lg w-full mx-4 max-h-[80vh] flex flex-col" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between mb-5">
+                            <div>
+                                <h2 className="text-xl font-semibold text-foreground">История решений</h2>
+                                <p className="text-sm text-muted-foreground mt-0.5 truncate max-w-xs">{historyTemplateName}</p>
+                            </div>
+                            <button onClick={() => setHistoryModalOpen(false)} className="text-muted-foreground hover:text-foreground bg-transparent p-0"><X className="w-5 h-5" /></button>
+                        </div>
+
+                        <div className="overflow-y-auto flex-1">
+                            {historyLoading ? (
+                                <p className="text-center text-muted-foreground py-8">Загрузка...</p>
+                            ) : historyReviews.length === 0 ? (
+                                <p className="text-center text-muted-foreground py-8">История решений пуста</p>
+                            ) : (
+                                <div className="space-y-3">
+                                    {historyReviews.map((r) => {
+                                        const statusMap: Record<string, { label: string; cls: string }> = {
+                                            'одобрено':  { label: 'Одобрено',  cls: 'bg-green-100 text-green-700' },
+                                            'отклонено': { label: 'Отклонено', cls: 'bg-red-100 text-red-600' },
+                                        };
+                                        const s = statusMap[r.status] ?? { label: r.status, cls: 'bg-muted text-muted-foreground' };
+                                        const date = new Date(r.reviewed_at).toLocaleString('ru-RU', {
+                                            day: '2-digit', month: '2-digit', year: 'numeric',
+                                            hour: '2-digit', minute: '2-digit',
+                                        });
+                                        return (
+                                            <div key={r.id} className="flex gap-4 p-4 rounded-lg border border-border bg-background">
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="flex items-center gap-2 mb-1">
+                                                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${s.cls}`}>{s.label}</span>
+                                                        <span className="text-xs text-muted-foreground">{date}</span>
+                                                    </div>
+                                                    {r.comment && (
+                                                        <p className="text-sm text-foreground mt-1 break-words">💬 {r.comment}</p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
