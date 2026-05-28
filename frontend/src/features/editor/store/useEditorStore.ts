@@ -16,6 +16,9 @@ interface EditorState {
   canvasWidth: number
   canvasHeight: number
   setCanvasSize: (width: number, height: number) => void
+
+  showGrid: boolean
+  toggleGrid: () => void
 }
 export const useEditorStore = create<EditorState>((set) => ({
   elements: [],
@@ -58,4 +61,7 @@ export const useEditorStore = create<EditorState>((set) => ({
   setCanvasSize: (width, height) => {
     set({ canvasWidth: width, canvasHeight: height })
   },
+
+  showGrid: true,
+  toggleGrid: () => set((state) => ({ showGrid: !state.showGrid })),
 }))

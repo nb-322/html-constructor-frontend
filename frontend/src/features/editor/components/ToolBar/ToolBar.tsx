@@ -2,10 +2,13 @@ import './ToolBar.css'
 import {useEditorStore} from "../../store/useEditorStore.ts";
 import ExportHTML from "./ExportHTML.tsx";
 import { useNavigate} from "react-router-dom";
+
 const ToolBar = () => {
     const add = useEditorStore(s=>s.addElement);
     const del = useEditorStore(s=>s.removeElement);
     const selectedId = useEditorStore(s=>s.selectedId);
+    const showGrid = useEditorStore(s=>s.showGrid);
+    const toggleGrid = useEditorStore(s=>s.toggleGrid);
 
     const navigate = useNavigate();
 
@@ -14,7 +17,16 @@ const ToolBar = () => {
             <button className="toolbar-button" onClick={()=>add("img")}>Добавить картинку</button>
             <button className="toolbar-button" onClick={()=>add("text")}>Добавить текст</button>
             <button className="toolbar-button" onClick={()=>add("button")}>Добавить кнопку</button>
+            <button className="toolbar-button" onClick={()=>add("divider")}>Разделитель</button>
+            <button className="toolbar-button" onClick={()=>add("rectangle")}>Блок</button>
 
+            <button
+                className="toolbar-button"
+                onClick={toggleGrid}
+                style={{ opacity: showGrid ? 1 : 0.45 }}
+            >
+                {showGrid ? '⊞ Сетка вкл' : '⊟ Сетка выкл'}
+            </button>
 
             {selectedId && (<button className="toolbar-button" onClick={()=>del(selectedId)}>Удалить</button>)}
             <button className="toolbar-button" onClick={()=>navigate('/main', { replace: true })}>Выйти на глав экран</button>
