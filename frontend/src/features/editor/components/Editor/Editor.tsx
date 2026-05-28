@@ -6,6 +6,7 @@ import { ArrowLeft, Type, Image as ImageIcon, Square, Mail, Trash2, Save, Minus,
 import ExportHtml from '../ToolBar/ExportHTML.tsx';
 import { useState, useEffect } from 'react';
 import { apiGetTemplate, apiCreateTemplate, apiUpdateTemplate } from '../../../../api/api.ts';
+import { extractEditorJson } from '../ToolBar/ExportHTML.tsx';
 
 const Editor = () => {
     const add = useEditorStore(s => s.addElement);
@@ -28,10 +29,14 @@ const Editor = () => {
             const tpl = data.template ?? data;
             if (tpl.name) setName(tpl.name);
             if (tpl.html_body) {
+                // Формат после экспорта: JSON-комментарий + рендеренный HTML
+                const fromExport = extractEditorJson(tpl.html_body);
+                if (fromExport) { loadElements(fromExport); return; }
+                // Старый формат: просто JSON-массив
                 try {
                     const parsed = JSON.parse(tpl.html_body);
                     if (Array.isArray(parsed)) loadElements(parsed);
-                } catch { /* html_body is raw HTML, can't restore elements */ }
+                } catch { /* html_body — чистый HTML, элементы не восстановить */ }
             }
         }).catch(() => {});
     }, [id]);
@@ -138,7 +143,7 @@ const Editor = () => {
                                 {saveMsg}
                             </span>
                         )}
-                        <ExportHtml />
+                        <ExportHtml templateId={id ? Number(id) : undefined} templateName={name} />
                         <button
                             onClick={handleSave}
                             disabled={saving}
