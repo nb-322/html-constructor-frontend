@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, TrendingUp, TrendingDown, Shield, Clock } from 'lucide-react';
+import { Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, TrendingUp, TrendingDown, Shield, Clock , Tag } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export default function ReportsPage() {
