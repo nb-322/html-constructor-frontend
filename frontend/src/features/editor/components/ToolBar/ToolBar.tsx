@@ -9,6 +9,8 @@ const ToolBar = () => {
     const selectedId = useEditorStore(s=>s.selectedId);
     const showGrid = useEditorStore(s=>s.showGrid);
     const toggleGrid = useEditorStore(s=>s.toggleGrid);
+    const snapGrid = useEditorStore(s=>s.snapGrid);
+    const toggleSnap = useEditorStore(s=>s.toggleSnap);
 
     const navigate = useNavigate();
 
@@ -26,6 +28,14 @@ const ToolBar = () => {
                 style={{ opacity: showGrid ? 1 : 0.45 }}
             >
                 {showGrid ? '⊞ Сетка вкл' : '⊟ Сетка выкл'}
+            </button>
+
+            <button
+                className="toolbar-button"
+                onClick={toggleSnap}
+                style={{ opacity: snapGrid ? 1 : 0.45 }}
+            >
+                {snapGrid ? '🧲 Привязка вкл' : '🧲 Привязка выкл'}
             </button>
 
             {selectedId && (<button className="toolbar-button" onClick={()=>del(selectedId)}>Удалить</button>)}

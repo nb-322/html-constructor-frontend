@@ -2,6 +2,8 @@ import { create } from "zustand"
 import { createElement } from "../utils/createElement"
 import type { EditorElement, ElementType } from "../types/Editor.ts"
 
+export const GRID_SIZE = 20
+
 interface EditorState {
   elements: EditorElement[]
   selectedId: string | null
@@ -19,6 +21,9 @@ interface EditorState {
 
   showGrid: boolean
   toggleGrid: () => void
+
+  snapGrid: boolean
+  toggleSnap: () => void
 }
 export const useEditorStore = create<EditorState>((set) => ({
   elements: [],
@@ -64,4 +69,7 @@ export const useEditorStore = create<EditorState>((set) => ({
 
   showGrid: true,
   toggleGrid: () => set((state) => ({ showGrid: !state.showGrid })),
+
+  snapGrid: true,
+  toggleSnap: () => set((state) => ({ snapGrid: !state.snapGrid })),
 }))
