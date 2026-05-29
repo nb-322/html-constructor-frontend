@@ -6,10 +6,8 @@
 }
 
 .PropertiesEditor > div {
-    padding: 12px;
-    background: var(--background);
-    border-radius: 8px;
-    border: 1px solid var(--border);
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
 }
 
 .PropertiesEditor label {
@@ -40,13 +38,13 @@
 .editor-field input,
 .editor-field select {
     width: 100%;
-    padding: 10px 12px;
+    padding: 8px 10px;
     background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 6px;
     color: var(--card-foreground);
-    font-size: 14px;
-    transition: all 0.2s ease;
+    font-size: 13px;
+    transition: border-color 0.15s ease;
 }
 
 .editor-field input[type="color"] {
