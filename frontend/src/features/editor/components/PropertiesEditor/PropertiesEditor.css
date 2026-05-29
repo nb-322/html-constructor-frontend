@@ -39,12 +39,16 @@
 .editor-field select {
     width: 100%;
     padding: 8px 10px;
-    background: var(--card);
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #ffffff;
     border: 1px solid var(--border);
     border-radius: 6px;
-    color: var(--card-foreground);
+    color: #1a1a1a;
     font-size: 13px;
     transition: border-color 0.15s ease;
+    box-shadow: none;
+    outline: none;
 }
 
 .editor-field input[type="color"] {
