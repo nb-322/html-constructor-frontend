@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useEditorStore } from "../../store/useEditorStore";
 import { useDrag } from "../../hooks/useDrag";
 import { useResize } from "../../hooks/useResize";

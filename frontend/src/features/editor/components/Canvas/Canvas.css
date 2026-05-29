@@ -1,3 +1,10 @@
+.Canvas *,
+.Canvas *::before,
+.Canvas *::after {
+    -webkit-user-drag: none;
+    user-drag: none;
+}
+
 .Canvas {
     flex: 1;
     border: 1px solid var(--border);
