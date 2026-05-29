@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Plus, Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, Clock, CheckCircle, X, Eye, MousePointerClick, Shield, Trash2, RotateCcw } from 'lucide-react';
+import { Plus, Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, Clock, CheckCircle, X, Eye, MousePointerClick, Shield, Trash2, RotateCcw, Tag } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import {

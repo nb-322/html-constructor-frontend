@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, Sun, Moon, Shield, Clock } from 'lucide-react';
+import { Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, Sun, Moon, Shield, Clock, Tag } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';

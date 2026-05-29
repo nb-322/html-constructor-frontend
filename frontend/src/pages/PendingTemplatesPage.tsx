@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Settings, User, LogOut, Mail, FileText, Send, Users, BarChart3, Shield, Clock, Check, X as XIcon } from 'lucide-react';
+import { Settings, User, LogOut, Mail, FileText, Send, Users, BarChart3, Shield, Clock, Check, X as XIcon, Tag } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { apiGetPendingTemplates, apiApproveTemplate, apiRejectTemplate, apiGetUsers } from '../api/api.ts';
