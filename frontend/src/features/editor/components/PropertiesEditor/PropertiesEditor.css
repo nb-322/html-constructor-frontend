@@ -7,7 +7,7 @@
 
 .PropertiesEditor > div {
     padding: 12px;
-    background: var(--muted);
+    background: var(--background);
     border-radius: 8px;
     border: 1px solid var(--border);
 }
@@ -44,7 +44,7 @@
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 8px;
-    color: var(--foreground);
+    color: var(--card-foreground);
     font-size: 14px;
     transition: all 0.2s ease;
 }
