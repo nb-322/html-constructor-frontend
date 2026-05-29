@@ -49,6 +49,16 @@
     transition: all 0.2s ease;
 }
 
+.editor-field input[type="color"] {
+    padding: 2px;
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+}
+
+.editor-field input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+.editor-field input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px; }
+
 .editor-field input:focus,
 .editor-field select:focus {
     outline: none;
