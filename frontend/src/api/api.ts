@@ -69,6 +69,7 @@ export const apiRestoreClient = (id: number) => patch(`/api/clients/${id}/restor
 export const apiGetSegments = () => get('/api/segments');
 export const apiGetArchivedSegments = () => get('/api/segments/archive');
 export const apiCreateSegment = (data: { name: string; description: string }) => post('/api/segments', data);
+export const apiUpdateSegment = (name: string, data: { description: string }) => patch(`/api/segments/${name}`, data);
 export const apiArchiveSegment = (name: string) => patch(`/api/segments/${name}/archive`);
 export const apiRestoreSegment = (name: string) => patch(`/api/segments/${name}/restore`);
 

@@ -1,8 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, X, Shield, Clock, Trash2, RotateCcw, Plus, Tag } from 'lucide-react';
+import { Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, X, Shield, Clock, Trash2, RotateCcw, Plus, Tag, Pencil } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
-import { apiGetSegments, apiGetArchivedSegments, apiCreateSegment, apiArchiveSegment, apiRestoreSegment } from '../api/api.ts';
+import { apiGetSegments, apiGetArchivedSegments, apiCreateSegment, apiUpdateSegment, apiArchiveSegment, apiRestoreSegment } from '../api/api.ts';
 
 interface Segment {
     name: string;
@@ -18,6 +18,10 @@ export default function SegmentsPage() {
     const [showDeleted, setShowDeleted] = useState(false);
     const [loading, setLoading] = useState(true);
     const [createModalOpen, setCreateModalOpen] = useState(false);
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [editingSegment, setEditingSegment] = useState<Segment | null>(null);
+    const [editDescription, setEditDescription] = useState('');
+    const [editError, setEditError] = useState('');
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
     const [segmentToDelete, setSegmentToDelete] = useState<string | null>(null);
     const [formData, setFormData] = useState({ name: '', description: '' });
@@ -45,6 +49,26 @@ export default function SegmentsPage() {
             setFormData({ name: '', description: '' });
         } catch (e: unknown) {
             setCreateError(e instanceof Error ? e.message : 'Ошибка создания сегмента');
+        }
+    };
+
+    const handleEditClick = (seg: Segment) => {
+        setEditingSegment(seg);
+        setEditDescription(seg.description);
+        setEditError('');
+        setEditModalOpen(true);
+    };
+
+    const saveEdit = async () => {
+        if (!editingSegment) return;
+        setEditError('');
+        try {
+            await apiUpdateSegment(editingSegment.name, { description: editDescription });
+            await load();
+            setEditModalOpen(false);
+            setEditingSegment(null);
+        } catch (e: unknown) {
+            setEditError(e instanceof Error ? e.message : 'Ошибка сохранения');
         }
     };
 
@@ -146,22 +170,32 @@ export default function SegmentsPage() {
                                             <td className="px-6 py-4 text-sm text-card-foreground">
                                                 {seg.description || <span className="text-muted-foreground italic">Без описания</span>}
                                             </td>
-                                            <td className="px-6 py-4 text-right">
-                                                {showDeleted ? (
-                                                    <button
-                                                        onClick={() => handleRestore(seg.name)}
-                                                        className="text-primary hover:opacity-70 bg-transparent p-0 flex items-center gap-1 ml-auto text-sm"
-                                                    >
-                                                        <RotateCcw className="w-4 h-4" />Восстановить
-                                                    </button>
-                                                ) : (
-                                                    <button
-                                                        onClick={() => handleDeleteClick(seg.name)}
-                                                        className="text-destructive hover:opacity-70 bg-transparent p-0 flex items-center gap-1 ml-auto text-sm"
-                                                    >
-                                                        <Trash2 className="w-4 h-4" />Удалить
-                                                    </button>
-                                                )}
+                                            <td className="px-6 py-4">
+                                                <div className="flex items-center justify-end gap-3">
+                                                    {showDeleted ? (
+                                                        <button
+                                                            onClick={() => handleRestore(seg.name)}
+                                                            className="text-primary hover:opacity-70 bg-transparent p-0 flex items-center gap-1 text-sm"
+                                                        >
+                                                            <RotateCcw className="w-4 h-4" />Восстановить
+                                                        </button>
+                                                    ) : (
+                                                        <>
+                                                            <button
+                                                                onClick={() => handleEditClick(seg)}
+                                                                className="text-muted-foreground hover:text-foreground bg-transparent p-0 flex items-center gap-1 text-sm"
+                                                            >
+                                                                <Pencil className="w-4 h-4" />Изменить
+                                                            </button>
+                                                            <button
+                                                                onClick={() => handleDeleteClick(seg.name)}
+                                                                className="text-destructive hover:opacity-70 bg-transparent p-0 flex items-center gap-1 text-sm"
+                                                            >
+                                                                <Trash2 className="w-4 h-4" />Удалить
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}
@@ -206,6 +240,45 @@ export default function SegmentsPage() {
                         <div className="flex gap-3 justify-end mt-6">
                             <button onClick={() => setCreateModalOpen(false)} className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition text-card-foreground bg-transparent">Отмена</button>
                             <button onClick={handleCreate} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition">Создать</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Модалка редактирования */}
+            {editModalOpen && editingSegment && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setEditModalOpen(false)}>
+                    <div className="bg-card border border-border rounded-lg p-6 max-w-md w-full mx-4" onClick={(e) => e.stopPropagation()}>
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-xl font-semibold text-foreground">Изменить сегмент</h2>
+                            <button onClick={() => setEditModalOpen(false)} className="text-muted-foreground hover:text-foreground bg-transparent p-0"><X className="w-5 h-5" /></button>
+                        </div>
+                        <div className="space-y-4">
+                            <div>
+                                <label className="block text-sm font-medium text-card-foreground mb-1">Название</label>
+                                <input
+                                    type="text"
+                                    value={editingSegment.name}
+                                    disabled
+                                    className="w-full px-3 py-2 border border-border rounded-lg bg-muted text-muted-foreground cursor-not-allowed"
+                                />
+                                <p className="text-xs text-muted-foreground mt-1">Название изменить нельзя</p>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-card-foreground mb-1">Описание</label>
+                                <textarea
+                                    value={editDescription}
+                                    onChange={(e) => setEditDescription(e.target.value)}
+                                    placeholder="Описание сегмента..."
+                                    rows={3}
+                                    className="w-full px-3 py-2 border border-border rounded-lg bg-card text-card-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+                                />
+                            </div>
+                            {editError && <p className="text-destructive text-sm">{editError}</p>}
+                        </div>
+                        <div className="flex gap-3 justify-end mt-6">
+                            <button onClick={() => setEditModalOpen(false)} className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition text-card-foreground bg-transparent">Отмена</button>
+                            <button onClick={saveEdit} className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:opacity-90 transition">Сохранить</button>
                         </div>
                     </div>
                 </div>
