@@ -48,9 +48,10 @@ const Editor = () => {
         try {
             const html_body = JSON.stringify(elements);
             if (id) {
-                await apiUpdateTemplate(Number(id), { name, html_body, status: 'черновик' });
+                // Сервер автоматически сбрасывает статус в "черновик" при обновлении
+                await apiUpdateTemplate(Number(id), { name, html_body });
             } else {
-                await apiCreateTemplate({ name, html_body, status: 'черновик' });
+                await apiCreateTemplate({ name, html_body });
             }
             setSaveMsg('Сохранено');
             setTimeout(() => setSaveMsg(''), 2000);

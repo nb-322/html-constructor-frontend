@@ -39,15 +39,14 @@ export const apiGetUserTemplates = () => get('/api/templates/user');
 export const apiGetPendingTemplates = () => get('/api/templates/pending');
 export const apiGetArchivedTemplates = () => get('/api/templates/archive');
 export const apiGetTemplate = (id: number) => get(`/api/templates/${id}`);
-export const apiCreateTemplate = (data: { name: string; html_body: string; status?: string }) => post('/api/templates', data);
-export const apiUpdateTemplate = (id: number, data: { name: string; html_body: string; status?: string }) => patch(`/api/templates/${id}`, data);
+export const apiCreateTemplate = (data: { name: string; html_body: string }) => post('/api/templates', data);
+export const apiUpdateTemplate = (id: number, data: { name: string; html_body: string }) => patch(`/api/templates/${id}`, data);
 export const apiGetTemplateReviews = (id: number) => get(`/api/templates/${id}/reviews`);
 export const apiArchiveTemplate = (id: number) => patch(`/api/templates/${id}/archive`);
 export const apiRestoreTemplate = (id: number) => patch(`/api/templates/${id}/restore`);
 export const apiApproveTemplate = (id: number) => patch(`/api/templates/${id}/approve`);
 export const apiRejectTemplate = (id: number, comment: string) => patch(`/api/templates/${id}/reject`, { comment });
 export const apiSubmitTemplate  = (id: number) => patch(`/api/templates/${id}/submit`, {});
-export const apiRevokeTemplate  = (id: number) => patch(`/api/templates/${id}/revoke`, {});
 
 // Campaigns
 export const apiGetCampaigns = () => get('/api/campaigns');

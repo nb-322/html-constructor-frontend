@@ -126,10 +126,11 @@ const MainPage = () => {
         if (templateToRevoke == null) return;
         const tpl = templates.find(t => t.tpl_id === templateToRevoke);
         try {
+            // /revoke в API нет — отзыв через обычное обновление,
+            // сервер сбрасывает статус в "черновик" при PATCH /templates/{id}
             await apiUpdateTemplate(templateToRevoke, {
                 name: tpl?.name ?? '',
                 html_body: tpl?.html_body ?? '',
-                status: 'черновик',
             });
             await loadTemplates();
             showToast('Шаблон отозван');
@@ -152,15 +153,16 @@ const MainPage = () => {
 
     const getStatusBadge = (status: string) => {
         const map: Record<string, { label: string; cls: string }> = {
-            'черновик':        { label: 'Черновик',        cls: 'bg-muted text-muted-foreground' },
-            'на утверждении':  { label: 'На утверждении',  cls: 'bg-yellow-100 text-yellow-700' },
-            'pending':         { label: 'На утверждении',  cls: 'bg-yellow-100 text-yellow-700' },
-            'одобрено':        { label: 'Одобрено',        cls: 'bg-green-100 text-green-700' },
-            'утверждён':       { label: 'Одобрено',        cls: 'bg-green-100 text-green-700' },
-            'approved':        { label: 'Одобрено',        cls: 'bg-green-100 text-green-700' },
-            'отклонено':       { label: 'Отклонено',       cls: 'bg-red-100 text-red-600' },
-            'отклонён':        { label: 'Отклонено',       cls: 'bg-red-100 text-red-600' },
-            'rejected':        { label: 'Отклонено',       cls: 'bg-red-100 text-red-600' },
+            'черновик':         { label: 'Черновик',         cls: 'bg-muted text-muted-foreground' },
+            'на рассмотрении':  { label: 'На рассмотрении',  cls: 'bg-yellow-100 text-yellow-700' },
+            'на утверждении':   { label: 'На рассмотрении',  cls: 'bg-yellow-100 text-yellow-700' },
+            'pending':          { label: 'На рассмотрении',  cls: 'bg-yellow-100 text-yellow-700' },
+            'одобрено':         { label: 'Одобрено',         cls: 'bg-green-100 text-green-700' },
+            'утверждён':        { label: 'Одобрено',         cls: 'bg-green-100 text-green-700' },
+            'approved':         { label: 'Одобрено',         cls: 'bg-green-100 text-green-700' },
+            'отклонено':        { label: 'Отклонено',        cls: 'bg-red-100 text-red-600' },
+            'отклонён':         { label: 'Отклонено',        cls: 'bg-red-100 text-red-600' },
+            'rejected':         { label: 'Отклонено',        cls: 'bg-red-100 text-red-600' },
         };
         const s = map[status] ?? { label: status, cls: 'bg-muted text-muted-foreground' };
         return <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${s.cls}`}>{s.label}</span>;
