@@ -12,6 +12,7 @@ interface EditorState {
   selectElement: (id: string | null) => void
   updateElement: (id: string, data: Partial<EditorElement>) => void
   removeElement: (id: string) => void
+  duplicateElement: (id: string) => void
   clearElements: () => void
   loadElements: (elements: EditorElement[]) => void
 
@@ -57,6 +58,14 @@ export const useEditorStore = create<EditorState>((set) => ({
       elements: state.elements.filter((el) => el.id !== id),
       selectedId: state.selectedId === id ? null : state.selectedId,
     })),
+
+  duplicateElement: (id) =>
+    set((state) => {
+      const src = state.elements.find((el) => el.id === id);
+      if (!src) return state;
+      const copy = { ...src, id: crypto.randomUUID(), x: src.x + 20, y: src.y + 20 };
+      return { elements: [...state.elements, copy], selectedId: copy.id };
+    }),
 
   clearElements: () => set({ elements: [] }),
   loadElements: (elements) => set({ elements, selectedId: null }),

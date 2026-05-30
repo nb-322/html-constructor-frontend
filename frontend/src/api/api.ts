@@ -46,7 +46,8 @@ export const apiArchiveTemplate = (id: number) => patch(`/api/templates/${id}/ar
 export const apiRestoreTemplate = (id: number) => patch(`/api/templates/${id}/restore`);
 export const apiApproveTemplate = (id: number) => patch(`/api/templates/${id}/approve`);
 export const apiRejectTemplate = (id: number, comment: string) => patch(`/api/templates/${id}/reject`, { comment });
-export const apiSubmitTemplate = (id: number) => patch(`/api/templates/${id}/submit`, {});
+export const apiSubmitTemplate  = (id: number) => patch(`/api/templates/${id}/submit`, {});
+export const apiRevokeTemplate  = (id: number) => patch(`/api/templates/${id}/revoke`, {});
 
 // Campaigns
 export const apiGetCampaigns = () => get('/api/campaigns');

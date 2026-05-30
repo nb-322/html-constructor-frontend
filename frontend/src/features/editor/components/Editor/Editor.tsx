@@ -2,7 +2,7 @@ import Canvas from '../Canvas/Canvas.tsx';
 import PropertiesEditor from '../PropertiesEditor/PropertiesEditor.tsx';
 import { useEditorStore } from '../../store/useEditorStore.ts';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Type, Image as ImageIcon, Square, Mail, Trash2, Save, Minus, RectangleHorizontal } from 'lucide-react';
+import { ArrowLeft, Type, Image as ImageIcon, Square, Mail, Trash2, Save, Minus, RectangleHorizontal, Copy } from 'lucide-react';
 import ExportHtml from '../ToolBar/ExportHTML.tsx';
 import { useState, useEffect } from 'react';
 import { apiGetTemplate, apiCreateTemplate, apiUpdateTemplate } from '../../../../api/api.ts';
@@ -11,6 +11,7 @@ import { extractEditorJson } from '../ToolBar/ExportHTML.tsx';
 const Editor = () => {
     const add = useEditorStore(s => s.addElement);
     const del = useEditorStore(s => s.removeElement);
+    const dup = useEditorStore(s => s.duplicateElement);
     const selectedId = useEditorStore(s => s.selectedId);
     const elements = useEditorStore(s => s.elements);
     const clearElements = useEditorStore(s => s.clearElements);
@@ -114,13 +115,22 @@ const Editor = () => {
                         </button>
 
                         {selectedId && (
-                            <button
-                                onClick={() => del(selectedId)}
-                                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg border border-destructive/40 hover:bg-destructive/10 transition bg-transparent text-destructive"
-                            >
-                                <Trash2 className="w-5 h-5" />
-                                <span className="text-sm">Удалить выбранный</span>
-                            </button>
+                            <>
+                                <button
+                                    onClick={() => dup(selectedId)}
+                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg border border-border hover:bg-accent transition bg-transparent text-card-foreground"
+                                >
+                                    <Copy className="w-5 h-5 text-muted-foreground" />
+                                    <span className="text-sm">Дублировать</span>
+                                </button>
+                                <button
+                                    onClick={() => del(selectedId)}
+                                    className="w-full flex items-center gap-3 px-4 py-3 rounded-lg border border-destructive/40 hover:bg-destructive/10 transition bg-transparent text-destructive"
+                                >
+                                    <Trash2 className="w-5 h-5" />
+                                    <span className="text-sm">Удалить выбранный</span>
+                                </button>
+                            </>
                         )}
                     </div>
                 </div>

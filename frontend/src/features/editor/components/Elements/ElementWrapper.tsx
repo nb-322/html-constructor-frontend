@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useEditorStore } from "../../store/useEditorStore";
 import { useDrag } from "../../hooks/useDrag";
 import { useResize } from "../../hooks/useResize";
@@ -58,6 +58,8 @@ export const ElementWrapper: React.FC<ElementWrapperProps> = ({ element, childre
                 userSelect: isSelected ? "text" : "none",
             }}
             onMouseDown={handleMouseDown}
+            onDragStart={(e) => e.preventDefault()}
+            draggable={false}
         >
             {children}
             {isSelected && !isDragging && (

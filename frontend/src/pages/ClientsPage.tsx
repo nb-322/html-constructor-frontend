@@ -1,7 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Upload, Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, Search, X, UserPlus, Shield, Clock, Trash2, RotateCcw, Tag } from 'lucide-react';
+import { Upload, Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, Search, X, UserPlus, Shield, Clock, Trash2, RotateCcw } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import Sidebar from '../components/Sidebar.tsx';
+import { isAdmin } from '../utils/roles.ts';
 import {
     apiGetClients, apiGetArchivedClients,
     apiCreateClient, apiUpdateClient, apiArchiveClient, apiRestoreClient,
@@ -111,33 +113,7 @@ export default function ClientsPage() {
 
     return (
         <div className="flex h-screen bg-background">
-            <aside className="w-64 bg-card border-r border-border flex flex-col">
-                <Link to="/templates" className="p-6 border-b border-border flex items-center gap-2">
-                    <Mail className="w-8 h-8 text-primary" /><span className="text-xl font-bold">EmailBuilder</span>
-                </Link>
-                <div className="flex-1 p-4">
-                    <nav className="space-y-2">
-                        <Link to="/templates" className="flex items-center gap-3 px-4 py-3 rounded-lg text-card-foreground hover:bg-accent"><FileText className="w-5 h-5" /><span>Шаблоны</span></Link>
-                        <Link to="/pending-templates" className="flex items-center gap-3 px-4 py-3 rounded-lg text-card-foreground hover:bg-accent"><Clock className="w-5 h-5" /><span>Шаблоны на утверждении</span></Link>
-                        <Link to="/campaigns" className="flex items-center gap-3 px-4 py-3 rounded-lg text-card-foreground hover:bg-accent"><Send className="w-5 h-5" /><span>Кампании</span></Link>
-                        <Link to="/clients" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-muted text-primary"><Users className="w-5 h-5" /><span>Клиенты</span></Link>
-                        <Link to="/segments" className="flex items-center gap-3 px-4 py-3 rounded-lg text-card-foreground hover:bg-accent"><Tag className="w-5 h-5" /><span>Сегменты</span></Link>
-                        <Link to="/reports" className="flex items-center gap-3 px-4 py-3 rounded-lg text-card-foreground hover:bg-accent"><BarChart3 className="w-5 h-5" /><span>Отчеты</span></Link>
-                        <Link to="/employees" className="flex items-center gap-3 px-4 py-3 rounded-lg text-card-foreground hover:bg-accent"><Shield className="w-5 h-5" /><span>Сотрудники</span></Link>
-                        <Link to="/settings" className="flex items-center gap-3 px-4 py-3 rounded-lg text-card-foreground hover:bg-accent"><Settings className="w-5 h-5" /><span>Настройки</span></Link>
-                    </nav>
-                </div>
-                <div className="p-4 border-t border-border">
-                    <div className="flex items-center gap-3 px-4 py-3">
-                        <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-primary-foreground"><User className="w-5 h-5" /></div>
-                        <div className="flex-1">
-                            <p className="font-medium text-sm text-card-foreground truncate">{user?.name || 'Пользователь'}</p>
-                            <p className="text-xs text-muted-foreground truncate">{user?.role || ''}</p>
-                        </div>
-                        <button onClick={() => { logout(); navigate('/auth', { replace: true }); }} className="text-muted-foreground hover:text-foreground p-0 bg-transparent"><LogOut className="w-5 h-5" /></button>
-                    </div>
-                </div>
-            </aside>
+            <Sidebar />
 
             <main className="flex-1 overflow-auto">
                 <div className="max-w-6xl mx-auto p-8">
@@ -147,7 +123,9 @@ export default function ClientsPage() {
                             <p className="text-muted-foreground">Управляйте своей базой подписчиков</p>
                         </div>
                         <div className="flex gap-3">
+                            {isAdmin(user?.role ?? '') && (
                             <button onClick={() => setShowDeleted(!showDeleted)} className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition text-card-foreground flex items-center gap-2 bg-transparent"><Trash2 className="w-4 h-4" />{showDeleted ? 'Показать активные' : 'Показать удаленные'}</button>
+                            )}
                             <button onClick={() => setImportModalOpen(true)} className="px-4 py-2 border border-border rounded-lg hover:bg-accent transition text-card-foreground flex items-center gap-2 bg-transparent"><Upload className="w-4 h-4" />Импорт CSV</button>
                             <button onClick={() => { setFormData({ email: '', consent_flag: true, segment: '' }); setAddModalOpen(true); }} className="px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:opacity-90 flex items-center gap-2"><UserPlus className="w-5 h-5" />Добавить клиента</button>
                         </div>
