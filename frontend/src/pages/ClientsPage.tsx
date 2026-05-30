@@ -1,5 +1,5 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { Upload, Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, Search, X, UserPlus, Shield, Clock, Trash2, RotateCcw } from 'lucide-react';
+
+import { Upload, Search, X, UserPlus, Trash2, RotateCcw } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Sidebar from '../components/Sidebar.tsx';
@@ -22,8 +22,7 @@ interface Client {
 interface Segment { name: string; }
 
 export default function ClientsPage() {
-    const { user, logout } = useAuth();
-    const navigate = useNavigate();
+    const { user } = useAuth();
 
     const [clients, setClients] = useState<Client[]>([]);
     const [segments, setSegments] = useState<Segment[]>([]);

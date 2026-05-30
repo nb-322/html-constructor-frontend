@@ -1,12 +1,8 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, TrendingUp, TrendingDown, Shield, Clock , Tag } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+
+import { TrendingUp, TrendingDown } from 'lucide-react';
 import Sidebar from '../components/Sidebar.tsx';
-import { isAdmin } from '../utils/roles.ts';
 
 export default function ReportsPage() {
-    const { user, logout } = useAuth();
-    const navigate = useNavigate();
 
     const stats = [
         { label: 'Всего отправлено', value: '12,543', change: '+12.5%', trend: 'up' },

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Plus, Eye, Trash2, X, MoreVertical, Ban, RotateCcw, SendHorizonal, History } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../../../contexts/AuthContext';
@@ -39,8 +39,7 @@ const THUMBNAILS = [
 ];
 
 const MainPage = () => {
-    const { user, logout } = useAuth();
-    const navigate = useNavigate();
+    const { user } = useAuth();
 
     const [templates, setTemplates] = useState<Template[]>([]);
     const [showDeleted, setShowDeleted] = useState(false);

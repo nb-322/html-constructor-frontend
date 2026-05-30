@@ -1,5 +1,5 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, X, Shield, Clock, Trash2, RotateCcw, Plus, Tag, Pencil } from 'lucide-react';
+
+import { X, Trash2, RotateCcw, Plus, Pencil } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { apiGetSegments, apiGetArchivedSegments, apiCreateSegment, apiUpdateSegment, apiArchiveSegment, apiRestoreSegment } from '../api/api.ts';
@@ -13,8 +13,7 @@ interface Segment {
 }
 
 export default function SegmentsPage() {
-    const { user, logout } = useAuth();
-    const navigate = useNavigate();
+    const { user } = useAuth();
 
     const [segments, setSegments] = useState<Segment[]>([]);
     const [showDeleted, setShowDeleted] = useState(false);

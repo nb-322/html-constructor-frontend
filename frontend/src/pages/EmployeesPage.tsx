@@ -1,5 +1,5 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, UserPlus, X, Shield, Clock, Trash2, RotateCcw } from 'lucide-react';
+
+import { User, UserPlus, X, Trash2, RotateCcw } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Sidebar from '../components/Sidebar.tsx';
@@ -14,8 +14,7 @@ interface Employee {
 }
 
 export default function EmployeesPage() {
-    const { user, logout } = useAuth();
-    const navigate = useNavigate();
+    const { user } = useAuth();
 
     const [employees, setEmployees] = useState<Employee[]>([]);
     const [showDeleted, setShowDeleted] = useState(false);

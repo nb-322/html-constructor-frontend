@@ -1,14 +1,10 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, Sun, Moon, Shield, Clock } from 'lucide-react';
+
+import { Sun, Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
 import Sidebar from '../components/Sidebar.tsx';
-import { isAdmin } from '../utils/roles.ts';
 
 export default function SettingsPage() {
-    const { user, logout } = useAuth();
-    const navigate = useNavigate();
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
 

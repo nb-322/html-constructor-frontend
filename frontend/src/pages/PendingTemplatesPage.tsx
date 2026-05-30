@@ -1,9 +1,7 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { Settings, User, LogOut, Mail, FileText, Send, Users, BarChart3, Shield, Clock, Check, X as XIcon } from 'lucide-react';
+
+import { Check, X as XIcon, Clock } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
 import Sidebar from '../components/Sidebar.tsx';
-import { isAdmin } from '../utils/roles.ts';
 import { apiGetPendingTemplates, apiApproveTemplate, apiRejectTemplate, apiGetUsers } from '../api/api.ts';
 
 interface PendingTemplate {
@@ -22,8 +20,6 @@ const THUMBNAILS = [
 ];
 
 export default function PendingTemplatesPage() {
-    const { user, logout } = useAuth();
-    const navigate = useNavigate();
 
     const [pendingTemplates, setPendingTemplates] = useState<PendingTemplate[]>([]);
     const [userMap, setUserMap] = useState<Record<number, string>>({});

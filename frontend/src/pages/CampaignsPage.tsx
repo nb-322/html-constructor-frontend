@@ -1,5 +1,5 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { Plus, Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, Clock, CheckCircle, X, Eye, MousePointerClick, Shield, Trash2, RotateCcw } from 'lucide-react';
+
+import { Plus, CheckCircle, X, Eye, MousePointerClick, Trash2, RotateCcw , Clock, Send} from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Sidebar from '../components/Sidebar.tsx';
@@ -23,8 +23,7 @@ interface Segment { name: string; }
 interface Template { tpl_id: number; name: string; }
 
 export default function CampaignsPage() {
-    const { user, logout } = useAuth();
-    const navigate = useNavigate();
+    const { user } = useAuth();
 
     const [campaigns, setCampaigns] = useState<Campaign[]>([]);
     const [segments, setSegments] = useState<Segment[]>([]);

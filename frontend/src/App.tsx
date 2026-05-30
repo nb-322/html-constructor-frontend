@@ -27,7 +27,7 @@ function App() {
     const { user, isLoading } = useAuth();
     const role = user?.role ?? '';
 
-    const protect = (element: React.ReactNode, allowed?: boolean) => (
+    const protect = (element: React.ReactElement, allowed?: boolean): React.ReactElement => (
         <ProtectedRoute user={user} isLoading={isLoading}>
             {allowed === false ? <Navigate to={defaultRoute(role)} replace /> : element}
         </ProtectedRoute>
