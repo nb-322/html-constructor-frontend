@@ -3,6 +3,8 @@ import { Mail, User, LogOut, Settings, FileText, Users, BarChart3, Send, X, Shie
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { apiGetSegments, apiGetArchivedSegments, apiCreateSegment, apiUpdateSegment, apiArchiveSegment, apiRestoreSegment } from '../api/api.ts';
+import Sidebar from '../components/Sidebar.tsx';
+import { isAdmin } from '../utils/roles.ts';
 
 interface Segment {
     name: string;
