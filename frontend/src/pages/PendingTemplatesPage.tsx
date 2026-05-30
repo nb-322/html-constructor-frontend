@@ -3,6 +3,7 @@ import { Check, X as XIcon, Clock } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar.tsx';
 import { apiGetPendingTemplates, apiApproveTemplate, apiRejectTemplate, apiGetUsers } from '../api/api.ts';
+import TemplatePreview from '../features/main/components/MainPage/TemplatePreview.tsx';
 
 interface PendingTemplate {
     tpl_id: number;
@@ -10,6 +11,7 @@ interface PendingTemplate {
     status: string;
     created_by: number;
     created_at: string;
+    html_body?: string;
 }
 
 const THUMBNAILS = [
@@ -84,7 +86,12 @@ export default function PendingTemplatesPage() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {pendingTemplates.map((template, index) => (
                                 <div key={template.tpl_id} className="aspect-[3/4] bg-card border border-border rounded-lg overflow-hidden shadow-sm">
-                                    <div className={`h-2/3 ${THUMBNAILS[index % THUMBNAILS.length]}`} />
+                                    <div className="h-2/3 overflow-hidden">
+                                        <TemplatePreview
+                                            htmlBody={template.html_body || ''}
+                                            fallbackClass={THUMBNAILS[index % THUMBNAILS.length]}
+                                        />
+                                    </div>
                                     <div className="h-1/3 p-4 flex flex-col justify-between">
                                         <div>
                                             <h3 className="font-semibold text-foreground mb-1">{template.name}</h3>

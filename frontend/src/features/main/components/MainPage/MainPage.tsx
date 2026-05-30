@@ -149,8 +149,13 @@ const MainPage = () => {
         const map: Record<string, { label: string; cls: string }> = {
             'черновик':        { label: 'Черновик',        cls: 'bg-muted text-muted-foreground' },
             'на утверждении':  { label: 'На утверждении',  cls: 'bg-yellow-100 text-yellow-700' },
-            'утверждён':       { label: 'Утверждён',       cls: 'bg-green-100 text-green-700' },
-            'отклонён':        { label: 'Отклонён',        cls: 'bg-red-100 text-red-600' },
+            'pending':         { label: 'На утверждении',  cls: 'bg-yellow-100 text-yellow-700' },
+            'одобрено':        { label: 'Одобрено',        cls: 'bg-green-100 text-green-700' },
+            'утверждён':       { label: 'Одобрено',        cls: 'bg-green-100 text-green-700' },
+            'approved':        { label: 'Одобрено',        cls: 'bg-green-100 text-green-700' },
+            'отклонено':       { label: 'Отклонено',       cls: 'bg-red-100 text-red-600' },
+            'отклонён':        { label: 'Отклонено',       cls: 'bg-red-100 text-red-600' },
+            'rejected':        { label: 'Отклонено',       cls: 'bg-red-100 text-red-600' },
         };
         const s = map[status] ?? { label: status, cls: 'bg-muted text-muted-foreground' };
         return <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${s.cls}`}>{s.label}</span>;

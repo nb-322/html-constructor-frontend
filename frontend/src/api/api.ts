@@ -78,11 +78,7 @@ export const apiRestoreSegment = (name: string) => patch(`/api/segments/${name}/
 export const apiGetUsers = () => get('/api/users');
 export const apiGetArchivedUsers = () => get('/api/users/archive');
 export const apiRegisterUser = (data: { login: string; password: string; role: string }) =>
-    request('/api/users/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-    });
+    post('/api/users/register', data);
 export const apiUpdateUser = (id: number, data: { login: string; role: string }) => patch(`/api/users/${id}`, data);
 export const apiArchiveUser = (id: number) => patch(`/api/users/${id}/archive`);
 export const apiRestoreUser = (id: number) => patch(`/api/users/${id}/restore`);
