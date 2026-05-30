@@ -5,7 +5,7 @@ import { useAuth } from '../../../../contexts/AuthContext';
 import {
     apiGetUserTemplates, apiGetArchivedTemplates,
     apiArchiveTemplate, apiRestoreTemplate, apiSubmitTemplate,
-    apiGetTemplateReviews, apiRevokeTemplate,
+    apiUpdateTemplate, apiGetTemplateReviews,
 } from '../../../../api/api.ts';
 import TemplatePreview from './TemplatePreview.tsx';
 import Sidebar from '../../../../components/Sidebar.tsx';
@@ -124,8 +124,13 @@ const MainPage = () => {
 
     const confirmRevoke = async () => {
         if (templateToRevoke == null) return;
+        const tpl = templates.find(t => t.tpl_id === templateToRevoke);
         try {
-            await apiRevokeTemplate(templateToRevoke);
+            await apiUpdateTemplate(templateToRevoke, {
+                name: tpl?.name ?? '',
+                html_body: tpl?.html_body ?? '',
+                status: 'черновик',
+            });
             await loadTemplates();
             showToast('Шаблон отозван');
         } catch (e) {
