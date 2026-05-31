@@ -190,9 +190,11 @@ func (r *TemplateRepository) GetByUserID(userID int64) ([]*models.Template, erro
 
 // Update обновляет шаблон
 func (r *TemplateRepository) Update(template *models.Template) (*models.Template, error) {
+	// При любом редактировании содержимого статус сбрасывается в "черновик",
+	// даже если шаблон был одобрен/отклонён/на рассмотрении
 	query := `
 		UPDATE templates
-		SET name = $1, html_body = $2, updated_by = $3, updated_at = NOW()
+		SET name = $1, html_body = $2, updated_by = $3, updated_at = NOW(), status = 'черновик'
 		WHERE tpl_id = $4
 		RETURNING tpl_id, name, html_body, status, created_at, updated_at, created_by, updated_by`
 

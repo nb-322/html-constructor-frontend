@@ -3,9 +3,9 @@ import { Plus, Eye, Trash2, X, MoreVertical, Ban, RotateCcw, SendHorizonal, Hist
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../../../contexts/AuthContext';
 import {
-    apiGetUserTemplates, apiGetArchivedTemplates,
+    apiGetTemplates, apiGetUserTemplates, apiGetArchivedTemplates,
     apiArchiveTemplate, apiRestoreTemplate, apiSubmitTemplate,
-    apiUpdateTemplate, apiGetTemplateReviews,
+    apiUpdateTemplate, apiGetTemplateReviews, apiGetUsers,
 } from '../../../../api/api.ts';
 import TemplatePreview from './TemplatePreview.tsx';
 import Sidebar from '../../../../components/Sidebar.tsx';
@@ -27,6 +27,8 @@ interface Template {
     updated_at: string;
     html_body?: string;
     deleted?: boolean;
+    created_by?: number;
+    updated_by?: number;
 }
 
 const THUMBNAILS = [
@@ -60,10 +62,16 @@ const MainPage = () => {
         setTimeout(() => setToast(null), 3000);
     };
 
+    const [userMap, setUserMap] = useState<Record<number, string>>({});
+    const admin = isAdmin(user?.role ?? '');
+
     const loadTemplates = async () => {
         setLoading(true);
         try {
-            const fn = showDeleted ? apiGetArchivedTemplates : apiGetUserTemplates;
+            // Админ видит шаблоны всех пользователей, остальные — только свои
+            const fn = showDeleted
+                ? apiGetArchivedTemplates
+                : (admin ? apiGetTemplates : apiGetUserTemplates);
             const data = await fn();
             setTemplates(data.templates || []);
         } catch {
@@ -73,7 +81,21 @@ const MainPage = () => {
         }
     };
 
+    // Карта id→login для отображения "кем создан/изменён"
+    useEffect(() => {
+        apiGetUsers()
+            .then((data) => {
+                const map: Record<number, string> = {};
+                for (const u of data.users || []) map[u.id] = u.login;
+                setUserMap(map);
+            })
+            .catch(() => { /* нет доступа к списку пользователей — покажем #id */ });
+    }, []);
+
     useEffect(() => { loadTemplates(); }, [showDeleted]);
+
+    const userName = (id?: number) =>
+        id == null ? '—' : (userMap[id] || `#${id}`);
 
     const handleDeleteClick = (id: number) => { setTemplateToDelete(id); setDeleteModalOpen(true); setMenuOpen(null); };
     const handleSubmit = async (id: number) => {
@@ -283,7 +305,11 @@ const MainPage = () => {
                                                 </button>
                                             ) : getStatusBadge(template.status)}
                                         </div>
-                                        <p className="text-xs text-muted-foreground">Изменено {formatDate(template.updated_at)}</p>
+                                        <div className="space-y-0.5">
+                                            <p className="text-xs text-muted-foreground truncate">Создал: {userName(template.created_by)}</p>
+                                            <p className="text-xs text-muted-foreground truncate">Изменил: {userName(template.updated_by)}</p>
+                                            <p className="text-xs text-muted-foreground">Изменено {formatDate(template.updated_at)}</p>
+                                        </div>
                                     </div>
                                 </div>
                             ))}
