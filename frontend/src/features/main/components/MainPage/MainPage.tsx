@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Plus, Eye, Trash2, X, MoreVertical, Ban, RotateCcw, SendHorizonal, History } from 'lucide-react';
+import { Plus, Eye, Trash2, X, MoreVertical, Ban, RotateCcw, SendHorizonal, History, Layers } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../../../contexts/AuthContext';
 import {
@@ -8,6 +8,7 @@ import {
     apiUpdateTemplate, apiGetTemplateReviews, apiGetUsers,
 } from '../../../../api/api.ts';
 import TemplatePreview from './TemplatePreview.tsx';
+import VersionHistoryModal from './VersionHistoryModal.tsx';
 import Sidebar from '../../../../components/Sidebar.tsx';
 import { isAdmin } from '../../../../utils/roles.ts';
 
@@ -55,6 +56,9 @@ const MainPage = () => {
     const [historyLoading, setHistoryLoading] = useState(false);
     const [historyReviews, setHistoryReviews] = useState<Review[]>([]);
     const [historyTemplateName, setHistoryTemplateName] = useState('');
+
+    // Модалка истории версий (изменений контента)
+    const [versionsModal, setVersionsModal] = useState<{ id: number; name: string } | null>(null);
 
     const [toast, setToast] = useState<{ msg: string; ok: boolean } | null>(null);
     const showToast = (msg: string, ok = true) => {
@@ -273,10 +277,16 @@ const MainPage = () => {
                                                                 <SendHorizonal className="w-4 h-4" />На утверждение
                                                             </button>
                                                             <button
+                                                                onClick={() => { setVersionsModal({ id: template.tpl_id, name: template.name }); setMenuOpen(null); }}
+                                                                className="w-full px-4 py-3 text-left hover:bg-accent flex items-center gap-2 text-card-foreground border-t border-border bg-transparent"
+                                                            >
+                                                                <Layers className="w-4 h-4" />Версии
+                                                            </button>
+                                                            <button
                                                                 onClick={() => handleHistoryClick(template.tpl_id, template.name)}
                                                                 className="w-full px-4 py-3 text-left hover:bg-accent flex items-center gap-2 text-card-foreground border-t border-border bg-transparent"
                                                             >
-                                                                <History className="w-4 h-4" />История
+                                                                <History className="w-4 h-4" />Решения
                                                             </button>
                                                             <button
                                                                 onClick={() => handleDeleteClick(template.tpl_id)}
@@ -403,6 +413,16 @@ const MainPage = () => {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {versionsModal && (
+                <VersionHistoryModal
+                    templateId={versionsModal.id}
+                    templateName={versionsModal.name}
+                    userName={userName}
+                    onClose={() => setVersionsModal(null)}
+                    onRestored={() => { void loadTemplates(); showToast('Версия восстановлена'); }}
+                />
             )}
         </div>
     );
